@@ -1,0 +1,23 @@
+{
+	"itemGroup.wildlands_block_item_group": "Wild Lands Blocks",
+	
+	"block.wildlands.mud": "Mud",
+	"block.wildlands.dried_mud": "Dried Mud",
+	"block.wildlands.dried_mud_shingles": "Dried Mud Shingles",
+	"block.wildlands.dried_mud_bricks": "Dried Mud Bricks",
+	"block.wildlands.cypress_log": "Bald Cypress Log",
+	"block.wildlands.stripped_cypress_log": "Stripped Bald Cypress Log",
+	"block.wildlands.cypress_planks": "Bald Cypress Planks",
+	"block.wildlands.cypress_wood": "Bald Cypress Wood",
+	"block.wildlands.stripped_cypress_wood": "Stripped Bald Cypress Wood",
+	"block.wildlands.cypress_door": "Bald Cypress Door",
+	"block.wildlands.cypress_leaves": "Bald Cypress Leaves",
+	"block.wildlands.cypress_stairs": "Bald Cypress Stairs",
+	"block.wildlands.cypress_pressure_plate": "Bald Cypress Pressure Plate",
+	"block.wildlands.cypress_fence": "Bald Cypress Fence",
+	"block.wildlands.cypress_trapdoor": "Bald Cypress Trapdoor",
+	"block.wildlands.cypress_fence_gate": "Bald Cypress Fence Gate",
+	"block.wildlands.cypress_button": "Bald Cypress Button",
+	"block.wildlands.cypress_slab": "Bald Cypress Slab",
+	"block.wildlands.wet_cypress_log": "Wet Cypress Log"
+}
