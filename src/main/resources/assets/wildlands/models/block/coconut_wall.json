@@ -1,0 +1,23 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/cube_all",
+	"texture_size": [40, 20],
+	"textures": {
+		"0": "wildlands:block/coconut",
+		"particle": "wildlands:block/coconut"
+	},
+	"elements": [
+		{
+			"from": [3, 3, 6],
+			"to": [13, 13, 16],
+			"faces": {
+				"north": {"uv": [4, 8, 8, 16], "texture": "#0"},
+				"east": {"uv": [0, 8, 4, 16], "texture": "#0"},
+				"south": {"uv": [12, 8, 16, 16], "texture": "#0"},
+				"west": {"uv": [8, 8, 12, 16], "texture": "#0"},
+				"up": {"uv": [4, 0, 8, 8], "texture": "#0"},
+				"down": {"uv": [8, 0, 12, 8], "texture": "#0"}
+			}
+		}
+	]
+}

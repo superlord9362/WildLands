@@ -1,6 +1,16 @@
 {
   "replace": false,
   "values": [
-    "wildlands:cypress_slab"
+    "wildlands:cypress_slab",
+	"wildlands:gabbro_slab",
+	"wildlands:polished_gabbro_slab",
+	"wildlands:polished_dolerite_slab",
+	"wildlands:dolerite_slab",
+	"wildlands:conglomerate_slab",
+	"wildlands:conglomerate_brick_slab",
+	"wildlands:fine_sandstone_slab",
+	"wildlands:smooth_fine_sandstone_slab",
+	"wildlands:cut_fine_sandstone_slab",
+	"wildlands:coconut_slab"
   ]
 }

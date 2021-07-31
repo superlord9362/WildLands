@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "wildlands:block/coconut_slab"
+    },
+    "type=double": {
+      "model": "wildlands:block/coconut_planks"
+    },
+    "type=top": {
+      "model": "wildlands:block/coconut_slab_top"
+    }
+  }
+}

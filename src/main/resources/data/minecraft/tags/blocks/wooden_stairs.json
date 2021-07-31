@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "wildlands:cypress_stairs"
+    "wildlands:cypress_stairs",
+	"wildlands:coconut_stairs"
   ]
 }

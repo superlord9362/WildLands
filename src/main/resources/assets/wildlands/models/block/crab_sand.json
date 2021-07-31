@@ -1,0 +1,47 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/cube_all",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "wildlands:block/crab_sand",
+		"particle": "wildlands:block/crab_sand"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 8, 8], "texture": "#0"},
+				"east": {"uv": [0, 0, 8, 8], "texture": "#0"},
+				"south": {"uv": [0, 0, 8, 8], "texture": "#0"},
+				"west": {"uv": [0, 0, 8, 8], "texture": "#0"},
+				"up": {"uv": [0, 0, 8, 8], "texture": "#0"},
+				"down": {"uv": [0, 0, 8, 8], "texture": "#0"}
+			}
+		},
+		{
+			"from": [4.5, 16, 7],
+			"to": [6.5, 20, 9],
+			"faces": {
+				"north": {"uv": [9, 6, 10, 8], "texture": "#0"},
+				"east": {"uv": [8, 6, 9, 8], "texture": "#0"},
+				"south": {"uv": [11, 6, 12, 8], "texture": "#0"},
+				"west": {"uv": [10, 6, 11, 8], "texture": "#0"},
+				"up": {"uv": [9, 5, 10, 6], "texture": "#0"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#0"}
+			}
+		},
+		{
+			"from": [9.5, 16, 7],
+			"to": [11.5, 20, 9],
+			"faces": {
+				"north": {"uv": [9, 6, 10, 8], "texture": "#0"},
+				"east": {"uv": [8, 6, 9, 8], "texture": "#0"},
+				"south": {"uv": [11, 6, 12, 8], "texture": "#0"},
+				"west": {"uv": [10, 6, 11, 8], "texture": "#0"},
+				"up": {"uv": [9, 5, 10, 6], "texture": "#0"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#0"}
+			}
+		}
+	]
+}

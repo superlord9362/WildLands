@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "wildlands:block/coconut_log_side",
+    "side": "wildlands:block/coconut_log_side"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "wildlands:block/cut_fine_sandstone_slab"
+    },
+    "type=double": {
+      "model": "wildlands:block/cut_fine_sandstone"
+    },
+    "type=top": {
+      "model": "wildlands:block/cut_fine_sandstone_slab_top"
+    }
+  }
+}

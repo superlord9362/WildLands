@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "wildlands:cypress_trapdoor"
+    "wildlands:cypress_trapdoor",
+	"wildlands:coconut_trapdoor"
   ]
 }

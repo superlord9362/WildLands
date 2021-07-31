@@ -9,6 +9,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MutableBoundingBox;
 import net.minecraft.world.ISeedReader;
+import net.minecraft.world.gen.IWorldGenerationBaseReader;
 import superlord.wildlands.world.feature.config.WLTreeConfig;
 import superlord.wildlands.world.feature.util.WLAbstractTreeFeature;
 
@@ -26,9 +27,8 @@ public class Cypress2 extends WLAbstractTreeFeature<WLTreeConfig> {
 		if (pos.getY() + randTreeHeight + 1 < world.getHeight()) {
 			if (!isDesiredGroundwDirtTag(world, pos.down(), config)) {
 				return false;
-			} else if (!this.isAnotherTreeNearby(world, pos, randTreeHeight, 0, isSapling)) {
-				return false;
-			} else if (!this.doesSaplingHaveSpaceToGrow(world, pos, randTreeHeight, 7, 5, 5, isSapling)) {
+			}
+			if (!this.doesTreeFit(world, pos, randTreeHeight)) {
 				return false;
 			} else {
 				buildTrunkBase(pos, changedBlocks, world, config, rand, boundsIn, mainmutable.setPos(pos).move(0, 0, -1).toImmutable(), mainmutable.setPos(pos).move(0, 0, 0).toImmutable(), mainmutable.setPos(pos).move(1, 0, -1).toImmutable(), mainmutable.setPos(pos).move(1, 0, 0).toImmutable());
@@ -185,5 +185,26 @@ public class Cypress2 extends WLAbstractTreeFeature<WLTreeConfig> {
 		}
 		return true;
 	}
+
+	private boolean doesTreeFit(IWorldGenerationBaseReader reader, BlockPos blockPos, int height) {
+		int x = blockPos.getX();
+		int y = blockPos.getY();
+		int z = blockPos.getZ();
+		BlockPos.Mutable pos = new BlockPos.Mutable();
+
+		for (int yOffset = 0; yOffset <= height + 1; ++yOffset) {
+			//Distance/Density of trees. Positive Values ONLY
+			int distance = 0;
+
+			for (int xOffset = -distance; xOffset <= distance; ++xOffset) {
+				for (int zOffset = -distance; zOffset <= distance; ++zOffset) {
+					if (!canLogPlaceHereWater(reader, pos.setPos(x + xOffset, y + yOffset, z + zOffset))) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}   
 
 }

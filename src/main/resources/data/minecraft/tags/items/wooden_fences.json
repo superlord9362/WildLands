@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "wildlands:cypress_fence"
+    "wildlands:cypress_fence",
+	"wildlands:coconut_fence"
   ]
 }

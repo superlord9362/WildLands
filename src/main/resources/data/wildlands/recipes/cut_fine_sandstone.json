@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+	"##",
+	"##"
+  ],
+  "key": {
+    "#": {
+      "item": "wildlands:fine_sandstone"
+    }
+  },
+  "result": {
+    "item": "wildlands:cut_fine_sandstone",
+	"count": 4
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "tag": "wildlands:coconut_logs"
+    }
+  ],
+  "result": {
+    "item": "wildlands:coconut_planks",
+    "count": 4
+  }
+}
