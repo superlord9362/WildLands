@@ -9,8 +9,10 @@ import net.minecraftforge.registries.ForgeRegistries;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.entity.AlligatorEntity;
 import superlord.wildlands.entity.CatfishEntity;
+import superlord.wildlands.entity.ClamEntity;
 import superlord.wildlands.entity.CoconutEntity;
 import superlord.wildlands.entity.CrabEntity;
+import superlord.wildlands.entity.FrogEntity;
 import superlord.wildlands.entity.WLBoatEntity;
 
 public class EntityInit {
@@ -22,5 +24,7 @@ public class EntityInit {
 	public static final RegistryObject<EntityType<WLBoatEntity>> BOAT = REGISTER.register("boat", () -> EntityType.Builder.<WLBoatEntity>create(WLBoatEntity::new, EntityClassification.MISC).size(1.375F, 0.5625F).build(new ResourceLocation(WildLands.MOD_ID, "boat").toString()));
 	public static final RegistryObject<EntityType<CoconutEntity>> COCONUT = REGISTER.register("coconut", () -> EntityType.Builder.<CoconutEntity>create(CoconutEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).build(new ResourceLocation(WildLands.MOD_ID, "coconut").toString()));
 	public static final RegistryObject<EntityType<CrabEntity>> CRAB = REGISTER.register("crab", () -> EntityType.Builder.<CrabEntity>create(CrabEntity::new, EntityClassification.AMBIENT).size(0.25F, 0.25F).build(new ResourceLocation(WildLands.MOD_ID, "crab").toString()));
+	public static final RegistryObject<EntityType<ClamEntity>> CLAM = REGISTER.register("clam", () -> EntityType.Builder.<ClamEntity>create(ClamEntity::new, EntityClassification.WATER_AMBIENT).size(1.0F, 1.0F).build(new ResourceLocation(WildLands.MOD_ID, "clam").toString()));
+	public static final RegistryObject<EntityType<FrogEntity>> FROG = REGISTER.register("frog", () -> EntityType.Builder.<FrogEntity>create(FrogEntity::new, EntityClassification.AMBIENT).size(0.75F, 0.75F).build(new ResourceLocation(WildLands.MOD_ID, "frog").toString()));
 	
 }

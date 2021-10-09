@@ -13,6 +13,11 @@ import net.minecraft.world.gen.feature.ProbabilityConfig;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.world.feature.StarFishFeature;
 import superlord.wildlands.world.feature.config.WLTreeConfig;
+import superlord.wildlands.world.feature.tree.coconut.Coconut1;
+import superlord.wildlands.world.feature.tree.coconut.Coconut2;
+import superlord.wildlands.world.feature.tree.coconut.Coconut3;
+import superlord.wildlands.world.feature.tree.coconut.Coconut4;
+import superlord.wildlands.world.feature.tree.coconut.Coconut5;
 import superlord.wildlands.world.feature.tree.cypress.Cypress1;
 import superlord.wildlands.world.feature.tree.cypress.Cypress2;
 import superlord.wildlands.world.feature.tree.cypress.Cypress3;
@@ -25,6 +30,12 @@ public class WLFeatures {
     public static final WLAbstractTreeFeature<WLTreeConfig> CYPRESS_TREE1 = createFeature("bald_cypress_1", new Cypress1(WLTreeConfig.CODEC.stable()));
     public static final WLAbstractTreeFeature<WLTreeConfig> CYPRESS_TREE2 = createFeature("bald_cypress_2", new Cypress2(WLTreeConfig.CODEC.stable()));
     public static final WLAbstractTreeFeature<WLTreeConfig> CYPRESS_TREE3 = createFeature("bald_cypress_3", new Cypress3(WLTreeConfig.CODEC.stable()));
+    
+    public static final WLAbstractTreeFeature<WLTreeConfig> COCONUT_TREE_1 = createFeature("coconut_palm_1", new Coconut1(WLTreeConfig.CODEC.stable()));
+    public static final WLAbstractTreeFeature<WLTreeConfig> COCONUT_TREE_2 = createFeature("coconut_palm_2", new Coconut2(WLTreeConfig.CODEC.stable()));
+    public static final WLAbstractTreeFeature<WLTreeConfig> COCONUT_TREE_3 = createFeature("coconut_palm_3", new Coconut3(WLTreeConfig.CODEC.stable()));
+    public static final WLAbstractTreeFeature<WLTreeConfig> COCONUT_TREE_4 = createFeature("coconut_palm_4", new Coconut4(WLTreeConfig.CODEC.stable()));
+    public static final WLAbstractTreeFeature<WLTreeConfig> COCONUT_TREE_5 = createFeature("coconut_palm_5", new Coconut5(WLTreeConfig.CODEC.stable()));
 
     public static final Feature<BlockStateFeatureConfig> DOLERITE = createFeature("dolerite", new BlockBlobFeature(BlockStateFeatureConfig.field_236455_a_));
     public static final StarFishFeature STARFISH = createFeature("starfish", new StarFishFeature(ProbabilityConfig.CODEC));

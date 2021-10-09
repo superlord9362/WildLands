@@ -34,7 +34,9 @@ import superlord.wildlands.core.world.WLConfiguredFeatures;
 import superlord.wildlands.core.world.WLFeatures;
 import superlord.wildlands.entity.AlligatorEntity;
 import superlord.wildlands.entity.CatfishEntity;
+import superlord.wildlands.entity.ClamEntity;
 import superlord.wildlands.entity.CrabEntity;
+import superlord.wildlands.entity.FrogEntity;
 import superlord.wildlands.init.BiomeInit;
 import superlord.wildlands.init.BlockInit;
 import superlord.wildlands.init.EntityInit;
@@ -75,6 +77,7 @@ public class WildLands {
     		event.getGeneration().getFeatures(GenerationStage.Decoration.UNDERGROUND_ORES).add(() -> WLConfiguredFeatures.FINE_SAND_DISK);
     	}
     	if (name.equals("warm_ocean") || name.equals("deep_warm_ocean")) {
+    		event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(EntityInit.CLAM.get(), 5, 1, 3));
     		event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WLConfiguredFeatures.STARFISH);
     	}
     	if (name.equals("ocean") || name.equals("deep_ocean") || name.equals("cold_ocean") || name.equals("deep_cold_ocean") || name.equals("frozen_ocean") || name.equals("deep_frozen_ocean") || name.equals("stone_shore")) {
@@ -83,6 +86,8 @@ public class WildLands {
     	}
     	if (name.equals("beach")) {
     		event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(EntityInit.CRAB.get(), 5, 1, 3));
+    		event.getGeneration().getFeatures(GenerationStage.Decoration.UNDERGROUND_ORES).add(() -> WLConfiguredFeatures.FINE_SAND_DISK);
+    		event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WLConfiguredFeatures.RANDOM_COCONUT_TREE);
     	}
     }
     
@@ -119,6 +124,9 @@ public class WildLands {
     private void commonSetup(FMLCommonSetupEvent event) {
         EntitySpawnPlacementRegistry.register(EntityInit.CATFISH.get(), EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractFishEntity::func_223363_b);
         EntitySpawnPlacementRegistry.register(EntityInit.ALLIGATOR.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
+        EntitySpawnPlacementRegistry.register(EntityInit.CRAB.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
+        EntitySpawnPlacementRegistry.register(EntityInit.CLAM.get(), EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.OCEAN_FLOOR, ClamEntity::func_223363_b);
+        EntitySpawnPlacementRegistry.register(EntityInit.FROG.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
         event.enqueueWork(() -> {
     		BiomeInit.addBiomeEntries();
     		BiomeInit.fillBiomeDictionary();
@@ -130,6 +138,8 @@ public class WildLands {
         GlobalEntityTypeAttributes.put(EntityInit.CATFISH.get(), CatfishEntity.createAttributes().create());
         GlobalEntityTypeAttributes.put(EntityInit.ALLIGATOR.get(), AlligatorEntity.createAttributes().create());
         GlobalEntityTypeAttributes.put(EntityInit.CRAB.get(), CrabEntity.createAttributes().create());
+        GlobalEntityTypeAttributes.put(EntityInit.CLAM.get(), ClamEntity.createAttributes().create());
+        GlobalEntityTypeAttributes.put(EntityInit.FROG.get(), FrogEntity.createAttributes().create());
     }
     
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)

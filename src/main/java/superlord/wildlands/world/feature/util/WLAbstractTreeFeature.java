@@ -84,6 +84,30 @@ public abstract class WLAbstractTreeFeature<TFC extends WLTreeConfig> extends Fe
             this.setFinalBlockState(blockSet, reader, pos, config.getTrunkProvider().getBlockState(random, pos), boundingBox);
         }
     }
+    
+    public void placeExtra(WLTreeConfig config, Random random, Set<BlockPos> blockSet, ISeedReader reader, BlockPos pos, MutableBoundingBox boundingBox) {
+        if (canLogPlaceHere(reader, pos)) {
+            this.setFinalBlockState(blockSet, reader, pos, config.getExtraProvider().getBlockState(random, pos), boundingBox);
+        }
+    }
+    
+    public void placeExtraEast(WLTreeConfig config, Random random, Set<BlockPos> blockSet, ISeedReader reader, BlockPos pos, MutableBoundingBox boundingBox) {
+        if (canLogPlaceHere(reader, pos)) {
+            this.setFinalBlockState(blockSet, reader, pos, config.getExtraProviderEast().getBlockState(random, pos), boundingBox);
+        }
+    }
+    
+    public void placeExtraSouth(WLTreeConfig config, Random random, Set<BlockPos> blockSet, ISeedReader reader, BlockPos pos, MutableBoundingBox boundingBox) {
+        if (canLogPlaceHere(reader, pos)) {
+            this.setFinalBlockState(blockSet, reader, pos, config.getExtraProviderSouth().getBlockState(random, pos), boundingBox);
+        }
+    }
+    
+    public void placeExtraWest(WLTreeConfig config, Random random, Set<BlockPos> blockSet, ISeedReader reader, BlockPos pos, MutableBoundingBox boundingBox) {
+        if (canLogPlaceHere(reader, pos)) {
+            this.setFinalBlockState(blockSet, reader, pos, config.getExtraProviderWest().getBlockState(random, pos), boundingBox);
+        }
+    }
 
     public void placeLeaves(WLTreeConfig config, Random random, Set<BlockPos> blockSet, ISeedReader reader, BlockPos pos, MutableBoundingBox boundingBox) {
         if (isAir(reader, pos)) {

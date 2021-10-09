@@ -54,11 +54,13 @@ public class ItemInit {
 	public static final RegistryObject<BlockItem> COCONUT_SLAB = REGISTER.register("coconut_slab", () -> new BlockItem(BlockInit.COCONUT_SLAB.get(), new Item.Properties().group(WildLands.BLOCK_GROUP)));
 	public static final RegistryObject<BlockItem> WET_CYPRESS_LOG = REGISTER.register("wet_cypress_log", () -> new BlockItem(BlockInit.WET_CYPRESS_LOG.get(), new Item.Properties().group(WildLands.BLOCK_GROUP)));
 	public static final RegistryObject<BlockItem> CYPRESS_SAPLING = REGISTER.register("cypress_sapling", () -> new BlockItem(BlockInit.CYPRESS_SAPLING.get(), new Item.Properties().group(WildLands.BLOCK_GROUP)));
+	public static final RegistryObject<BlockItem> COCONUT_SAPLING = REGISTER.register("coconut_sapling", () -> new BlockItem(BlockInit.COCONUT_SAPLING.get(), new Item.Properties().group(WildLands.BLOCK_GROUP)));
 	public static final RegistryObject<BlockItem> PALMETTO = REGISTER.register("palmetto", () -> new BlockItem(BlockInit.PALMETTO.get(), new Item.Properties().group(WildLands.BLOCK_GROUP)));
 	public static final RegistryObject<Item> RAW_CATFISH = REGISTER.register("raw_catfish", () -> new Item(new Item.Properties().group(WildLands.ITEM_GROUP).food(new Food.Builder().hunger(3).saturation(0.1F).meat().build())));
 	public static final RegistryObject<Item> COOKED_CATFISH = REGISTER.register("cooked_catfish", () -> new Item(new Item.Properties().group(WildLands.ITEM_GROUP).food(new Food.Builder().hunger(8).saturation(0.8F).meat().build())));
 	public static final RegistryObject<WLBucketItem> CATFISH_BUCKET = REGISTER.register("catfish_bucket", () -> new WLBucketItem(EntityInit.CATFISH, () -> Fluids.WATER, new Item.Properties().group(WildLands.ITEM_GROUP).maxStackSize(1)));
 	public static final RegistryObject<WLBucketItem> ALLIGATOR_BUCKET = REGISTER.register("alligator_bucket", () -> new WLBucketItem(EntityInit.ALLIGATOR, () -> Fluids.WATER, new Item.Properties().group(WildLands.ITEM_GROUP).maxStackSize(1)));
+	public static final RegistryObject<WLBucketItem> FROG_BUCKET = REGISTER.register("frog_bucket", () -> new WLBucketItem(EntityInit.FROG, () -> Fluids.WATER, new Item.Properties().group(WildLands.ITEM_GROUP).maxStackSize(1)));
 	public static final RegistryObject<Item> CATFISH_SPAWN_EGG = REGISTER.register("catfish_spawn_egg", () -> new WLSpawnEggItem(EntityInit.CATFISH, 0xC9A764, 0x7E774F, new Item.Properties().group(WildLands.SPAWN_EGG_GROUP)));
 	public static final RegistryObject<Item> ALLIGATOR_SPAWN_EGG = REGISTER.register("alligator_spawn_egg", () -> new WLSpawnEggItem(EntityInit.ALLIGATOR, 0x5A6C43, 0x89915A, new Item.Properties().group(WildLands.SPAWN_EGG_GROUP)));
 	public static final RegistryObject<Item> CRAB_SPAWN_EGG = REGISTER.register("crab_spawn_egg", () -> new WLSpawnEggItem(EntityInit.CRAB, 0x872B2F, 0xE74D3C, new Item.Properties().group(WildLands.SPAWN_EGG_GROUP)));
@@ -112,5 +114,8 @@ public class ItemInit {
 	
 	public static final RegistryObject<WLBoatItem> BALD_CYPRESS_BOAT = REGISTER.register("bald_cypress_boat", () -> new WLBoatItem(WLBoatEntity.WLType.BALD_CYPRESS, (new Item.Properties().maxStackSize(1).group(WildLands.ITEM_GROUP))));
 	public static final RegistryObject<WLBoatItem> COCONUT_BOAT = REGISTER.register("coconut_boat", () -> new WLBoatItem(WLBoatEntity.WLType.COCONUT, (new Item.Properties().maxStackSize(1).group(WildLands.ITEM_GROUP))));
+	public static final RegistryObject<Item> FROG_SPAWN_EGG = REGISTER.register("frog_spawn_egg", () -> new WLSpawnEggItem(EntityInit.FROG, 0x4C7D3C, 0xCAD257, new Item.Properties().group(WildLands.SPAWN_EGG_GROUP)));
 
+	public static final RegistryObject<Item> CLAM_SPAWN_EGG = REGISTER.register("clam_spawn_egg", () -> new WLSpawnEggItem(EntityInit.CLAM, 0x674F57, 0xE2C19D, new Item.Properties().group(WildLands.SPAWN_EGG_GROUP)));
+	
 }

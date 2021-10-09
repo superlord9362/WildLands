@@ -1,8 +1,13 @@
 package superlord.wildlands.world.feature.config;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -11,10 +16,6 @@ import net.minecraft.world.gen.blockstateprovider.BlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.feature.IFeatureConfig;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 public class WLTreeConfig implements IFeatureConfig {
 
 	public static final Codec<WLTreeConfig> CODEC = RecordCodecBuilder.create((codecRecorder) -> {
@@ -22,6 +23,14 @@ public class WLTreeConfig implements IFeatureConfig {
 			return config.trunkProvider;
 		}), BlockStateProvider.CODEC.fieldOf("leaves_provider").orElse(new SimpleBlockStateProvider(Blocks.OAK_LEAVES.getDefaultState())).forGetter((config) -> {
 			return config.leavesProvider;
+		}), BlockStateProvider.CODEC.fieldOf("extra_provider").orElse(new SimpleBlockStateProvider(Blocks.AIR.getDefaultState())).forGetter((config) -> {
+			return config.getExtraProvider();
+		}), BlockStateProvider.CODEC.fieldOf("extra_provider_east").orElse(new SimpleBlockStateProvider(Blocks.AIR.getDefaultState())).forGetter((config) -> {
+			return config.getExtraProviderEast();
+		}), BlockStateProvider.CODEC.fieldOf("extra_provider_south").orElse(new SimpleBlockStateProvider(Blocks.AIR.getDefaultState())).forGetter((config) -> {
+			return config.getExtraProviderSouth();
+		}), BlockStateProvider.CODEC.fieldOf("extra_provider_west").orElse(new SimpleBlockStateProvider(Blocks.AIR.getDefaultState())).forGetter((config) -> {
+			return config.getExtraProviderWest();
 		}), BlockStateProvider.CODEC.fieldOf("ground_replacement_provider").orElse(new SimpleBlockStateProvider(Blocks.DIRT.getDefaultState())).forGetter((config) -> {
 			return config.groundReplacementProvider;//TODO: Remove Ground Replacement Provider
 		}), BlockStateProvider.CODEC.fieldOf("disk_provider").orElse(new SimpleBlockStateProvider(Blocks.PODZOL.getDefaultState())).forGetter((config) -> {
@@ -40,6 +49,10 @@ public class WLTreeConfig implements IFeatureConfig {
 
 	private final BlockStateProvider trunkProvider;
 	private final BlockStateProvider leavesProvider;
+	private final BlockStateProvider extraProvider;
+	private final BlockStateProvider extraProviderEast;
+	private final BlockStateProvider extraProviderSouth;
+	private final BlockStateProvider extraProviderWest;
 	@Deprecated
 	private final BlockStateProvider groundReplacementProvider;
 	private final BlockStateProvider diskProvider;
@@ -49,9 +62,13 @@ public class WLTreeConfig implements IFeatureConfig {
 	private final Set<Block> whitelist;
 	private boolean forcedPlacement = false;
 
-	WLTreeConfig(BlockStateProvider trunkProvider, BlockStateProvider leavesProvider, BlockStateProvider groundReplacementProvider, BlockStateProvider diskProvider, int minHeight, int maxHeight, int diskRadius, List<BlockState> whitelist) {
+	WLTreeConfig(BlockStateProvider trunkProvider, BlockStateProvider leavesProvider, BlockStateProvider extraProvider, BlockStateProvider extraProviderEast, BlockStateProvider extraProviderSouth, BlockStateProvider extraProviderWest, BlockStateProvider groundReplacementProvider, BlockStateProvider diskProvider, int minHeight, int maxHeight, int diskRadius, List<BlockState> whitelist) {
 		this.trunkProvider = trunkProvider;
 		this.leavesProvider = leavesProvider;
+		this.extraProvider = extraProvider;
+		this.extraProviderEast = extraProviderEast;
+		this.extraProviderSouth = extraProviderSouth;
+		this.extraProviderWest = extraProviderWest;
 		this.groundReplacementProvider = groundReplacementProvider;
 		this.diskProvider = diskProvider;
 		this.minHeight = minHeight;
@@ -74,6 +91,22 @@ public class WLTreeConfig implements IFeatureConfig {
 
 	public BlockStateProvider getLeavesProvider() {
 		return this.leavesProvider;
+	}
+	
+	public BlockStateProvider getExtraProvider() {
+		return this.extraProvider;
+	}
+	
+	public BlockStateProvider getExtraProviderEast() {
+		return this.extraProviderEast;
+	}
+	
+	public BlockStateProvider getExtraProviderSouth() {
+		return this.extraProviderSouth;
+	}
+	
+	public BlockStateProvider getExtraProviderWest() {
+		return this.extraProviderWest;
 	}
 
 	@Deprecated
@@ -116,6 +149,10 @@ public class WLTreeConfig implements IFeatureConfig {
 	public static class Builder {
 		private BlockStateProvider trunkProvider = new SimpleBlockStateProvider(Blocks.OAK_LOG.getDefaultState());
 		private BlockStateProvider leavesProvider = new SimpleBlockStateProvider(Blocks.OAK_LEAVES.getDefaultState());
+		private BlockStateProvider extraProvider = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
+		private BlockStateProvider extraProviderEast = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
+		private BlockStateProvider extraProviderSouth = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
+		private BlockStateProvider extraProviderWest = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
 		@Deprecated private BlockStateProvider groundReplacementProvider = new SimpleBlockStateProvider(Blocks.DIRT.getDefaultState());
 		private BlockStateProvider diskProvider = new SimpleBlockStateProvider(Blocks.PODZOL.getDefaultState());
 		private List<Block> whitelist = ImmutableList.of(Blocks.GRASS_BLOCK);
@@ -173,6 +210,114 @@ public class WLTreeConfig implements IFeatureConfig {
 				leavesProvider = stateProvider;
 			else
 				leavesProvider = new SimpleBlockStateProvider(Blocks.OAK_LEAVES.getDefaultState());
+
+			return this;
+		}
+		
+		public Builder setExtraBlock(Block block) {
+			if (block != null)
+				extraProvider = new SimpleBlockStateProvider(block.getDefaultState());
+			else
+				extraProvider = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
+
+			return this;
+		}
+
+		public Builder setExtraBlock(BlockState state) {
+			if (state != null)
+				extraProvider = new SimpleBlockStateProvider(state);
+			else
+				extraProvider = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
+
+			return this;
+		}
+
+		public Builder setExtraBlock(BlockStateProvider stateProvider) {
+			if (stateProvider != null)
+				extraProvider = stateProvider;
+			else
+				extraProvider = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
+
+			return this;
+		}
+		
+		public Builder setExtraBlockEast(Block block) {
+			if (block != null)
+				extraProviderEast = new SimpleBlockStateProvider(block.getDefaultState());
+			else
+				extraProviderEast = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
+
+			return this;
+		}
+
+		public Builder setExtraBlockEast(BlockState state) {
+			if (state != null)
+				extraProviderEast = new SimpleBlockStateProvider(state);
+			else
+				extraProviderEast = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
+
+			return this;
+		}
+
+		public Builder setExtraBlockEast(BlockStateProvider stateProvider) {
+			if (stateProvider != null)
+				extraProviderEast = stateProvider;
+			else
+				extraProviderEast = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
+
+			return this;
+		}
+		
+		public Builder setExtraBlockWest(Block block) {
+			if (block != null)
+				extraProviderWest = new SimpleBlockStateProvider(block.getDefaultState());
+			else
+				extraProviderWest = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
+
+			return this;
+		}
+
+		public Builder setExtraBlockWest(BlockState state) {
+			if (state != null)
+				extraProviderWest = new SimpleBlockStateProvider(state);
+			else
+				extraProviderWest = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
+
+			return this;
+		}
+
+		public Builder setExtraBlocWest(BlockStateProvider stateProvider) {
+			if (stateProvider != null)
+				extraProviderWest = stateProvider;
+			else
+				extraProviderWest = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
+
+			return this;
+		}
+		
+		public Builder setExtraBlockSouth(Block block) {
+			if (block != null)
+				extraProviderSouth = new SimpleBlockStateProvider(block.getDefaultState());
+			else
+				extraProviderSouth = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
+
+			return this;
+		}
+
+		public Builder setExtraBlockSouth(BlockState state) {
+			if (state != null)
+				extraProviderSouth = new SimpleBlockStateProvider(state);
+			else
+				extraProviderSouth = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
+
+			return this;
+		}
+
+		public Builder setExtraBlockSouth(BlockStateProvider stateProvider) {
+			if (stateProvider != null)
+				extraProviderSouth = stateProvider;
+			else
+				extraProviderSouth = new SimpleBlockStateProvider(Blocks.AIR.getDefaultState());
 
 			return this;
 		}
@@ -261,6 +406,10 @@ public class WLTreeConfig implements IFeatureConfig {
 		public Builder copy(WLTreeConfig config) {
 			this.trunkProvider = config.trunkProvider;
 			this.leavesProvider = config.leavesProvider;
+			this.extraProvider = config.extraProvider;
+			this.extraProviderEast = config.extraProviderEast;
+			this.extraProviderSouth = config.extraProviderSouth;
+			this.extraProviderWest = config.extraProviderWest;
 			this.groundReplacementProvider = config.groundReplacementProvider;
 			this.diskProvider = config.diskProvider;
 			this.maxPossibleHeight = config.maxHeight;
@@ -271,7 +420,7 @@ public class WLTreeConfig implements IFeatureConfig {
 		}
 
 		public WLTreeConfig build() {
-			return new WLTreeConfig(this.trunkProvider, this.leavesProvider, this.groundReplacementProvider, this.diskProvider, this.minHeight, this.maxPossibleHeight, this.diskRadius, this.whitelist.stream().map(Block::getDefaultState).collect(Collectors.toList()));
+			return new WLTreeConfig(this.trunkProvider, this.leavesProvider, this.extraProvider, this.extraProviderEast, this.extraProviderSouth, this.extraProviderWest, this.groundReplacementProvider, this.diskProvider, this.minHeight, this.maxPossibleHeight, this.diskRadius, this.whitelist.stream().map(Block::getDefaultState).collect(Collectors.toList()));
 		}
 	}
 }

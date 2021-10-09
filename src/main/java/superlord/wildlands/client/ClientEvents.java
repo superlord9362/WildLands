@@ -12,8 +12,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.client.render.AlligatorRenderer;
 import superlord.wildlands.client.render.CatfishRenderer;
+import superlord.wildlands.client.render.ClamRenderer;
 import superlord.wildlands.client.render.CoconutRenderer;
 import superlord.wildlands.client.render.CrabRenderer;
+import superlord.wildlands.client.render.FrogRenderer;
 import superlord.wildlands.client.render.WLBoatRenderer;
 import superlord.wildlands.init.EntityInit;
 import superlord.wildlands.item.WLSpawnEggItem;
@@ -29,6 +31,8 @@ public class ClientEvents {
 		RenderingRegistry.registerEntityRenderingHandler(EntityInit.BOAT.get(), WLBoatRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityInit.COCONUT.get(), CoconutRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityInit.CRAB.get(), CrabRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityInit.CLAM.get(), manager -> new ClamRenderer());
+		RenderingRegistry.registerEntityRenderingHandler(EntityInit.FROG.get(), manager -> new FrogRenderer());
 	}
 	
 	@SubscribeEvent

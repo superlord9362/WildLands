@@ -37,6 +37,9 @@
 	"block.wildlands.coconut_fence_gate": "Coconut Fence Gate",
 	"block.wildlands.coconut_button": "Coconut Button",
 	"block.wildlands.coconut_slab": "Coconut Slab",
+	"block.wildlands.coconut_sapling": "Coconut Sapling",
+	"block.wildlands.potted_coconut_sapling": "Potted Coconut Sapling",
+	"block.wildlands.potted_cypress_sapling": "Potted Bald Cypress Sapling",
 	"block.wildlands.palmetto": "Palmetto",
 	"block.wildlands.conglomerate": "Conglomerate",
 	"block.wildlands.conglomerate_slab": "Conglomerate Slab",
@@ -86,9 +89,12 @@
 	"item.wildlands.olivine": "Olivine",
 	"item.wildlands.catfish_spawn_egg": "Catfish Spawn Egg",
 	"item.wildlands.crab_spawn_egg": "Crab Spawn Egg",
+	"item.wildlands.clam_spawn_egg": "Clam Spawn Egg",
+	"item.wildlands.frog_spawn_egg": "Frog Spawn Egg",
 	"block.wildlands.crab_sand": "Crab Sand",
 	"block.wildlands.crab_fine_sand": "Crab Fine Sand",
 	"item.wildlands.catfish_bucket": "Bucket of Catfish",
+	"item.wildlands.frog_bucket": "Bucket of Frog",
 	"item.wildlands.raw_catfish": "Raw Catfish",
 	"item.wildlands.cooked_catfish": "Cooked Catfish",
 	"item.wildlands.alligator_spawn_egg": "Alligator Spawn Egg",
@@ -98,12 +104,15 @@
 	"entity.wildlands.alligator.2": "Alligator",
 	"entity.wildlands.alligator.3": "Albino Alligator",
 	
+	"entity.wildlands.frog": "Frog",
+	
 	"entity.wildlands.catfish": "Catfish",
 	"entity.wildlands.alligator": "Alligator",
 	"item.wildlands.bald_cypress_boat": "Bald Cypress Boat",
 	"item.wildlands.coconut_boat": "Coconut Boat",
 	"entity.wildlands.boat": "Boat",
 	"entity.wildlands.crab": "Crab",
+	"entity.wildlands.clam": "Clam",
 	
 	"biome.wildlands.bayou": "Bayou"
 }

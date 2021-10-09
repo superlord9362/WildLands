@@ -94,36 +94,36 @@ public class CrabModel<T extends Entity> extends EntityModel<CrabEntity> {
 
     @Override
     public void setRotationAngles(CrabEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        this.rightleg1.rotateAngleZ = (-(float)Math.PI / 4F);
-        this.leftleg1.rotateAngleZ = ((float)Math.PI / 4F);
-        this.rightleg2.rotateAngleZ = -0.58119464F;
-        this.leftleg2.rotateAngleZ = 0.58119464F;
-        this.rightleg3.rotateAngleZ = -0.58119464F;
-        this.leftleg3.rotateAngleZ = 0.58119464F;
-        this.rightleg1.rotateAngleY = ((float)Math.PI / 4F);
-        this.leftleg1.rotateAngleY = (-(float)Math.PI / 4F);
-        this.rightleg2.rotateAngleY = ((float)Math.PI / 8F);
-        this.leftleg2.rotateAngleY = (-(float)Math.PI / 8F);
-        this.rightleg3.rotateAngleY = (-(float)Math.PI / 8F);
-        this.leftleg3.rotateAngleY = ((float)Math.PI / 8F);
+        this.leftleg1.rotateAngleZ = (-(float)Math.PI / 4F);
+        this.rightleg1.rotateAngleZ = ((float)Math.PI / 4F);
+        this.leftleg2.rotateAngleZ = -0.58119464F;
+        this.rightleg2.rotateAngleZ = 0.58119464F;
+        this.leftleg3.rotateAngleZ = -0.58119464F;
+        this.rightleg3.rotateAngleZ = 0.58119464F;
+        this.leftleg1.rotateAngleY = ((float)Math.PI / 4F);
+        this.rightleg1.rotateAngleY = (-(float)Math.PI / 4F);
+        this.leftleg2.rotateAngleY = ((float)Math.PI / 8F);
+        this.rightleg2.rotateAngleY = (-(float)Math.PI / 8F);
+        this.leftleg3.rotateAngleY = (-(float)Math.PI / 8F);
+        this.rightleg3.rotateAngleY = ((float)Math.PI / 8F);
         float f3 = -(MathHelper.cos(limbSwing * 0.6662F * 2.0F + 0.0F) * 0.4F) * limbSwingAmount;
         float f4 = -(MathHelper.cos(limbSwing * 0.6662F * 2.0F + (float)Math.PI) * 0.4F) * limbSwingAmount;
         float f5 = -(MathHelper.cos(limbSwing * 0.6662F * 2.0F + ((float)Math.PI / 2F)) * 0.4F) * limbSwingAmount;
         float f7 = Math.abs(MathHelper.sin(limbSwing * 0.6662F + 0.0F) * 0.4F) * limbSwingAmount;
         float f8 = Math.abs(MathHelper.sin(limbSwing * 0.6662F + (float)Math.PI) * 0.4F) * limbSwingAmount;
         float f9 = Math.abs(MathHelper.sin(limbSwing * 0.6662F + ((float)Math.PI / 2F)) * 0.4F) * limbSwingAmount;
-        this.rightleg1.rotateAngleY += f3;
-        this.leftleg1.rotateAngleY += -f3;
-        this.rightleg2.rotateAngleY += f4;
-        this.leftleg2.rotateAngleY += -f4;
-        this.rightleg3.rotateAngleY += f5;
-        this.leftleg3.rotateAngleY += -f5;
-        this.rightleg1.rotateAngleZ += f7;
-        this.leftleg1.rotateAngleZ += -f7;
-        this.rightleg2.rotateAngleZ += f8;
-        this.leftleg2.rotateAngleZ += -f8;
-        this.rightleg3.rotateAngleZ += f9;
-        this.leftleg3.rotateAngleZ += -f9;
+        this.leftleg1.rotateAngleY += f3;
+        this.rightleg1.rotateAngleY += -f3;
+        this.leftleg2.rotateAngleY += f4;
+        this.rightleg2.rotateAngleY += -f4;
+        this.leftleg3.rotateAngleY += f5;
+        this.rightleg3.rotateAngleY += -f5;
+        this.leftleg1.rotateAngleZ += f7;
+        this.rightleg1.rotateAngleZ += -f7;
+        this.leftleg2.rotateAngleZ += f8;
+        this.rightleg2.rotateAngleZ += -f8;
+        this.leftleg3.rotateAngleZ += f9;
+        this.rightleg3.rotateAngleZ += -f9;
     }
 
     /**

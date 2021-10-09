@@ -1,7 +1,6 @@
 package superlord.wildlands.init;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -28,25 +27,24 @@ public class BiomeInit {
 
 	public static List<PreserveBiomeOrder> biomeList = new ArrayList<>();
 
-	public static Biome BAYOU = WorldGenRegistrationHelper.createBiome("bayou", new Bayou().getBiome(), 1);
+	public static final WLBiome BAYOU = new Bayou();
+
+	
+	public static Biome BAYOU_BIOME = WorldGenRegistrationHelper.createBiome("bayou", BAYOU.getBiome(), 1);
 
 	public static void init() {
 
 	}
-
-	@SuppressWarnings({ "unused", "deprecation" })
+	
 	public static void addBiomeEntries() {
-		for(BiomeData biomeData : WLBiome.biomeData) {
-			List<BiomeDictionary.Type> dictionaryList = Arrays.stream(biomeData.getDictionaryTypes()).collect(Collectors.toList());
-			ResourceLocation key = WorldGenRegistries.BIOME.getKey(biomeData.getBiome());
-			if (biomeData.getBiomeWeight() > 0) {
-				BiomeManager.addBiome(biomeData.getBiomeType(), new BiomeManager.BiomeEntry(RegistryKey.getOrCreateKey(Registry.BIOME_KEY, key), biomeData.getBiomeWeight()));
-			}
-		}
+		BiomeManager.addBiome(BAYOU.getBiomeType(), new BiomeManager.BiomeEntry(BAYOU.getKey(), 6));
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void fillBiomeDictionary(Registry<Biome> biomeRegistry) {
-
+		for (BiomeData pfBiomes : WLBiome.biomeData) {
+			BiomeDictionary.addTypes(RegistryKey.getOrCreateKey(Registry.BIOME_KEY, WorldGenRegistries.BIOME.getKey(pfBiomes.getBiome())), pfBiomes.getDictionaryTypes());
+		}
 	}
 	
     public static void addWLFeaturesToBiomes(Biome biome, ResourceLocation locationKey) {

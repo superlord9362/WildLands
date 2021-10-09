@@ -74,6 +74,7 @@ public class Bayou extends WLBiome {
 
 		SPAWN_SETTINGS.withSpawner(EntityClassification.WATER_AMBIENT, new MobSpawnInfo.Spawners(EntityInit.CATFISH.get(), 2, 1, 3));
 		SPAWN_SETTINGS.withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(EntityInit.ALLIGATOR.get(), 10, 1, 2));
+		SPAWN_SETTINGS.withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(EntityInit.FROG.get(), 15, 1, 3));
 	}
 
 }

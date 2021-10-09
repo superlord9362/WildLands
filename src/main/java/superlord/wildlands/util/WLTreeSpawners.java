@@ -24,5 +24,13 @@ public class WLTreeSpawners {
      		}
     	}
     }
+	
+	public static class Coconut extends TreeSpawner {
+    	@Nullable
+    	@Override
+    	protected ConfiguredFeature<WLTreeConfig, ?> getTreeFeature(Random random) {
+   			return WLConfiguredFeatures.COCONUT_PALM_5;
+    	}
+    }
 
 }

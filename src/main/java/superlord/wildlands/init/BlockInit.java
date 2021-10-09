@@ -93,8 +93,10 @@ public class BlockInit {
 	public static final RegistryObject<Block> COCONUT_FENCE_GATE = REGISTER.register("coconut_fence_gate", () -> new FenceGateBlock(AbstractBlock.Properties.create(Material.WOOD, COCONUT_PLANKS.get().getMaterialColor()).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD)));
 	public static final RegistryObject<Block> COCONUT_BUTTON = REGISTER.register("coconut_button", () -> new WoodButtonBlock(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().hardnessAndResistance(0.5F).sound(SoundType.WOOD)));
 	public static final RegistryObject<Block> COCONUT_SLAB = REGISTER.register("coconut_slab", () -> new SlabBlock(AbstractBlock.Properties.create(Material.WOOD, MaterialColor.WOOD).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD)));
-	//public static final RegistryObject<Block> COCONUT_SAPLING = REGISTER.register("coconut_sapling", () -> WLSapling(new WLTreeSpawners.Coconut(), AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0F).sound(SoundType.PLANT)));
-	
+	public static final RegistryObject<Block> COCONUT_SAPLING = REGISTER.register("coconut_sapling", () -> new WLSapling(new WLTreeSpawners.Coconut(), AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0F).sound(SoundType.PLANT)));
+	@SuppressWarnings("deprecation")
+	public static final RegistryObject<Block> POTTED_COCONUT_SAPLING = REGISTER.register("potted_coconut_sapling", () -> new FlowerPotBlock(COCONUT_SAPLING.get(), AbstractBlock.Properties.create(Material.MISCELLANEOUS).notSolid().zeroHardnessAndResistance()));
+
 	public static final RegistryObject<Block> CONGLOMERATE = REGISTER.register("conglomerate", () -> new Block(AbstractBlock.Properties.create(Material.ROCK).setRequiresTool().hardnessAndResistance(1.5F, 6.0F).sound(SoundType.STONE)));
 	@SuppressWarnings("deprecation")
 	public static final RegistryObject<Block> CONGLOMERATE_STAIRS = REGISTER.register("conglomerate_stairs", () -> new StairsBlock(BlockInit.CONGLOMERATE.get().getDefaultState(), AbstractBlock.Properties.create(Material.ROCK).setRequiresTool().hardnessAndResistance(1.5F, 6.0F).sound(SoundType.STONE)));
@@ -170,6 +172,8 @@ public class BlockInit {
 			RenderTypeLookup.setRenderLayer(PINK_STARFISH.get(), cutoutRenderType);
 			RenderTypeLookup.setRenderLayer(RED_STARFISH.get(), cutoutRenderType);
 			RenderTypeLookup.setRenderLayer(PALMETTO.get(), cutoutMippedRenderType);
+			RenderTypeLookup.setRenderLayer(COCONUT_SAPLING.get(), cutoutRenderType);
+			RenderTypeLookup.setRenderLayer(POTTED_COCONUT_SAPLING.get(), cutoutRenderType);
 		}
 	}
 	
