@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "wildlands:pearl_block"
+    }
+  ],
+  "result": {
+    "item": "wildlands:pearl",
+	"count": 9
+  }
+}

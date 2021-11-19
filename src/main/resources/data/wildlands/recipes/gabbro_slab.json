@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "wildlands:gabbro"
+    }
+  },
+  "result": {
+    "item": "wildlands:gabbro_slab",
+    "count": 6
+  }
+}

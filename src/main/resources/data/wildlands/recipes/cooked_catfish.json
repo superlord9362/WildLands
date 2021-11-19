@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "wildlands:raw_catfish"
+  },
+  "result": "wildlands:cooked_catfish",
+  "experience": 0.35,
+  "cookingtime": 200
+}

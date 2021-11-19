@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "wooden_fence_gate",
+  "pattern": [
+    "#W#",
+    "#W#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "W": {
+      "item": "wildlands:cypress_planks"
+    }
+  },
+  "result": {
+    "item": "wildlands:cypress_fence_gate"
+  }
+}
