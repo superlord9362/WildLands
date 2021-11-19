@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.client.model.CrabModel;
-import superlord.wildlands.entity.CrabEntity;
+import superlord.wildlands.common.entity.CrabEntity;
 
 public class CrabRenderer extends MobRenderer<CrabEntity, CrabModel<CrabEntity>> {
 	

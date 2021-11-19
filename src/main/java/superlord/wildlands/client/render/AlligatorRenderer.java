@@ -11,7 +11,7 @@ import superlord.wildlands.WildLands;
 import superlord.wildlands.client.model.AlligatorFloatingModel;
 import superlord.wildlands.client.model.AlligatorModel;
 import superlord.wildlands.client.model.AlligatorThreatenModel;
-import superlord.wildlands.entity.AlligatorEntity;
+import superlord.wildlands.common.entity.AlligatorEntity;
 
 public class AlligatorRenderer extends MobRenderer<AlligatorEntity, EntityModel<AlligatorEntity>> {
 	

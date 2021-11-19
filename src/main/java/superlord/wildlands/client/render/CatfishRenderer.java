@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.client.model.CatfishModel;
-import superlord.wildlands.entity.CatfishEntity;
+import superlord.wildlands.common.entity.CatfishEntity;
 
 public class CatfishRenderer extends MobRenderer<CatfishEntity, CatfishModel<CatfishEntity>> {
 	

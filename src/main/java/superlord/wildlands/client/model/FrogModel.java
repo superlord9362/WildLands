@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.entity.FrogEntity;
+import superlord.wildlands.common.entity.FrogEntity;
 
 /**
  * Frog - Weastian
@@ -28,7 +28,8 @@ public class FrogModel extends EntityModel<FrogEntity> {
     public ModelRenderer eye2;
     public ModelRenderer Leftfoot;
     public ModelRenderer Leftfoot_1;
-    private float jumpRotation;
+    @SuppressWarnings("unused")
+	private float jumpRotation;
 
     public FrogModel() {
         this.textureWidth = 48;
@@ -89,12 +90,12 @@ public class FrogModel extends EntityModel<FrogEntity> {
     public void setRotationAngles(FrogEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
     	float f = ageInTicks - (float)entityIn.ticksExisted;
     	this.jumpRotation = MathHelper.sin(entityIn.getJumpCompletion(f) * (float)Math.PI);
-        this.LeftLeg.rotateAngleX = (limbSwingAmount * 50.0F - 21.0F) * ((float)Math.PI / 180F);
-        this.RightLeg.rotateAngleX = (limbSwingAmount * 50.0F - 21.0F) * ((float)Math.PI / 180F);
+        this.LeftLeg.rotateAngleX = (limbSwingAmount * 50.0F) * ((float)Math.PI / 180F);
+        this.RightLeg.rotateAngleX = (limbSwingAmount * 50.0F) * ((float)Math.PI / 180F);
         this.Leftfoot.rotateAngleX = limbSwingAmount * 50.0F * ((float)Math.PI / 180F);
         this.Leftfoot_1.rotateAngleX = limbSwingAmount * 50.0F * ((float)Math.PI / 180F);
-        this.LeftLegfront.rotateAngleX = (limbSwingAmount * -40.0F - 11.0F) * ((float)Math.PI / 180F);
-        this.RightLegfront.rotateAngleX = (limbSwingAmount * -40.0F - 11.0F) * ((float)Math.PI / 180F);
+        this.LeftLegfront.rotateAngleX = (limbSwingAmount * -40.0F + 15.0F) * ((float)Math.PI / 180F);
+        this.RightLegfront.rotateAngleX = (limbSwingAmount * -40.0F + 15.0F) * ((float)Math.PI / 180F);
      }
 
      public void setLivingAnimations(FrogEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {

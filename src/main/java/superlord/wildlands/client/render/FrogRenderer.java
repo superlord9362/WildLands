@@ -10,8 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.client.model.FrogModel;
 import superlord.wildlands.client.model.TadpoleModel;
-import superlord.wildlands.client.render.overlay.TadpoleSlimeLayer;
-import superlord.wildlands.entity.FrogEntity;
+import superlord.wildlands.common.entity.FrogEntity;
 
 public class FrogRenderer extends MobRenderer<FrogEntity, EntityModel<FrogEntity>> {
 
@@ -27,7 +26,6 @@ public class FrogRenderer extends MobRenderer<FrogEntity, EntityModel<FrogEntity
 	public void render(FrogEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
 		if(entityIn.isChild()) {
 			entityModel = TADPOLE;
-			this.addLayer(new TadpoleSlimeLayer(this));
 		}  else {
 			entityModel = FROG;
 		}

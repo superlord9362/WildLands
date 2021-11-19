@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.entity.ClamEntity;
+import superlord.wildlands.common.entity.ClamEntity;
 
 /**
  * Clam - Weastian

@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.client.model.ClamModel;
 import superlord.wildlands.client.model.ClamOpenModel;
-import superlord.wildlands.entity.ClamEntity;
+import superlord.wildlands.common.entity.ClamEntity;
 
 public class ClamRenderer extends MobRenderer<ClamEntity, EntityModel<ClamEntity>> {
 	

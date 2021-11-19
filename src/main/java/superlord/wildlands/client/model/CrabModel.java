@@ -9,7 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.entity.CrabEntity;
+import superlord.wildlands.common.entity.CrabEntity;
 
 /**
  * Crab - Weastian

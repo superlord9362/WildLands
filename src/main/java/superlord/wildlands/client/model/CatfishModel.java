@@ -91,7 +91,8 @@ public class CatfishModel<T extends Entity> extends EntityModel<T> {
         if (!entityIn.isInWater()) {
            f = 1.5F;
         }
-
+        this.Body.rotateAngleX = headPitch * ((float)Math.PI / 180F);
+        this.Body.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
         this.Tail.rotateAngleY = -f * 0.45F * MathHelper.sin(0.6F * ageInTicks);
     }
 

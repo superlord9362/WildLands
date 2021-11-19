@@ -41,6 +41,9 @@
 	"block.wildlands.potted_coconut_sapling": "Potted Coconut Sapling",
 	"block.wildlands.potted_cypress_sapling": "Potted Bald Cypress Sapling",
 	"block.wildlands.palmetto": "Palmetto",
+	"block.wildlands.cattail": "Cattail",
+	"block.wildlands.duckweed": "Duckweed",
+	"block.wildlands.beard_moss": "Beard Moss",
 	"block.wildlands.conglomerate": "Conglomerate",
 	"block.wildlands.conglomerate_slab": "Conglomerate Slab",
 	"block.wildlands.conglomerate_stairs": "Conglomerate Stairs",
@@ -91,6 +94,7 @@
 	"item.wildlands.crab_spawn_egg": "Crab Spawn Egg",
 	"item.wildlands.clam_spawn_egg": "Clam Spawn Egg",
 	"item.wildlands.frog_spawn_egg": "Frog Spawn Egg",
+	"item.wildlands.hammerhead_spawn_egg": "Hammerhead Shark Spawn Egg",
 	"block.wildlands.crab_sand": "Crab Sand",
 	"block.wildlands.crab_fine_sand": "Crab Fine Sand",
 	"item.wildlands.catfish_bucket": "Bucket of Catfish",
@@ -99,6 +103,8 @@
 	"item.wildlands.cooked_catfish": "Cooked Catfish",
 	"item.wildlands.alligator_spawn_egg": "Alligator Spawn Egg",
 	"item.wildlands.alligator_bucket": "Bucket of Alligator",
+	"item.wildlands.coconut_sign": "Coconut Sign",
+	"item.wildlands.cypress_sign": "Cypress Sign",
 	"entity.wildlands.alligator.0": "Light Green Alligator",
 	"entity.wildlands.alligator.1": "Dark Green Alligator",
 	"entity.wildlands.alligator.2": "Alligator",
@@ -113,6 +119,7 @@
 	"entity.wildlands.boat": "Boat",
 	"entity.wildlands.crab": "Crab",
 	"entity.wildlands.clam": "Clam",
+	"entity.wildlands.hammerhead": "Hammerhead Shark",
 	
 	"biome.wildlands.bayou": "Bayou"
 }

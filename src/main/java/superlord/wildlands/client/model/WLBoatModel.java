@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.entity.WLBoatEntity;
+import superlord.wildlands.common.entity.WLBoatEntity;
 
 @OnlyIn(Dist.CLIENT)
 public class WLBoatModel extends SegmentedModel<WLBoatEntity> {

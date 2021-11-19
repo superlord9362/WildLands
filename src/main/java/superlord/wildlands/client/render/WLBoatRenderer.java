@@ -16,7 +16,7 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.wildlands.WildLands;
-import superlord.wildlands.entity.WLBoatEntity;
+import superlord.wildlands.common.entity.WLBoatEntity;
 
 @OnlyIn(Dist.CLIENT)
 public class WLBoatRenderer extends EntityRenderer<WLBoatEntity> {

@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "top": "wildlands:block/mud_top",
+    "top": "wildlands:block/mud",
     "bottom": "wildlands:block/mud",
     "side": "wildlands:block/mud"
   }
