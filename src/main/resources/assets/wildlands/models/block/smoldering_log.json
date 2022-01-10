@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "wildlands:block/burning_log_top",
+    "side": "wildlands:block/burning_log_side"
+  }
+}

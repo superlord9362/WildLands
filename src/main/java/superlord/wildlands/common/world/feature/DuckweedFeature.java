@@ -27,7 +27,7 @@ public class DuckweedFeature extends Feature<DuckweedConfig> {
 		for(int j = 0; j < config.count; ++j) {
 			int k = rand.nextInt(8) - rand.nextInt(8);
 			int l = rand.nextInt(8) - rand.nextInt(8);
-			int i1 = worldIn.getHeight(Heightmap.Type.OCEAN_FLOOR, pos.getX() + k, pos.getZ() + l);
+			int i1 = worldIn.getHeight(Heightmap.Type.WORLD_SURFACE, pos.getX() + k, pos.getZ() + l);
 			BlockPos blockpos = new BlockPos(pos.getX() + k, i1, pos.getZ() + l);
 			if (worldIn.getBlockState(blockpos).getBlock() == Blocks.AIR && worldIn.getBlockState(blockpos.down()).getBlock() == Blocks.WATER) {
 				BlockState blockstate = WildLandsBlocks.DUCKWEED.get().getDefaultState();

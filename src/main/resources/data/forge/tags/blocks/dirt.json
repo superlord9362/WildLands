@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "wildlands:mud"
+    "wildlands:mud",
+	"wildlands:charred_grass"
   ]
 }

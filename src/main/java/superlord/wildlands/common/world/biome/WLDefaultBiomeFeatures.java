@@ -22,5 +22,11 @@ public class WLDefaultBiomeFeatures {
         gen.withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, WLConfiguredFeatures.PALMETTO_PATCH);
         gen.withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, WLConfiguredFeatures.CATTAIL_PATCH);
     }
+	
+	public static void addBurntForestVegetation(BiomeGenerationSettings.Builder gen) {
+		gen.withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, WLConfiguredFeatures.RANDOM_BURNT_LOG);
+		gen.withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, WLConfiguredFeatures.BURNT_GRASS);
+		gen.withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, WLConfiguredFeatures.BURNT_BUSH);
+	}
 
 }

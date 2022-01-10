@@ -4,6 +4,7 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.AgeableEntity;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.MobEntity;
@@ -13,6 +14,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.JumpController;
 import net.minecraft.entity.ai.controller.MovementController;
+import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.BreedGoal;
 import net.minecraft.entity.ai.goal.FindWaterGoal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
@@ -75,15 +77,17 @@ public class FrogEntity extends AnimalEntity {
 	public void setFromBucket(boolean p_203706_1_) {
 		this.dataManager.set(FROM_BUCKET, p_203706_1_);
 	}
-	
+
 	protected void registerGoals() {
 		this.goalSelector.addGoal(1, new FrogEntity.PanicGoal(this, 2.2D));
 		this.goalSelector.addGoal(2, new BreedGoal(this, 0.8D));
-		this.goalSelector.addGoal(6, new RandomWalkingGoal(this, 0.6D));
+		this.goalSelector.addGoal(6, new FrogEntity.AdultWalkingGoal(this, 0.6D));
 		this.goalSelector.addGoal(11, new LookAtGoal(this, PlayerEntity.class, 10.0F));
 		this.goalSelector.addGoal(4, new FrogEntity.FrogFindWaterGoal(this));
-		this.goalSelector.addGoal(4, new FrogEntity.SitOnLilypadGoal(20, 5, 5));
+		this.goalSelector.addGoal(4, new FrogEntity.SitOnLilypadGoal(1, 5, 5));
 		this.goalSelector.addGoal(4, new FrogEntity.SwimGoal(this));
+		this.goalSelector.addGoal(4, new FrogEntity.GoToWaterGoal(this, 1.0D));
+		this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, AlligatorEntity.class, 8.0F, 2.2D, 2.2D));
 	}
 
 	protected float getJumpUpwardsMotion() {
@@ -101,13 +105,13 @@ public class FrogEntity extends AnimalEntity {
 			return 0.5F;
 		}
 	}
-	
+
 	static class SwimGoal extends RandomSwimmingGoal {
 
 		public SwimGoal(FrogEntity frog) {
 			super(frog, 1.0D, 40);
 		}
-		
+
 		public boolean shouldExecute() {
 			return super.shouldExecute();
 		}
@@ -265,7 +269,7 @@ public class FrogEntity extends AnimalEntity {
 	}
 
 	private boolean isFrogBreedingItem(Item itemIn) {
-		return itemIn == Items.CARROT || itemIn == Items.GOLDEN_CARROT || itemIn == Blocks.DANDELION.asItem();
+		return itemIn == Items.SPIDER_EYE;
 	}
 
 	public boolean isBreedingItem(ItemStack stack) {
@@ -358,7 +362,7 @@ public class FrogEntity extends AnimalEntity {
 						this.frog.rotationYaw = this.limitAngle(this.frog.rotationYaw, f, 10.0F);
 						this.frog.renderYawOffset = this.frog.rotationYaw;
 						this.frog.rotationYawHead = this.frog.rotationYaw;
-						float f1 = (float)(this.speed * this.frog.getAttributeValue(Attributes.MOVEMENT_SPEED));
+						float f1 = (float)(this.frog.getAttributeValue(Attributes.MOVEMENT_SPEED));
 						if (this.frog.isInWater()) {
 							this.frog.setAIMoveSpeed(f1 * 0.02F);
 							float f2 = -((float)(MathHelper.atan2(d1, (double)MathHelper.sqrt(d0 * d0 + d2 * d2)) * (double)(180F / (float)Math.PI)));
@@ -537,7 +541,7 @@ public class FrogEntity extends AnimalEntity {
 		}
 
 	}
-	
+
 	public boolean preventDespawn() {
 		return super.preventDespawn() || this.isFromBucket();
 	}
@@ -545,7 +549,7 @@ public class FrogEntity extends AnimalEntity {
 	public boolean canDespawn(double distanceToClosestPlayer) {
 		return !this.isFromBucket() && !this.hasCustomName();
 	}
-	
+
 	public ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
 		ItemStack itemstack = p_230254_1_.getHeldItem(p_230254_2_);
 		if (!this.isChild()) {
@@ -581,6 +585,52 @@ public class FrogEntity extends AnimalEntity {
 	protected void setBucketData(ItemStack bucket) {
 		if (this.hasCustomName()) {
 			bucket.setDisplayName(this.getCustomName());
+		}
+	}
+
+	class AdultWalkingGoal extends RandomWalkingGoal {
+
+		public AdultWalkingGoal(CreatureEntity creatureIn, double speedIn) {
+			super(creatureIn, speedIn);
+		}
+
+		public boolean shouldExecute() {
+			if (!FrogEntity.this.isChild() && super.shouldExecute()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+	}
+
+	static class GoToWaterGoal extends MoveToBlockGoal {
+		private final FrogEntity frog;
+
+		private GoToWaterGoal(FrogEntity frog, double speedIn) {
+			super(frog, frog.isChild() ? 2.0D : speedIn, 24);
+			this.frog = frog;
+			this.field_203112_e = -1;
+		}
+
+		public boolean shouldContinueExecuting() {
+			return !this.frog.isInWater() && this.timeoutCounter <= 1200 && this.shouldMoveTo(this.frog.world, this.destinationBlock);
+		}
+
+		public boolean shouldExecute() {
+			if (this.frog.isChild() && !this.frog.isInWater() && super.shouldExecute()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		public boolean shouldMove() {
+			return this.timeoutCounter % 160 == 0;
+		}
+
+		protected boolean shouldMoveTo(IWorldReader worldIn, BlockPos pos) {
+			return worldIn.getBlockState(pos).isIn(Blocks.WATER);
 		}
 	}
 

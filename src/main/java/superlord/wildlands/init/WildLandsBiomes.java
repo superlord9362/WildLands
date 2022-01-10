@@ -22,15 +22,19 @@ import superlord.wildlands.common.util.BiomeData;
 import superlord.wildlands.common.util.WorldGenRegistrationHelper;
 import superlord.wildlands.common.world.biome.WLBiome;
 import superlord.wildlands.common.world.biome.overworld.Bayou;
+import superlord.wildlands.common.world.biome.overworld.BurntForest;
 
 public class WildLandsBiomes {
 
 	public static List<PreserveBiomeOrder> biomeList = new ArrayList<>();
 
 	public static final WLBiome BAYOU = new Bayou();
+	
+	public static final WLBiome BURNT_FOREST = new BurntForest();
 
 	
 	public static Biome BAYOU_BIOME = WorldGenRegistrationHelper.createBiome("bayou", BAYOU.getBiome(), 1);
+	public static Biome BURNT_FOREST_BIOME = WorldGenRegistrationHelper.createBiome("burnt_forest", BURNT_FOREST.getBiome(), 2);
 
 	public static void init() {
 
@@ -38,6 +42,7 @@ public class WildLandsBiomes {
 	
 	public static void addBiomeEntries() {
 		BiomeManager.addBiome(BAYOU.getBiomeType(), new BiomeManager.BiomeEntry(BAYOU.getKey(), 6));
+		BiomeManager.addBiome(BURNT_FOREST.getBiomeType(), new BiomeManager.BiomeEntry(BURNT_FOREST.getKey(), 2));
 	}
 
 	@SuppressWarnings("deprecation")

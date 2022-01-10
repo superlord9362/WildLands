@@ -24,6 +24,7 @@ import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.EntityType;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
@@ -38,13 +39,19 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.common.block.BeardMossBlock;
+import superlord.wildlands.common.block.BeardMossTopBlock;
+import superlord.wildlands.common.block.CharredGrassBlock;
+import superlord.wildlands.common.block.CharredTallGrassBlock;
 import superlord.wildlands.common.block.CoconutBlock;
 import superlord.wildlands.common.block.CrabBlock;
 import superlord.wildlands.common.block.DoubleWaterPlantBlock;
 import superlord.wildlands.common.block.DriedMudBlock;
 import superlord.wildlands.common.block.DuckWeedBlock;
 import superlord.wildlands.common.block.MudBlock;
+import superlord.wildlands.common.block.OlivinePressurePlate;
+import superlord.wildlands.common.block.SmoldderingLogBlock;
 import superlord.wildlands.common.block.StarfishBlock;
+import superlord.wildlands.common.block.UrchinBlock;
 import superlord.wildlands.common.block.WLSapling;
 import superlord.wildlands.common.block.WLStandingSignBlock;
 import superlord.wildlands.common.block.WLWallSignBlock;
@@ -69,6 +76,14 @@ public class WildLandsBlocks {
 	public static final Block STRIPPED_COCONUT_LOG = createLogBlock(MaterialColor.WOOD, MaterialColor.CLAY).setRegistryName("stripped_coconut_log");//Loot Table done
 	public static final Block COCONUT_WOOD = createLogBlock(MaterialColor.WOOD, MaterialColor.CLAY).setRegistryName("coconut_wood");//Loot Table done
 	public static final Block STRIPPED_COCONUT_WOOD = createLogBlock(MaterialColor.WOOD, MaterialColor.CLAY).setRegistryName("stripped_coconut_wood");//Loot Table done
+	public static final Block CHARRED_LOG = createLogBlock(MaterialColor.WOOD, MaterialColor.BLACK).setRegistryName("charred_log");
+	public static final Block STRIPPED_CHARRED_LOG = createLogBlock(MaterialColor.WOOD, MaterialColor.BLACK).setRegistryName("stripped_charred_log");
+	public static final Block CHARRED_WOOD = createLogBlock(MaterialColor.WOOD, MaterialColor.BLACK).setRegistryName("charred_wood");
+	public static final Block STRIPPED_CHARRED_WOOD = createLogBlock(MaterialColor.WOOD, MaterialColor.BLACK).setRegistryName("stripped_charred_wood");
+	
+	public static final RegistryObject<Block> SMOLDERING_LOG = REGISTER.register("smoldering_log", () -> new SmoldderingLogBlock(AbstractBlock.Properties.create(Material.WOOD, MaterialColor.BLACK).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD).setLightLevel((state) -> {
+	      return 3;
+	   }), ParticleTypes.FLAME));
 
 	public static final RegistryObject<Block> CYPRESS_PLANKS = REGISTER.register("cypress_planks", () -> new Block(AbstractBlock.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(2.0F, 3.0F)));
 	public static final RegistryObject<Block> CYPRESS_DOOR = REGISTER.register("cypress_door", () -> new DoorBlock(AbstractBlock.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(3.0F).notSolid()));
@@ -87,8 +102,9 @@ public class WildLandsBlocks {
 	public static final RegistryObject<Block> POTTED_CYPRESS_SAPLING = REGISTER.register("potted_cypress_sapling", () -> new FlowerPotBlock(CYPRESS_SAPLING.get(), AbstractBlock.Properties.create(Material.MISCELLANEOUS).notSolid().zeroHardnessAndResistance()));
 	public static final RegistryObject<Block> PALMETTO = REGISTER.register("palmetto", () -> new TallGrassBlock(AbstractBlock.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.PLANT)));
 	public static final RegistryObject<Block> CATTAIL = REGISTER.register("cattail", () -> new DoubleWaterPlantBlock(AbstractBlock.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.PLANT)));
-	public static final RegistryObject<Block> DUCKWEED = REGISTER.register("duckweed", () -> new DuckWeedBlock(AbstractBlock.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.PLANT).speedFactor(0.8F).notSolid()));
+	public static final RegistryObject<Block> DUCKWEED = REGISTER.register("duckweed", () -> new DuckWeedBlock(AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.PLANT).notSolid()));
 	public static final RegistryObject<Block> BEARD_MOSS = REGISTER.register("beard_moss", () -> new BeardMossBlock(AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.PLANT)));
+	public static final RegistryObject<Block> BEARD_MOSS_TOP = REGISTER.register("beard_moss_top", () -> new BeardMossTopBlock(AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.PLANT)));
 	public static final RegistryObject<Block> COCONUT_PLANKS = REGISTER.register("coconut_planks", () -> new Block(AbstractBlock.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(2.0F, 3.0F)));
 	public static final RegistryObject<Block> COCONUT_DOOR = REGISTER.register("coconut_door", () -> new DoorBlock(AbstractBlock.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(3.0F).notSolid()));
 	public static final RegistryObject<Block> COCONUT_LEAVES = REGISTER.register("coconut_leaves", () -> createLeavesBlock());
@@ -104,6 +120,17 @@ public class WildLandsBlocks {
 	@SuppressWarnings("deprecation")
 	public static final RegistryObject<Block> POTTED_COCONUT_SAPLING = REGISTER.register("potted_coconut_sapling", () -> new FlowerPotBlock(COCONUT_SAPLING.get(), AbstractBlock.Properties.create(Material.MISCELLANEOUS).notSolid().zeroHardnessAndResistance()));
 
+	public static final RegistryObject<Block> CHARRED_PLANKS = REGISTER.register("charred_planks", () -> new Block(AbstractBlock.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(2.0F, 3.0F)));
+	public static final RegistryObject<Block> CHARRED_DOOR = REGISTER.register("charred_door", () -> new DoorBlock(AbstractBlock.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(3.0F).notSolid()));
+	@SuppressWarnings("deprecation")
+	public static final RegistryObject<Block> CHARRED_STAIRS = REGISTER.register("charred_stairs", () -> new StairsBlock(WildLandsBlocks.CHARRED_PLANKS.get().getDefaultState(), AbstractBlock.Properties.from(CHARRED_PLANKS.get())));
+	public static final RegistryObject<Block> CHARRED_PRESSURE_PLATE = REGISTER.register("charred_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, AbstractBlock.Properties.create(Material.WOOD, CHARRED_PLANKS.get().getMaterialColor()).doesNotBlockMovement().hardnessAndResistance(0.5F).sound(SoundType.WOOD)));
+	public static final RegistryObject<Block> CHARRED_FENCE = REGISTER.register("charred_fence", () -> new FenceBlock(AbstractBlock.Properties.create(Material.WOOD, MaterialColor.BLACK).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD)));
+	public static final RegistryObject<Block> CHARRED_TRAPDOOR = REGISTER.register("charred_trapdoor", () -> new TrapDoorBlock(AbstractBlock.Properties.create(Material.WOOD, MaterialColor.BLACK).hardnessAndResistance(3.0F).sound(SoundType.WOOD).notSolid().setAllowsSpawn(WildLandsBlocks::neverAllowSpawn)));
+	public static final RegistryObject<Block> CHARRED_FENCE_GATE = REGISTER.register("charred_fence_gate", () -> new FenceGateBlock(AbstractBlock.Properties.create(Material.WOOD, MaterialColor.BLACK).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD)));
+	public static final RegistryObject<Block> CHARRED_BUTTON = REGISTER.register("charred_button", () -> new WoodButtonBlock(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().hardnessAndResistance(0.5F).sound(SoundType.WOOD)));
+	public static final RegistryObject<Block> CHARRED_SLAB = REGISTER.register("charred_slab", () -> new SlabBlock(AbstractBlock.Properties.create(Material.WOOD, MaterialColor.BLACK).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD)));
+	
 	public static final RegistryObject<Block> CONGLOMERATE = REGISTER.register("conglomerate", () -> new Block(AbstractBlock.Properties.create(Material.ROCK).setRequiresTool().hardnessAndResistance(1.5F, 6.0F).sound(SoundType.STONE)));
 	@SuppressWarnings("deprecation")
 	public static final RegistryObject<Block> CONGLOMERATE_STAIRS = REGISTER.register("conglomerate_stairs", () -> new StairsBlock(WildLandsBlocks.CONGLOMERATE.get().getDefaultState(), AbstractBlock.Properties.create(Material.ROCK).setRequiresTool().hardnessAndResistance(1.5F, 6.0F).sound(SoundType.STONE)));
@@ -137,6 +164,7 @@ public class WildLandsBlocks {
 
 	public static final RegistryObject<Block> OLIVINE = REGISTER.register("olivine_block", () -> new Block(AbstractBlock.Properties.create(Material.IRON).setRequiresTool().hardnessAndResistance(5.0F, 6.0F).sound(SoundType.METAL)));
 	public static final RegistryObject<Block> CUT_OLIVINE = REGISTER.register("cut_olivine_block", () -> new Block(AbstractBlock.Properties.create(Material.IRON).setRequiresTool().hardnessAndResistance(5.0F, 6.0F).sound(SoundType.METAL)));
+	public static final RegistryObject<Block> OLIVINE_PRESSURE_PLATE = REGISTER.register("olivine_pressure_plate", () -> new OlivinePressurePlate(OlivinePressurePlate.Sensitivity.MOBS, AbstractBlock.Properties.create(Material.IRON).setRequiresTool().hardnessAndResistance(5.0F, 6.0F).sound(SoundType.METAL)));
 	public static final RegistryObject<Block> PEARL = REGISTER.register("pearl_block", () -> new Block(AbstractBlock.Properties.create(Material.IRON).setRequiresTool().hardnessAndResistance(5.0F, 6.0F).sound(SoundType.METAL)));
 	public static final RegistryObject<Block> PEARL_TILES = REGISTER.register("pearl_tile_block", () -> new Block(AbstractBlock.Properties.create(Material.IRON).setRequiresTool().hardnessAndResistance(5.0F, 6.0F).sound(SoundType.METAL)));
 	public static final RegistryObject<CoconutBlock> COCONUT = REGISTER.register("coconut", () -> new CoconutBlock(AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(2.5F).notSolid().sound(SoundType.WOOD)));
@@ -161,7 +189,7 @@ public class WildLandsBlocks {
 	public static final RegistryObject<StarfishBlock> ORANGE_STARFISH = REGISTER.register("orange_starfish", () -> new StarfishBlock(AbstractBlock.Properties.create(Material.ORGANIC).zeroHardnessAndResistance().doesNotBlockMovement().sound(SoundType.PLANT)));
 	public static final RegistryObject<StarfishBlock> PINK_STARFISH = REGISTER.register("pink_starfish", () -> new StarfishBlock(AbstractBlock.Properties.create(Material.ORGANIC).zeroHardnessAndResistance().doesNotBlockMovement().sound(SoundType.PLANT)));
 	public static final RegistryObject<StarfishBlock> RED_STARFISH = REGISTER.register("red_starfish", () -> new StarfishBlock(AbstractBlock.Properties.create(Material.ORGANIC).zeroHardnessAndResistance().doesNotBlockMovement().sound(SoundType.PLANT)));
-
+	public static final RegistryObject<UrchinBlock> URCHIN = REGISTER.register("urchin", () -> new UrchinBlock(AbstractBlock.Properties.create(Material.ORGANIC).zeroHardnessAndResistance().doesNotBlockMovement().sound(SoundType.PLANT)));
 	public static final RegistryObject<CrabBlock> CRAB_SAND = REGISTER.register("crab_sand", () -> new CrabBlock(Blocks.SAND, AbstractBlock.Properties.create(Material.SAND, MaterialColor.SAND).hardnessAndResistance(0.5F).sound(SoundType.SAND)));
 	public static final RegistryObject<CrabBlock> CRAB_FINE_SAND = REGISTER.register("crab_fine_sand", () -> new CrabBlock(FINE_SAND.get(), AbstractBlock.Properties.create(Material.SAND, MaterialColor.SAND).hardnessAndResistance(0.5F).sound(SoundType.SAND)));
 
@@ -169,6 +197,10 @@ public class WildLandsBlocks {
 	public static final RegistryObject<Block> CYPRESS_WALL_SIGN = REGISTER.register("cypress_wall_sign", () -> new WLWallSignBlock(AbstractBlock.Properties.create(Material.WOOD, WildLandsBlocks.CYPRESS_LOG.getMaterialColor()).doesNotBlockMovement().hardnessAndResistance(1.0F).sound(SoundType.WOOD), WLWoodTypes.CYPRESS));
 	public static final RegistryObject<Block> COCONUT_SIGN = REGISTER.register("coconut_sign", () -> new WLStandingSignBlock(AbstractBlock.Properties.create(Material.WOOD, WildLandsBlocks.COCONUT_LOG.getMaterialColor()).doesNotBlockMovement().hardnessAndResistance(1.0F).sound(SoundType.WOOD), WLWoodTypes.COCONUT));
 	public static final RegistryObject<Block> COCONUT_WALL_SIGN = REGISTER.register("coconut_wall_sign", () -> new WLWallSignBlock(AbstractBlock.Properties.create(Material.WOOD, WildLandsBlocks.COCONUT_LOG.getMaterialColor()).doesNotBlockMovement().hardnessAndResistance(1.0F).sound(SoundType.WOOD), WLWoodTypes.COCONUT));
+
+	public static final Block CHARRED_GRASS = new CharredGrassBlock(AbstractBlock.Properties.create(Material.EARTH).hardnessAndResistance(0.5F).sound(SoundType.GROUND)).setRegistryName("charred_grass");
+	public static final Block CHARRED_TALL_GRASS = new CharredTallGrassBlock(AbstractBlock.Properties.create(Material.PLANTS).zeroHardnessAndResistance().doesNotBlockMovement().notSolid().sound(SoundType.PLANT)).setRegistryName("charred_tall_grass");
+	public static final Block CHARRED_BUSH = new CharredTallGrassBlock(AbstractBlock.Properties.create(Material.PLANTS).zeroHardnessAndResistance().doesNotBlockMovement().notSolid().sound(SoundType.PLANT)).setRegistryName("charred_bush");
 
 	@SubscribeEvent
 	public static void registerBlocks(final RegistryEvent.Register<Block> event) {
@@ -180,6 +212,13 @@ public class WildLandsBlocks {
 		event.getRegistry().register(STRIPPED_COCONUT_WOOD);
 		event.getRegistry().register(STRIPPED_CYPRESS_LOG);
 		event.getRegistry().register(STRIPPED_CYPRESS_WOOD);
+		event.getRegistry().register(CHARRED_LOG);
+		event.getRegistry().register(CHARRED_WOOD);
+		event.getRegistry().register(STRIPPED_CHARRED_LOG);
+		event.getRegistry().register(STRIPPED_CHARRED_WOOD);
+		event.getRegistry().register(CHARRED_GRASS);
+		event.getRegistry().register(CHARRED_TALL_GRASS);
+		event.getRegistry().register(CHARRED_BUSH);
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			RenderType cutoutRenderType = RenderType.getCutout();
 			RenderType cutoutMippedRenderType = RenderType.getCutoutMipped();
@@ -197,6 +236,10 @@ public class WildLandsBlocks {
 			RenderTypeLookup.setRenderLayer(CATTAIL.get(), cutoutRenderType);
 			RenderTypeLookup.setRenderLayer(DUCKWEED.get(), cutoutRenderType);
 			RenderTypeLookup.setRenderLayer(BEARD_MOSS.get(), cutoutRenderType);
+			RenderTypeLookup.setRenderLayer(BEARD_MOSS_TOP.get(), cutoutRenderType);
+			RenderTypeLookup.setRenderLayer(CHARRED_TALL_GRASS, cutoutRenderType);
+			RenderTypeLookup.setRenderLayer(CHARRED_BUSH, cutoutRenderType);
+			RenderTypeLookup.setRenderLayer(URCHIN.get(), cutoutRenderType);
 		}
 	}
 	

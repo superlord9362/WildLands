@@ -11,6 +11,7 @@ import net.minecraft.block.FireBlock;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.AxeItem;
+import net.minecraft.item.HoeItem;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -27,6 +28,7 @@ import superlord.wildlands.init.WildLandsBlocks;
 public class CommonEvents {
 	
 	public static Map<Block, Block> BLOCK_STRIPPING_MAP = new HashMap<>();
+	public static Map<Block, Block> BLOCK_HOE_MAP = new HashMap<>();
 	
 	public static void registerFlammable(Block block, int encouragement, int flammability) {
 		FireBlock fire = (FireBlock) Blocks.FIRE;
@@ -71,6 +73,9 @@ public class CommonEvents {
 		BLOCK_STRIPPING_MAP.put(WildLandsBlocks.COCONUT_WOOD, WildLandsBlocks.STRIPPED_COCONUT_WOOD);
 		BLOCK_STRIPPING_MAP.put(WildLandsBlocks.CYPRESS_LOG, WildLandsBlocks.STRIPPED_CYPRESS_LOG);
 		BLOCK_STRIPPING_MAP.put(WildLandsBlocks.CYPRESS_WOOD, WildLandsBlocks.STRIPPED_CYPRESS_WOOD);
+		BLOCK_STRIPPING_MAP.put(WildLandsBlocks.CHARRED_LOG, WildLandsBlocks.STRIPPED_CHARRED_LOG);
+		BLOCK_STRIPPING_MAP.put(WildLandsBlocks.CHARRED_WOOD, WildLandsBlocks.STRIPPED_CHARRED_WOOD);
+		BLOCK_HOE_MAP.put(WildLandsBlocks.CHARRED_GRASS, Blocks.FARMLAND);
 	}
 	
 	@SubscribeEvent
@@ -85,6 +90,24 @@ public class CommonEvents {
 				world.playSound(entity, pos, SoundEvents.ITEM_AXE_STRIP, SoundCategory.BLOCKS, 1.0F, 1.0F);
 				if(!world.isRemote) {
 					world.setBlockState(pos, block.getDefaultState().with(RotatedPillarBlock.AXIS, state.get(RotatedPillarBlock.AXIS)), 11);
+					if(entity != null) {
+						event.getItemStack().damageItem(1, entity, (p_220040_1_) -> {
+							p_220040_1_.sendBreakAnimation(event.getHand());
+						});
+					}
+				}
+			}
+		}
+		if(event.getItemStack().getItem() instanceof HoeItem) {
+			World world = event.getWorld();
+			BlockPos pos = event.getPos();
+			BlockState state = world.getBlockState(pos);
+			Block block = BLOCK_HOE_MAP.get(state.getBlock());
+			if(block != null) {
+				PlayerEntity entity = event.getPlayer();
+				world.playSound(entity, pos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+				if(!world.isRemote) {
+					world.setBlockState(pos, block.getDefaultState(), 11);
 					if(entity != null) {
 						event.getItemStack().damageItem(1, entity, (p_220040_1_) -> {
 							p_220040_1_.sendBreakAnimation(event.getHand());

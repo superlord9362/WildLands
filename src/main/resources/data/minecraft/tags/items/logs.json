@@ -8,6 +8,10 @@
 	"wildlands:coconut_log",
 	"wildlands:stripped_coconut_log",
 	"wildlands:coconut_wood",
-	"wildlands:stripped_coconut_wood"
+	"wildlands:stripped_coconut_wood",
+	"wildlands:charred_log",
+	"wildlands:charred_wood",
+	"wildlands:stripped_charred_log",
+	"wildlands:stripped_charred_wood"
   ]
 }

@@ -5,22 +5,28 @@ import java.util.List;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.gen.blockplacer.SimpleBlockPlacer;
+import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.feature.BlockBlobFeature;
+import net.minecraft.world.gen.feature.BlockClusterFeatureConfig;
 import net.minecraft.world.gen.feature.BlockStateFeatureConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.gen.feature.NoFeatureConfig;
 import net.minecraft.world.gen.feature.ProbabilityConfig;
-import net.minecraft.world.gen.treedecorator.TreeDecorator;
 import net.minecraft.world.gen.treedecorator.TreeDecoratorType;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import superlord.wildlands.WildLands;
+import superlord.wildlands.common.world.feature.BeardMossFeature;
+import superlord.wildlands.common.world.feature.BigBlockBlobFeature;
 import superlord.wildlands.common.world.feature.DuckweedFeature;
+import superlord.wildlands.common.world.feature.SmolderingLogFeature;
 import superlord.wildlands.common.world.feature.StarFishFeature;
+import superlord.wildlands.common.world.feature.UrchinFeature;
 import superlord.wildlands.common.world.feature.config.DuckweedConfig;
+import superlord.wildlands.common.world.feature.config.SmolderingLogFeatureConfig;
 import superlord.wildlands.common.world.feature.config.WLTreeConfig;
-import superlord.wildlands.common.world.feature.decorator.BeardMossTreeDecorator;
 import superlord.wildlands.common.world.feature.tree.coconut.Coconut1;
 import superlord.wildlands.common.world.feature.tree.coconut.Coconut2;
 import superlord.wildlands.common.world.feature.tree.coconut.Coconut3;
@@ -30,6 +36,7 @@ import superlord.wildlands.common.world.feature.tree.cypress.Cypress1;
 import superlord.wildlands.common.world.feature.tree.cypress.Cypress2;
 import superlord.wildlands.common.world.feature.tree.cypress.Cypress3;
 import superlord.wildlands.common.world.feature.util.WLAbstractTreeFeature;
+import superlord.wildlands.init.WildLandsBlocks;
 
 public class WLFeatures {
 
@@ -48,8 +55,13 @@ public class WLFeatures {
 
 	public static final Feature<BlockStateFeatureConfig> DOLERITE = createFeature("dolerite", new BlockBlobFeature(BlockStateFeatureConfig.field_236455_a_));
 	public static final StarFishFeature STARFISH = createFeature("starfish", new StarFishFeature(ProbabilityConfig.CODEC));
+	public static final UrchinFeature URCHIN = createFeature("urchin", new UrchinFeature(ProbabilityConfig.CODEC));
 	public static final Feature<DuckweedConfig> DUCKWEED_FEATURE = createFeature("duckweed", new DuckweedFeature(DuckweedConfig.field_236558_a_.stable()));
-    public static final RegistryObject<TreeDecoratorType<TreeDecorator>> BEARD_MOSS = TREE_DECORATOR_REGISTRY.register("beard_moss", () -> new TreeDecoratorType<>(BeardMossTreeDecorator.field_236874_c_));
+	public static final Feature<NoFeatureConfig> BEARD_MOSS_FEATURE = createFeature("beard_moss", new BeardMossFeature(NoFeatureConfig.field_236558_a_.stable()));
+	public static final Feature<BlockStateFeatureConfig> BIG_BLOB = createFeature("big_block_blob", new BigBlockBlobFeature(BlockStateFeatureConfig.field_236455_a_.stable()));
+	public static final Feature<SmolderingLogFeatureConfig> SMOLDERING_LOG = createFeature("smoldering_log", new SmolderingLogFeature(SmolderingLogFeatureConfig.field_236558_a_.stable()));
+    public static final BlockClusterFeatureConfig BURNT_GRASS_CONFIG = (new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(WildLandsBlocks.CHARRED_TALL_GRASS.getDefaultState()), SimpleBlockPlacer.PLACER)).tries(32).build();
+    public static final BlockClusterFeatureConfig BURNT_BUSH_CONFIG = (new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(WildLandsBlocks.CHARRED_BUSH.getDefaultState()), SimpleBlockPlacer.PLACER)).tries(4).build();
 
 	@SuppressWarnings("deprecation")
 	public static <C extends IFeatureConfig, F extends Feature<C>> F createFeature(String id, F feature) {

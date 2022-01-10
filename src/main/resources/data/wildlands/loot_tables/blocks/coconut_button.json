@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "wildlands:cypress_button"
+          "name": "wildlands:coconut_button"
         }
       ],
       "conditions": [

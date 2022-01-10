@@ -184,11 +184,7 @@ public class ClamEntity extends AbstractFishEntity {
 	}
 
 	private boolean isClosed() {
-		if (this.isOpen()) {
-			return false;
-		} else {
-			return true;
-		}
+		return !this.isOpen();
 	}
 
 	private void spawnItem(ItemStack stack) {
@@ -201,15 +197,16 @@ public class ClamEntity extends AbstractFishEntity {
 		ItemStack itemstack1 = new ItemStack(WildLandsItems.PEARL.get());
 		Item item = itemstack.getItem();
 		Random rand = new Random();
-		int chance = rand.nextInt(5);
-		if ((item == Items.SAND || item == WildLandsItems.FINE_SAND.get()) && !this.isOpen()) {
+		if ((item == Items.SAND || item == WildLandsItems.FINE_SAND.get() || item == Items.RED_SAND) && !this.isOpen()) {
+			int chance = rand.nextInt(5);
 			itemstack.shrink(1);
 			if (chance == 0) {
 				this.setOpen(true);
 				return ActionResultType.SUCCESS;
 			}
 			return ActionResultType.CONSUME;
-		} else if (this.isOpen()) {
+		}
+		if (this.isOpen()) {
 			player.attackEntityFrom(DamageSourceInit.CLAM, 1.0F);
 			this.spawnItem(itemstack1);
 			this.setOpen(false);

@@ -18,19 +18,22 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.client.render.AlligatorRenderer;
+import superlord.wildlands.client.render.AnchovyRenderer;
 import superlord.wildlands.client.render.CatfishRenderer;
 import superlord.wildlands.client.render.ClamRenderer;
 import superlord.wildlands.client.render.CoconutRenderer;
 import superlord.wildlands.client.render.CrabRenderer;
 import superlord.wildlands.client.render.FrogRenderer;
 import superlord.wildlands.client.render.HammerheadRenderer;
+import superlord.wildlands.client.render.OctopusRenderer;
+import superlord.wildlands.client.render.SeaLionRenderer;
 import superlord.wildlands.client.render.WLBoatRenderer;
 import superlord.wildlands.client.render.WLSignTileEntityRenderer;
 import superlord.wildlands.common.item.WLSpawnEggItem;
-import superlord.wildlands.init.WildLandsBlocks;
-import superlord.wildlands.init.WildLandsEntities;
 import superlord.wildlands.init.WLTileEntities;
 import superlord.wildlands.init.WLWoodTypes;
+import superlord.wildlands.init.WildLandsBlocks;
+import superlord.wildlands.init.WildLandsEntities;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = WildLands.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -46,6 +49,9 @@ public class ClientEvents {
 		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.CLAM.get(), manager -> new ClamRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.FROG.get(), manager -> new FrogRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.HAMMERHEAD.get(), HammerheadRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.ANCHOVY.get(), AnchovyRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.OCTOPUS.get(), OctopusRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.SEA_LION.get(), SeaLionRenderer::new);
 	}
 	
 	@SubscribeEvent
