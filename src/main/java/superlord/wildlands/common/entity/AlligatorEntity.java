@@ -121,7 +121,9 @@ public class AlligatorEntity extends AnimalEntity {
 
 	@Override
 	public AgeableEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
-		return WildLandsEntities.ALLIGATOR.get().create(p_241840_1_);
+		AlligatorEntity entity = new AlligatorEntity(WildLandsEntities.ALLIGATOR.get(), this.world);
+		entity.onInitialSpawn(p_241840_1_, this.world.getDifficultyForLocation(new BlockPos(entity.getPositionVec())), SpawnReason.BREEDING, (ILivingEntityData)null, (CompoundNBT)null);
+		return entity;
 	}
 
 	public boolean isBreedingItem(ItemStack stack) {

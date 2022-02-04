@@ -44,8 +44,9 @@ public class CrabEntity extends AnimalEntity {
 	}
 
 	protected void registerGoals() {
-		this.targetSelector.addGoal(1, new CrabEntity.AttackPlayerGoal());
-		this.targetSelector.addGoal(2, new CrabEntity.RunFromPlayerGoal());
+		this.goalSelector.addGoal(0, new CrabEntity.AttackPlayerGoal());
+		this.goalSelector.addGoal(1, new CrabEntity.MeleeAttackGoal());
+		this.goalSelector.addGoal(0, new CrabEntity.RunFromPlayerGoal());
 		this.goalSelector.addGoal(3, new RandomWalkingGoal(this, 1.0D));
 	}
 
@@ -106,15 +107,6 @@ public class CrabEntity extends AnimalEntity {
 		return null;
 	}
 
-	private boolean shouldAttackOrFlee(PlayerEntity player) {
-		Vector3d vector3d = player.getLook(1.0F).normalize();
-		Vector3d vector3d1 = new Vector3d(this.getPosX() - player.getPosX(), this.getPosYEye() - player.getPosYEye(), this.getPosZ() - player.getPosZ());
-		double d0 = vector3d1.length();
-		vector3d1 = vector3d1.normalize();
-		double d1 = vector3d.dotProduct(vector3d1);
-		return d1 > 1.0D - 0.025D / d0 ? player.canEntityBeSeen(this) : false;
-	}
-
 	protected SoundEvent getAmbientSound() {
 		return WildLandsSounds.CRAB_IDLE;
 	}
@@ -127,48 +119,100 @@ public class CrabEntity extends AnimalEntity {
 		return WildLandsSounds.CRAB_DEATH;
 	}
 
+	class MeleeAttackGoal extends net.minecraft.entity.ai.goal.MeleeAttackGoal {
+		public MeleeAttackGoal() {
+			super(CrabEntity.this, 1.25D, true);
+		}
+
+		protected void checkAndPerformAttack(LivingEntity enemy, double distToEnemySqr) {
+			double d0 = this.getAttackReachSqr(enemy);
+			if (distToEnemySqr <= d0 && this.func_234040_h_()) {
+				this.func_234039_g_();
+				this.attacker.attackEntityAsMob(enemy);
+			} else if (distToEnemySqr <= d0 * 2.0D) {
+				if (this.func_234040_h_()) {
+					this.func_234039_g_();
+				}
+			} else {
+				this.func_234039_g_();
+			}
+
+		}
+		
+		public void resetTask() {
+			super.resetTask();
+		}
+
+		protected double getAttackReachSqr(LivingEntity attackTarget) {
+			return (double)(3.0F + attackTarget.getWidth());
+		}
+	}
+
 	class AttackPlayerGoal extends NearestAttackableTargetGoal<PlayerEntity> {
-		private LivingEntity targetPlayer;
 
 		public AttackPlayerGoal() {
 			super(CrabEntity.this, PlayerEntity.class, 20, true, true, (Predicate<LivingEntity>)null);
 		}
 
 		public boolean shouldExecute() {
-			this.targetPlayer = CrabEntity.this.getAttackTarget();
-			if (!(this.targetPlayer instanceof PlayerEntity) || !CrabEntity.this.isFighter()) {
-				return false;
-			}else {
-				double d0 = this.targetPlayer.getDistanceSq(CrabEntity.this);
-				return d0 > 256.0D ? false : CrabEntity.this.shouldAttackOrFlee((PlayerEntity)this.targetPlayer);
-			}
+			this.target = CrabEntity.this.world.getClosestPlayer(CrabEntity.this, 50);
+			if (target != null && CrabEntity.this.isFighter()) {
+				double d0 = target.getDistanceSq(CrabEntity.this);
+				return d0 > 256.0D ? false : this.shouldAttackOrFlee((PlayerEntity)target);
+			} else return false;
 		}
 
 		protected double getTargetDistance() {
 			return super.getTargetDistance() * 0.5D;
 		}
+
+		private boolean shouldAttackOrFlee(PlayerEntity player) {
+			Vector3d vector3d = player.getLook(1.0F).normalize();
+			Vector3d vector3d1 = new Vector3d(CrabEntity.this.getPosX() - player.getPosX(), CrabEntity.this.getPosYEye() - player.getPosYEye(), CrabEntity.this.getPosZ() - player.getPosZ());
+			double d0 = vector3d1.length();
+			vector3d1 = vector3d1.normalize();
+			double d1 = vector3d.dotProduct(vector3d1);
+			return d1 > 1.0D - 0.025D / d0 ? player.canEntityBeSeen(CrabEntity.this) : false;
+		}
 	}
 
 	class RunFromPlayerGoal extends AvoidEntityGoal<PlayerEntity> {
-		private LivingEntity targetPlayer;
-
 		public RunFromPlayerGoal() {
-			super(CrabEntity.this, PlayerEntity.class, 20, 1.3D, 1);
+			super(CrabEntity.this, PlayerEntity.class, 40, 1D, 1.3D);
 		}
 
 		public boolean shouldExecute() {
-			this.targetPlayer = this.avoidTarget;
-			if (!(this.targetPlayer instanceof PlayerEntity) || CrabEntity.this.isFighter()) {
-				return false;
-			} else {
-				double d0 = this.targetPlayer.getDistanceSq(CrabEntity.this);
-				return d0 > 256.0D ? false : CrabEntity.this.shouldAttackOrFlee((PlayerEntity)this.targetPlayer);
-			}
+			this.avoidTarget = CrabEntity.this.world.getClosestPlayer(CrabEntity.this, 50);
+			if (avoidTarget != null && !CrabEntity.this.isFighter()) {
+				double d0 = avoidTarget.getDistanceSq(CrabEntity.this);
+				return d0 > 256.0D ? false : (this.shouldAttackOrFlee(avoidTarget) && super.shouldExecute());
+			} else return false;
 		}
-		
+
+		public boolean shouldContinueExecuting() {
+			return !this.navigation.noPath();
+		}
+
+		public void startExecuting() {
+			this.navigation.setPath(this.path, 1.0D);
+		}
+
 		public void tick() {
 			super.tick();
-			System.out.println("RUN!");
+			if (this.entity.getDistanceSq(this.avoidTarget) < 49.0D) {
+				this.entity.getNavigator().setSpeed(1.3D);
+			} else {
+				this.entity.getNavigator().setSpeed(1.0D);
+			}
+		}
+
+		private boolean shouldAttackOrFlee(PlayerEntity player) {
+			Vector3d vector3d = player.getLook(1.0F).normalize();
+			Vector3d vector3d1 = new Vector3d(CrabEntity.this.getPosX() - player.getPosX(), CrabEntity.this.getPosYEye() - player.getPosYEye(), CrabEntity.this.getPosZ() - player.getPosZ());
+			double d0 = vector3d1.length();
+			vector3d1 = vector3d1.normalize();
+			double d1 = vector3d.dotProduct(vector3d1);
+			return d1 > 1.0D - 0.025D / d0 ? player.canEntityBeSeen(CrabEntity.this) : false;
 		}
 	}
 

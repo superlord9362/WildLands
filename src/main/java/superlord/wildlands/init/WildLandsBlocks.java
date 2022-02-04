@@ -14,7 +14,6 @@ import net.minecraft.block.SandBlock;
 import net.minecraft.block.SlabBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.StairsBlock;
-import net.minecraft.block.TallGrassBlock;
 import net.minecraft.block.TrapDoorBlock;
 import net.minecraft.block.WallBlock;
 import net.minecraft.block.WoodButtonBlock;
@@ -49,6 +48,7 @@ import superlord.wildlands.common.block.JellyBlock;
 import superlord.wildlands.common.block.MudBlock;
 import superlord.wildlands.common.block.OlivineLampBlock;
 import superlord.wildlands.common.block.OlivinePressurePlate;
+import superlord.wildlands.common.block.PalmettoBlock;
 import superlord.wildlands.common.block.SmolderingLogBlock;
 import superlord.wildlands.common.block.StarfishBlock;
 import superlord.wildlands.common.block.UrchinBlock;
@@ -101,7 +101,7 @@ public class WildLandsBlocks {
 	public static final RegistryObject<Block> CYPRESS_SAPLING = REGISTER.register("cypress_sapling", () -> new WLSapling(new WLTreeSpawners.Cypress(), AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0F).sound(SoundType.PLANT)));
 	@SuppressWarnings("deprecation")
 	public static final RegistryObject<Block> POTTED_CYPRESS_SAPLING = REGISTER.register("potted_cypress_sapling", () -> new FlowerPotBlock(CYPRESS_SAPLING.get(), AbstractBlock.Properties.create(Material.MISCELLANEOUS).notSolid().zeroHardnessAndResistance()));
-	public static final RegistryObject<Block> PALMETTO = REGISTER.register("palmetto", () -> new TallGrassBlock(AbstractBlock.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.PLANT)));
+	public static final RegistryObject<Block> PALMETTO = REGISTER.register("palmetto", () -> new PalmettoBlock(AbstractBlock.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().zeroHardnessAndResistance().notSolid().sound(SoundType.PLANT)));
 	public static final RegistryObject<Block> CATTAIL = REGISTER.register("cattail", () -> new DoubleWaterPlantBlock(AbstractBlock.Properties.create(Material.TALL_PLANTS).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.PLANT)));
 	public static final RegistryObject<Block> DUCKWEED = REGISTER.register("duckweed", () -> new DuckWeedBlock(AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.PLANT).notSolid()));
 	public static final RegistryObject<Block> BEARD_MOSS = REGISTER.register("beard_moss", () -> new BeardMossBlock(AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().zeroHardnessAndResistance().sound(SoundType.PLANT)));
