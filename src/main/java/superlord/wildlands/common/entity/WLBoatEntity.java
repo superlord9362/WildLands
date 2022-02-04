@@ -59,6 +59,8 @@ public class WLBoatEntity extends BoatEntity {
 				return WildLandsItems.BALD_CYPRESS_BOAT.get();
 			case COCONUT:
 				return WildLandsItems.COCONUT_BOAT.get();
+			case CHARRED:
+				return WildLandsItems.CHARRED_BOAT.get();
 		}
 	}
 	
@@ -68,6 +70,8 @@ public class WLBoatEntity extends BoatEntity {
 				return WildLandsBlocks.CYPRESS_PLANKS.get();
 			case COCONUT:
 				return WildLandsBlocks.COCONUT_PLANKS.get();
+			case CHARRED:
+				return WildLandsBlocks.CHARRED_PLANKS.get();
 		}
 	}
 	
@@ -171,7 +175,8 @@ public class WLBoatEntity extends BoatEntity {
 	
 	public enum WLType {
 		BALD_CYPRESS("bald_cypress"),
-		COCONUT("coconut");
+		COCONUT("coconut"),
+		CHARRED("charred");
 		
 		private final String name;
 		

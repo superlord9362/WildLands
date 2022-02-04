@@ -1,0 +1,586 @@
+{
+	"alligator_idle": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.alligatorIdle",
+		"sounds": [
+			{
+				"name": "wildlands:alligator/alligator_idle",
+				"stream": true
+			}
+		]
+	},
+	"alligator_hurt": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.alligatorHurt",
+		"sounds": [
+			{
+				"name": "wildlands:alligator/alligator_hurt",
+				"stream": true
+			}
+		]
+	},
+	"alligator_death": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.alligatorDeath",
+		"sounds": [
+			{
+				"name": "wildlands:alligator/alligator_death",
+				"stream": true
+			}
+		]
+	},
+	"frog_idle": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.frogIdle",
+		"sounds": [
+			{
+				"name": "wildlands:frog/frog_idle",
+				"stream": true
+			}
+		]
+	},
+	"frog_hurt": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.frogHurt",
+		"sounds": [
+			{
+				"name": "wildlands:frog/frog_hurt",
+				"stream": true
+			}
+		]
+	},
+	"frog_death": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.frogDeath",
+		"sounds": [
+			{
+				"name": "wildlands:frog/frog_death",
+				"stream": true
+			}
+		]
+	},
+	"clam_open": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.clamOpen",
+		"sounds": [
+			{
+				"name": "wildlands:clam/clam_open",
+				"stream": true
+			}
+		]
+	},
+	"clam_close": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.clamClose",
+		"sounds": [
+			{
+				"name": "wildlands:clam/clam_close",
+				"stream": true
+			}
+		]
+	},
+	"crab_idle": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.crabIdle",
+		"sounds": [
+			{
+				"name": "wildlands:crab/crab_idle",
+				"stream": true
+			}
+		]
+	},
+	"crab_hurt": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.crabHurt",
+		"sounds": [
+			{
+				"name": "wildlands:crab/crab_hurt",
+				"stream": true
+			}
+		]
+	},
+	"crab_death": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.crabDeath",
+		"sounds": [
+			{
+				"name": "wildlands:crab/crab_death",
+				"stream": true
+			}
+		]
+	},
+	"sea_lion_idle": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.seaLionIdle",
+		"sounds": [
+			{
+				"name": "wildlands:sea_lion/sea_lion_idle1",
+				"stream": true
+			},
+			{
+				"name": "wildlands:sea_lion/sea_lion_idle2",
+				"stream": true
+			}
+		]
+	},
+	"sea_lion_hurt": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.seaLionHurt",
+		"sounds": [
+			{
+				"name": "wildlands:sea_lion/sea_lion_hurt",
+				"stream": true
+			}
+		]
+	},
+	"sea_lion_death": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.seaLionDeath",
+		"sounds": [
+			{
+				"name": "wildlands:sea_lion/sea_lion_death",
+				"stream": true
+			}
+		]
+	},
+	"catfish_idle": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.catfishIdle",
+		"sounds": [
+			{
+				"name": "entity/fish/swim1",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim2",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim3",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim4",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim5",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim6",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim7",
+				"stream": true
+			}
+		]
+	},
+	"catfish_flop": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.catfishFlop",
+		"sounds": [
+			{
+				"name": "entity/fish/flop1",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/flop2",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/flop3",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/flop4",
+				"stream": true
+			}
+		]
+	},
+	"catfish_hurt": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.catfishHurt",
+		"sounds": [
+			{
+				"name": "entity/fish/hurt1",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt2",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt3",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt4",
+				"stream": true
+			}
+		]
+	},
+	"catfish_death": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.catfishDeath",
+		"sounds": [
+			{
+				"name": "entity/fish/hurt1",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt2",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt3",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt4",
+				"stream": true
+			}
+		]
+	},
+	"anchovy_idle": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.anchovyIdle",
+		"sounds": [
+			{
+				"name": "entity/fish/swim1",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim2",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim3",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim4",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim5",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim6",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim7",
+				"stream": true
+			}
+		]
+	},
+	"anchovy_flop": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.anchovyFlop",
+		"sounds": [
+			{
+				"name": "entity/fish/flop1",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/flop2",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/flop3",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/flop4",
+				"stream": true
+			}
+		]
+	},
+	"anchovy_hurt": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.anchovyHurt",
+		"sounds": [
+			{
+				"name": "entity/fish/hurt1",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt2",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt3",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt4",
+				"stream": true
+			}
+		]
+	},
+	"anchovy_death": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.anchovyDeath",
+		"sounds": [
+			{
+				"name": "entity/fish/hurt1",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt2",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt3",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt4",
+				"stream": true
+			}
+		]
+	},
+	"hammerhead_idle": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.hammerheadIdle",
+		"sounds": [
+			{
+				"name": "entity/fish/swim1",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim2",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim3",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim4",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim5",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim6",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/swim7",
+				"stream": true
+			}
+		]
+	},
+	"hammerhead_hurt": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.hammerheadHurt",
+		"sounds": [
+			{
+				"name": "entity/fish/hurt1",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt2",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt3",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt4",
+				"stream": true
+			}
+		]
+	},
+	"hammerhead_death": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.hammerheadDeath",
+		"sounds": [
+			{
+				"name": "entity/fish/hurt1",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt2",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt3",
+				"stream": true
+			},
+			{
+				"name": "entity/fish/hurt4",
+				"stream": true
+			}
+		]
+	},
+	"jellyfish_hurt": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.jellyfishHurt",
+		"sounds": [
+			{
+				"name": "mob/slime/small1",
+				"stream": true
+			},
+			{
+				"name": "mob/slime/small2",
+				"stream": true
+			},
+			{
+				"name": "mob/slime/small3",
+				"stream": true
+			},
+			{
+				"name": "mob/slime/small4",
+				"stream":true
+			},
+			{
+				"name": "mob/slime/small5",
+				"stream":true
+			}
+		]
+	},
+	"jellyfish_death": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.jellyfishDeath",
+		"sounds": [
+			{
+				"name": "mob/slime/small1",
+				"stream": true
+			},
+			{
+				"name": "mob/slime/small2",
+				"stream": true
+			},
+			{
+				"name": "mob/slime/small3",
+				"stream": true
+			},
+			{
+				"name": "mob/slime/small4",
+				"stream":true
+			},
+			{
+				"name": "mob/slime/small5",
+				"stream":true
+			}
+		]
+	},
+	"octopus_idle": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.octopusIdle",
+		"sounds": [
+			{
+				"name": "entity/squid/ambient1",
+				"stream":true
+			},
+			{
+				"name": "entity/squid/ambient2",
+				"stream":true
+			},
+			{
+				"name": "entity/squid/ambient3",
+				"stream":true
+			},
+			{
+				"name": "entity/squid/ambient4",
+				"stream":true
+			},
+			{
+				"name": "entity/squid/ambient5",
+				"stream":true
+			}
+		]
+	},
+	"octopus_death": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.octopusDeath",
+		"sounds": [
+			{
+				"name": "entity/squid/death1",
+				"stream":true
+			},
+			{
+				"name": "entity/squid/death2",
+				"stream":true
+			},
+			{
+				"name": "entity/squid/death3",
+				"stream":true
+			}
+		]
+	},
+	"octopus_hurt": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.octopusHurt",
+		"sounds": [
+			{
+				"name": "entity/squid/hurt1",
+				"stream":true
+			},
+			{
+				"name": "entity/squid/hurt2",
+				"stream":true
+			},
+			{
+				"name": "entity/squid/hurt3",
+				"stream":true
+			},
+			{
+				"name": "entity/squid/hurt4",
+				"stream":true
+			}
+		]
+	},
+	"grizzly_idle": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.grizzlyIdle",
+		"sounds": [
+			{
+				"name": "wildlands:grizzly/grizzly_idle",
+				"stream": true
+			},
+			{
+				"name": "wildlands:grizzly/grizzly_idle2",
+				"stream": true
+			}
+		]
+	},
+	"grizzly_hurt": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.grizzlyHurt",
+		"sounds": [
+			{
+				"name": "wildlands:grizzly/grizzly_hurt",
+				"stream": true
+			}
+		]
+	},
+	"grizzly_death": {
+		"category": "neutral",
+		"subtitle": "wildlands.subtitle.grizzlyDeath",
+		"sounds": [
+			{
+				"name": "wildlands:grizzly/grizzly_death",
+				"stream": true
+			}
+		]
+	},
+	"grizzly_warning": {
+		"category":"neutral",
+		"subtitle": "wildlands.subtitle.grizzlyWarning",
+		"sounds": [
+			{
+				"name": "wildlands:grizzly/grizzly_warning",
+				"stream": true
+			}
+		]
+	}
+}

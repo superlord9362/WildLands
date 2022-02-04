@@ -3,6 +3,7 @@ package superlord.wildlands.client.model;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.entity.Entity;
@@ -114,11 +115,20 @@ public class AlligatorModel<T extends Entity> extends EntityModel<T> {
 		if(entityIn.isInWater()) {
 			this.Tail.rotateAngleY = -1.0F * 0.45F * MathHelper.sin(0.6F * ageInTicks);
 		} else {
-			this.rightlegback.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
-			this.leftlegback.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-			this.rightlegfront.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
-			this.leftlegfront.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+			float speed = 1.0f;
+			float degree = 1.0f;
+			this.Tail.rotateAngleY = MathHelper.cos(limbSwing * speed * 0.05F) * degree * 0.75F * limbSwingAmount;
+			this.Head.rotateAngleX = MathHelper.cos(limbSwing * speed * 0.02F) * degree * 0.25F * limbSwingAmount;
+			this.leftlegfront.rotateAngleX = MathHelper.cos(limbSwing * speed * 0.25F) * degree * 1.0F * limbSwingAmount;
+			this.leftlegback.rotateAngleX = MathHelper.cos(3.0F + limbSwing * speed * 0.25F) * degree * 1.0F * limbSwingAmount;
+			this.rightlegfront.rotateAngleX = MathHelper.cos(3.0F + limbSwing * speed * 0.25F) * degree * 1.0F * limbSwingAmount;
+			this.rightlegback.rotateAngleX = MathHelper.cos(limbSwing * speed * 0.25F) * degree * 1.0F * limbSwingAmount;
 			this.Tail.rotateAngleY = 0;
+			this.leftlegfront.rotationPointY = Math.abs(MathHelper.cos(limbSwing * speed * 0.2F) * degree * 0.2F * limbSwingAmount) + 17.5F;
+			this.leftlegback.rotationPointY = Math.abs(MathHelper.cos(3.0F + limbSwing * speed * 0.2F) * degree * 0.2F * limbSwingAmount) + 17.5F;
+			this.rightlegfront.rotationPointY = Math.abs(MathHelper.cos(3.0F + limbSwing * speed * 0.2F) * degree * 0.2F * limbSwingAmount) + 17.5F;
+			this.rightlegback.rotationPointY = Math.abs(MathHelper.cos(limbSwing * speed * 0.2F) * degree * 0.2F * limbSwingAmount) + 17.5F;
+
 		}
 	}
 

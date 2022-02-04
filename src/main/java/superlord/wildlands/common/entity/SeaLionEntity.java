@@ -16,6 +16,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.MovementController;
+import net.minecraft.entity.ai.goal.BreatheAirGoal;
 import net.minecraft.entity.ai.goal.BreedGoal;
 import net.minecraft.entity.ai.goal.FollowParentGoal;
 import net.minecraft.entity.ai.goal.Goal;
@@ -43,11 +44,14 @@ import net.minecraft.pathfinding.WalkAndSwimNodeProcessor;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -56,12 +60,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.wildlands.init.WildLandsEntities;
 import superlord.wildlands.init.WildLandsItems;
+import superlord.wildlands.init.WildLandsSounds;
 
 public class SeaLionEntity extends AnimalEntity {
 	public int eatTicks;
 
 	public SeaLionEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
 		super(type, worldIn);
+		this.moveController = new SeaLionEntity.MoveHelperController(this);
 	}
 	
 	protected void registerGoals() {
@@ -73,7 +79,9 @@ public class SeaLionEntity extends AnimalEntity {
 		this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
 		this.goalSelector.addGoal(5, new SeaLionEntity.GoToWaterGoal(this, 1.2));
 		this.goalSelector.addGoal(3, new SeaLionEntity.FishingGoal(this));
-		this.goalSelector.addGoal(0, new SeaLionEntity.SwimGoal(this));
+		this.goalSelector.addGoal(1, new SeaLionEntity.SwimGoal(this));
+		this.goalSelector.addGoal(3, new SeaLionEntity.FindItemsGoal());
+		this.goalSelector.addGoal(0, new BreatheAirGoal(this));
 	}
 	
 	@Override
@@ -89,6 +97,18 @@ public class SeaLionEntity extends AnimalEntity {
 			}
 		}
 		return super.func_230254_b_(player, hand);
+	}
+	
+	protected SoundEvent getAmbientSound() {
+		return WildLandsSounds.SEA_LION_IDLE;
+	}
+
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return WildLandsSounds.SEA_LION_HURT;
+	}
+
+	protected SoundEvent getDeathSound() {
+		return WildLandsSounds.SEA_LION_DEATH;
 	}
 	
 	class WalkAndSwimPathNavigator extends SwimmerPathNavigator {
@@ -368,6 +388,59 @@ public class SeaLionEntity extends AnimalEntity {
 				}
 			}
 		}
+	}
+	
+	class FindItemsGoal extends Goal {
+	      public FindItemsGoal() {
+	         this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
+	      }
+
+	      /**
+	       * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
+	       * method as well.
+	       */
+	      public boolean shouldExecute() {
+	         if (!SeaLionEntity.this.getItemStackFromSlot(EquipmentSlotType.MAINHAND).isEmpty()) {
+	            return false;
+	         } else if (SeaLionEntity.this.getAttackTarget() == null && SeaLionEntity.this.getRevengeTarget() == null) {
+	        	 if (SeaLionEntity.this.getRNG().nextInt(10) != 0) {
+	               return false;
+	            } else {
+	               List<ItemEntity> list = SeaLionEntity.this.world.getEntitiesWithinAABB(ItemEntity.class, SeaLionEntity.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
+	               return !list.isEmpty() && SeaLionEntity.this.getItemStackFromSlot(EquipmentSlotType.MAINHAND).isEmpty();
+	            }
+	         } else {
+	            return false;
+	         }
+	      }
+
+	      /**
+	       * Keep ticking a continuous task that has already been started
+	       */
+	      public void tick() {
+	         List<ItemEntity> list = SeaLionEntity.this.world.getEntitiesWithinAABB(ItemEntity.class, SeaLionEntity.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
+	         ItemStack itemstack = SeaLionEntity.this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
+	         if (itemstack.isEmpty() && !list.isEmpty()) {
+	        	 SeaLionEntity.this.getNavigator().tryMoveToEntityLiving(list.get(0), (double)1.2F);
+	         }
+
+	      }
+
+	      /**
+	       * Execute a one shot task or start executing a continuous task
+	       */
+	      public void startExecuting() {
+	         List<ItemEntity> list = SeaLionEntity.this.world.getEntitiesWithinAABB(ItemEntity.class, SeaLionEntity.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
+	         if (!list.isEmpty()) {
+	        	 SeaLionEntity.this.getNavigator().tryMoveToEntityLiving(list.get(0), (double)1.2F);
+	         }
+
+	      }
+	   }
+	
+	@Override
+	public ItemStack getPickedResult(RayTraceResult target) {
+		return new ItemStack(WildLandsItems.SEA_LION_SPAWN_EGG.get());
 	}
 
 }

@@ -38,14 +38,26 @@ public class AlligatorRenderer extends MobRenderer<AlligatorEntity, EntityModel<
 	}
 
 	public ResourceLocation getEntityTexture(AlligatorEntity entity) {
-		if (entity.isLight()) {
-			return LIGHT;
-		} else if (entity.isDark()) {
-			return DARK;
-		} else if(entity.isAlbino()) {
-			return ALBINO;
+		if (entity.isChild()) {
+			if (entity.isLight()) {
+				return LIGHT;
+			} else if (entity.isDark()) {
+				return DARK;
+			} else if(entity.isAlbino()) {
+				return ALBINO;
+			} else {
+				return NORMAL;
+			}
 		} else {
-			return NORMAL;
+			if (entity.isLight()) {
+				return LIGHT;
+			} else if (entity.isDark()) {
+				return DARK;
+			} else if(entity.isAlbino()) {
+				return ALBINO;
+			} else {
+				return NORMAL;
+			}	
 		}
 	}
 

@@ -12,6 +12,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.Tags;
 import superlord.wildlands.common.util.TreeSpawner;
+import superlord.wildlands.init.WildLandsBlocks;
 
 import java.util.Random;
 
@@ -28,7 +29,9 @@ public class WLSapling extends BushBlock implements IGrowable {
 
     @Override
     protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        return state.isIn(Tags.Blocks.DIRT);
+    	if (state.getBlock() == WildLandsBlocks.COCONUT_SAPLING.get()) {
+    		return state.isIn(Tags.Blocks.DIRT) || state.isIn(Tags.Blocks.SAND);
+    	} else return state.isIn(Tags.Blocks.DIRT);
     }
 
     @Override

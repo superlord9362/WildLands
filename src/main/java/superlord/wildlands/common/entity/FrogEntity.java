@@ -35,9 +35,11 @@ import net.minecraft.pathfinding.Path;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -46,6 +48,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.wildlands.init.WildLandsEntities;
 import superlord.wildlands.init.WildLandsItems;
+import superlord.wildlands.init.WildLandsSounds;
 
 public class FrogEntity extends AnimalEntity {
 	private int jumpTicks;
@@ -76,6 +79,18 @@ public class FrogEntity extends AnimalEntity {
 
 	public void setFromBucket(boolean p_203706_1_) {
 		this.dataManager.set(FROM_BUCKET, p_203706_1_);
+	}
+	
+	protected SoundEvent getAmbientSound() {
+		return WildLandsSounds.FROG_IDLE;
+	}
+
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return WildLandsSounds.FROG_HURT;
+	}
+
+	protected SoundEvent getDeathSound() {
+		return WildLandsSounds.FROG_DEATH;
 	}
 
 	protected void registerGoals() {
@@ -632,6 +647,11 @@ public class FrogEntity extends AnimalEntity {
 		protected boolean shouldMoveTo(IWorldReader worldIn, BlockPos pos) {
 			return worldIn.getBlockState(pos).isIn(Blocks.WATER);
 		}
+	}
+	
+	@Override
+	public ItemStack getPickedResult(RayTraceResult target) {
+		return new ItemStack(WildLandsItems.FROG_SPAWN_EGG.get());
 	}
 
 }

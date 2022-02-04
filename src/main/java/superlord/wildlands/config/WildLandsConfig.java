@@ -11,10 +11,13 @@ public class WildLandsConfig {
 	public static int crabSpawnWeight = 5;
 	public static int seaLionSpawnWeight = 10;
 	public static int anchovySpawnWeight = 1;
+	public static int clamSpawnWeight = 1;
 	public static int hammerheadSharkSpawnWeight = 5;
 	public static int octopusSpawnWeight = 3;
+	public static int jellyfishSpawnWeight = 6;
 	public static double bayouScale = 0.1D;
 	public static double burntForestScale = 0.1D;
+	public static int grizzlyBearSpawnWeight = 10;
 	public static boolean superSecretSettings = false;
 	
 	public static void bakeClient(final ModConfig config) {
@@ -31,9 +34,12 @@ public class WildLandsConfig {
 			anchovySpawnWeight = WLConfigHolder.SERVER.anchovySpawnWeight.get();
 			hammerheadSharkSpawnWeight = WLConfigHolder.SERVER.hammerheadSharkSpawnWeight.get();
 			octopusSpawnWeight = WLConfigHolder.SERVER.octopusSpawnWeight.get();
+			jellyfishSpawnWeight = WLConfigHolder.SERVER.jellyfishSpawnWeight.get();
 			bayouScale = WLConfigHolder.SERVER.bayouScale.get();
 			burntForestScale = WLConfigHolder.SERVER.burntForestScale.get();
+			grizzlyBearSpawnWeight = WLConfigHolder.SERVER.grizzlyBearSpawnWeight.get();
 			superSecretSettings = WLConfigHolder.SERVER.superSecretSettings.get();
+			clamSpawnWeight = WLConfigHolder.SERVER.clamSpawnWeight.get();
 		} catch (Exception e) {
 			WildLands.LOGGER.warn("An exception was caused trying to load the config for Wild Lands");
 			e.printStackTrace();

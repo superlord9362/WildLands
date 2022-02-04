@@ -23,7 +23,7 @@ public class WLSurfaceBuilders {
 	}
 	
 	public static class Configs {
-		public static final SurfaceBuilderConfig MUD = new SurfaceBuilderConfig(WildLandsBlocks.MUD.get().getDefaultState(), WildLandsBlocks.DRIED_MUD.get().getDefaultState(), Blocks.DIRT.getDefaultState());
+		public static final SurfaceBuilderConfig MUD = new SurfaceBuilderConfig(WildLandsBlocks.MUD.get().getDefaultState(), WildLandsBlocks.MUD.get().getDefaultState(), Blocks.DIRT.getDefaultState());
 		public static final SurfaceBuilderConfig CHARRED_GRASS = new SurfaceBuilderConfig(WildLandsBlocks.CHARRED_GRASS.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState());
 	}
 	

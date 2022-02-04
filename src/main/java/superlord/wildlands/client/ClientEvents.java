@@ -24,7 +24,10 @@ import superlord.wildlands.client.render.ClamRenderer;
 import superlord.wildlands.client.render.CoconutRenderer;
 import superlord.wildlands.client.render.CrabRenderer;
 import superlord.wildlands.client.render.FrogRenderer;
+import superlord.wildlands.client.render.GrizzlyRenderer;
 import superlord.wildlands.client.render.HammerheadRenderer;
+import superlord.wildlands.client.render.JellyBallRenderer;
+import superlord.wildlands.client.render.JellyfishRenderer;
 import superlord.wildlands.client.render.OctopusRenderer;
 import superlord.wildlands.client.render.SeaLionRenderer;
 import superlord.wildlands.client.render.WLBoatRenderer;
@@ -45,12 +48,15 @@ public class ClientEvents {
 		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.ALLIGATOR.get(), manager -> new AlligatorRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.BOAT.get(), WLBoatRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.COCONUT.get(), CoconutRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.JELLY_BALL.get(), JellyBallRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.CRAB.get(), CrabRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.CLAM.get(), manager -> new ClamRenderer());
+		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.GRIZZLY.get(), manager -> new GrizzlyRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.FROG.get(), manager -> new FrogRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.HAMMERHEAD.get(), HammerheadRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.ANCHOVY.get(), AnchovyRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.OCTOPUS.get(), OctopusRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.JELLYFISH.get(), manager -> new JellyfishRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.SEA_LION.get(), SeaLionRenderer::new);
 	}
 	

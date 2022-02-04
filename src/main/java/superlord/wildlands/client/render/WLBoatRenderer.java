@@ -23,7 +23,8 @@ public class WLBoatRenderer extends EntityRenderer<WLBoatEntity> {
 
     private static final ResourceLocation[] BOAT_TEXTURES = new ResourceLocation[]{
             new ResourceLocation(WildLands.MOD_ID, "textures/entity/boat/bald_cypress.png"),
-            new ResourceLocation(WildLands.MOD_ID, "textures/entity/boat/coconut.png")
+            new ResourceLocation(WildLands.MOD_ID, "textures/entity/boat/coconut.png"),
+            new ResourceLocation(WildLands.MOD_ID, "textures/entity/boat/charred.png")
     };
     protected final BoatModel modelBoat = new BoatModel();
 

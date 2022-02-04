@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:sand"
+          "name": "wildlands:dried_mud_brick_stairs"
         }
       ],
       "conditions": [

@@ -10,9 +10,12 @@ public class ServerConfig {
 	public final ForgeConfigSpec.IntValue crabSpawnWeight;
 	public final ForgeConfigSpec.IntValue seaLionSpawnWeight;
 	public final ForgeConfigSpec.IntValue anchovySpawnWeight;
+	public final ForgeConfigSpec.IntValue clamSpawnWeight;
 	public final ForgeConfigSpec.IntValue hammerheadSharkSpawnWeight;
 	public final ForgeConfigSpec.IntValue octopusSpawnWeight;
+	public final ForgeConfigSpec.IntValue jellyfishSpawnWeight;
 	public final ForgeConfigSpec.DoubleValue bayouScale;
+	public final ForgeConfigSpec.IntValue grizzlyBearSpawnWeight;
 	public final ForgeConfigSpec.DoubleValue burntForestScale;
 	
 	public final ForgeConfigSpec.BooleanValue superSecretSettings;
@@ -29,9 +32,12 @@ public class ServerConfig {
 		this.seaLionSpawnWeight = buildInt(builder, "Sea Lion Spawn Weight", "all", 10, 1, 300, "The weight of Sea Lions in vanilla's spawn rate. Default is 10");
 		builder.comment("Ocean Config");
 		this.anchovySpawnWeight = buildInt(builder, "Anchovy Spawn Weight", "all", 1, 1, 300, "The weight of Anchovy in vanilla's spawn rate. Default is 1");
+		this.clamSpawnWeight = buildInt(builder, "Clam Spawn Weight", "all", 1, 1, 300, "The weight of Clams in vanilla's spawn rate. Default is 3");
 		this.hammerheadSharkSpawnWeight = buildInt(builder, "Hammerhead Shark Spawn Weight", "all", 5, 1, 300, "The weight of Hammerhead Sharks in vanilla's spawn rate. Default is 5");
 		this.octopusSpawnWeight = buildInt(builder, "Octopus Spawn Weight", "all", 3, 1, 300, "The weight of Octopi in vanilla's spawn rate. Default is 3");
+		this.jellyfishSpawnWeight = buildInt(builder, "Jellyfish Spawn Weight", "all", 6, 1, 300, "The weight of Jellyfish in vanilla's spawn rate. Default is 6");
 		builder.comment("Forest Config");
+		this.grizzlyBearSpawnWeight = buildInt(builder, "Grizzly Bear Spawn Weight", "all", 10, 1, 300, "The weight of Grizzly Bears in vanilla's spawn rate. Default is 10");
 		this.burntForestScale = buildDouble(builder, "Burnt Forest Biome Size", "all", 0.1, 0, 300, "The size of the Burnt Forest biome. Default is 0.1");
 		builder.comment("Misc Config");
 		this.superSecretSettings = buildBoolean(builder, "Super Secret Settings", "all", false, "Even I don't know what this does. Default is false");

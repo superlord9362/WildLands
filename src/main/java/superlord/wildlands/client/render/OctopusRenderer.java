@@ -21,6 +21,7 @@ public class OctopusRenderer extends MobRenderer<OctopusEntity, OctopusModel<Oct
 	private static final ResourceLocation SAND = new ResourceLocation(WildLands.MOD_ID, "textures/entity/octopus/octopus_sandy.png");
 	private static final ResourceLocation STONE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/octopus/octopus_stone.png");
 	private static final ResourceLocation YELLOW = new ResourceLocation(WildLands.MOD_ID, "textures/entity/octopus/octopus_yellow_coral.png");
+	private static final ResourceLocation SWIMMING = new ResourceLocation(WildLands.MOD_ID, "textures/entity/octopus/octopus_swimming.png");
 
 	public OctopusRenderer(EntityRendererManager renderManager) {
 		super(renderManager, new OctopusModel<>(), 1.0F);
@@ -50,6 +51,8 @@ public class OctopusRenderer extends MobRenderer<OctopusEntity, OctopusModel<Oct
 			return STONE;
 		} else if (entity.isOnYellowCoral()) {
 			return YELLOW;
+		} else if (entity.isScared()) {
+			return SWIMMING;
 		} else {
 			return TEXTURE;
 		}

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "wildlands:dried_mud_shingles"
+          "name": "wildlands:jelly_block"
         }
       ],
       "conditions": [

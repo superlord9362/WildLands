@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "wildlands:fine_sand"
+          "name": "wildlands:charred_sign"
         }
       ],
       "conditions": [

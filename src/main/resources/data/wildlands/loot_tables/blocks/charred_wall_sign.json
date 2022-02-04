@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "wildlands:wet_cypress_log"
+          "name": "wildlands:charred_sign"
         }
       ],
       "conditions": [

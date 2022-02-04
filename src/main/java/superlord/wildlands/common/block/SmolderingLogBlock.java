@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.FluidState;
@@ -26,10 +27,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.wildlands.init.WildLandsBlocks;
 
-public class SmoldderingLogBlock extends RotatedPillarBlock {
+public class SmolderingLogBlock extends RotatedPillarBlock {
 	protected final IParticleData particleData;
 
-	public SmoldderingLogBlock(Properties properties, IParticleData particleData) {
+	public SmolderingLogBlock(Properties properties, IParticleData particleData) {
 		super(properties);
 		this.particleData = particleData;
 	}
@@ -69,6 +70,15 @@ public class SmoldderingLogBlock extends RotatedPillarBlock {
 	protected void tryAbsorb(World worldIn, BlockPos pos) {
 		if (this.absorb(worldIn, pos)) {
 			worldIn.setBlockState(pos, WildLandsBlocks.CHARRED_LOG.getDefaultState(), 2);
+			AreaEffectCloudEntity areaeffectcloudentity = new AreaEffectCloudEntity(worldIn, pos.getX(), pos.getY(), pos.getZ());
+			areaeffectcloudentity.setRadius(1.5F);
+			areaeffectcloudentity.setRadiusOnUse(-0.5F);
+			areaeffectcloudentity.setWaitTime(10);
+			areaeffectcloudentity.setDuration(areaeffectcloudentity.getDuration() / 4);
+			areaeffectcloudentity.setRadiusPerTick(-areaeffectcloudentity.getRadius() / (float)areaeffectcloudentity.getDuration());
+			areaeffectcloudentity.setParticleData(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE);
+			worldIn.playSound(null, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.3F, 0.5F);
+			worldIn.addEntity(areaeffectcloudentity);
 		}
 	}
 

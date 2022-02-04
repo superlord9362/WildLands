@@ -11,6 +11,7 @@ public class WLWoodTypes extends WoodType {
 	private static final Set<WoodType> VALUES = new ObjectArraySet<>();
 	public static final WoodType CYPRESS = WLWoodTypes.register(new WLWoodTypes("bald_cypress"));
 	public static final WoodType COCONUT = WLWoodTypes.register(new WLWoodTypes("coconut"));
+	public static final WoodType CHARRED = WLWoodTypes.register(new WLWoodTypes("charred"));
 	
 	private final String name;
 	

@@ -16,20 +16,26 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.PanicGoal;
-import net.minecraft.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.entity.ai.goal.RandomWalkingGoal;
 import net.minecraft.entity.passive.WaterMobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import superlord.wildlands.init.WildLandsBlocks;
+import superlord.wildlands.init.WildLandsItems;
+import superlord.wildlands.init.WildLandsSounds;
 
 public class OctopusEntity extends WaterMobEntity {
 
@@ -50,12 +56,23 @@ public class OctopusEntity extends WaterMobEntity {
 	public OctopusEntity(EntityType<? extends OctopusEntity> type, World p_i48565_2_) {
 		super(type, p_i48565_2_);
 	}
+	
+	protected SoundEvent getAmbientSound() {
+		return WildLandsSounds.OCTOPUS_IDLE;
+	}
+
+	protected SoundEvent getDeathSound() {
+		return WildLandsSounds.OCTOPUS_DEATH;
+	}
+
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return WildLandsSounds.OCTOPUS_HURT;
+	}
 
 	protected void registerGoals() {
 		this.goalSelector.addGoal(3, new RandomWalkingGoal(this, 1.0D));
 		this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 6.0F));
 		this.goalSelector.addGoal(7, new LookRandomlyGoal(this));
-		this.goalSelector.addGoal(0, new PanicGoal(this, 1.0D));
 		this.goalSelector.addGoal(1, new OctopusEntity.CamoflaugeGoal(this));
 		this.goalSelector.addGoal(2, new AvoidEntityGoal<PlayerEntity>(this, PlayerEntity.class, 10, 1, 1.2F));
 		this.goalSelector.addGoal(0, new OctopusEntity.SwimGoal(this));
@@ -241,6 +258,7 @@ public class OctopusEntity extends WaterMobEntity {
 
 	public class CamoflaugeGoal extends Goal {
 		OctopusEntity octopus;
+		int tickCounter;
 
 		CamoflaugeGoal(OctopusEntity octopus) {
 			this.octopus = octopus;
@@ -249,15 +267,25 @@ public class OctopusEntity extends WaterMobEntity {
 		@Override
 		public boolean shouldExecute() {
 			List<PlayerEntity> players = octopus.world.getEntitiesWithinAABB(PlayerEntity.class, octopus.getBoundingBox().grow(5, 5, 5));
-			if (!players.isEmpty()) {
-				return true;
-			} else {
-				return false;
+			for (PlayerEntity player : players) {
+				if (!player.isCreative()) {
+					if (!players.isEmpty() && !octopus.isScared()) {
+						return true;
+					}
+				} else {
+					return false;
+				}
 			}
+			return false;
+		}
+
+		public void startExecuting() {
+
 		}
 
 		public void tick() {
 			super.tick();
+			tickCounter++;
 			BlockPos pos = octopus.getPosition();
 			BlockState state = world.getBlockState(pos.down());
 			Block block = state.getBlock();
@@ -309,7 +337,6 @@ public class OctopusEntity extends WaterMobEntity {
 		}
 
 		public void resetGoal() {
-			System.out.println("Hello");
 			resetModes();
 			setDefault(true);
 		}
@@ -319,17 +346,44 @@ public class OctopusEntity extends WaterMobEntity {
 		return new SwimmerPathNavigator(this, worldIn);
 	}
 
-	static class SwimGoal extends RandomSwimmingGoal {
+	static class SwimGoal extends PanicGoal {
 		private final OctopusEntity octopus;
 
 		public SwimGoal(OctopusEntity octopus) {
-			super(octopus, 1.0D, 40);
+			super(octopus, 2.5D);
 			this.octopus = octopus;
 		}
 
 		public boolean shouldExecute() {
-			return super.shouldExecute() && octopus.getRevengeTarget() != null;
+			return super.shouldExecute();
 		}
+
+		public void startExecuting() {
+			octopus.addVelocity(0, 0.2, 0);
+			this.octopus.getNavigator().tryMoveToXYZ(this.randPosX, this.randPosY, this.randPosZ, this.speed);
+			this.running = true;
+			octopus.setScared(true);
+		}
+
+		public void tick() {
+			super.tick();
+			octopus.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, octopus.getPosX(), octopus.getPosY(), octopus.getPosZ(), 1, 1, 1);
+		}
+
+		public void resetTask() {
+			octopus.addVelocity(0, -0.2, 0);
+			this.running = false;
+			octopus.setScared(false);
+		}
+
+		public boolean shouldContinueExecuting() {
+			return !octopus.getNavigator().noPath();
+		}
+	}
+	
+	@Override
+	public ItemStack getPickedResult(RayTraceResult target) {
+		return new ItemStack(WildLandsItems.OCTOPUS_SPAWN_EGG.get());
 	}
 
 }

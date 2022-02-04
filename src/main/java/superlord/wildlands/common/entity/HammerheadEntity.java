@@ -28,13 +28,17 @@ import net.minecraft.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.entity.monster.GuardianEntity;
 import net.minecraft.entity.passive.WaterMobEntity;
 import net.minecraft.entity.passive.fish.AbstractGroupFishEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.RegistryKey;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -43,6 +47,8 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import superlord.wildlands.common.entity.controllers.SwimMoveController;
 import superlord.wildlands.init.WildLandsBlocks;
+import superlord.wildlands.init.WildLandsItems;
+import superlord.wildlands.init.WildLandsSounds;
 
 public class HammerheadEntity extends WaterMobEntity {
 
@@ -70,6 +76,18 @@ public class HammerheadEntity extends WaterMobEntity {
 		this.targetSelector.addGoal(2, new WaterAttackGoal<>(this, AbstractGroupFishEntity.class, 70, false, true, null));
 		this.goalSelector.addGoal(6, new MeleeAttackGoal(this, (double)1.2F, true));
 		this.goalSelector.addGoal(5, new HurtByTargetGoal(this));
+	}
+	
+	protected SoundEvent getAmbientSound() {
+		return WildLandsSounds.HAMMERHEAD_IDLE;
+	}
+
+	protected SoundEvent getDeathSound() {
+		return WildLandsSounds.HAMMERHEAD_DEATH;
+	}
+
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return WildLandsSounds.HAMMERHEAD_HURT;
 	}
 
 	private static class CirclePreyGoal extends Goal {
@@ -222,7 +240,7 @@ public class HammerheadEntity extends WaterMobEntity {
 	}
 
 	public static AttributeModifierMap.MutableAttribute createAttributes() {
-		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 30.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.35F).createMutableAttribute(Attributes.ATTACK_DAMAGE, 6.0D);
+		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 30.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, (double)0.45F).createMutableAttribute(Attributes.ATTACK_DAMAGE, 6.0D);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -268,4 +286,9 @@ public class HammerheadEntity extends WaterMobEntity {
 
 	}
 
+	@Override
+	public ItemStack getPickedResult(RayTraceResult target) {
+		return new ItemStack(WildLandsItems.HAMMERHEAD_SPAWN_EGG.get());
+	}
+	
 }

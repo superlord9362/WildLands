@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "wildlands:block/olivine_lamp_top",
+    "bottom": "wildlands:block/olivine_lamp_off",
+    "side": "wildlands:block/olivine_lamp_off"
+  }
+}

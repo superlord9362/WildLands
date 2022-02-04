@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "wildlands:block/dried_mud_brick_slab"
+    },
+    "type=double": {
+      "model": "wildlands:block/dried_mud_bricks"
+    },
+    "type=top": {
+      "model": "wildlands:block/dried_mud_brick_slab_top"
+    }
+  }
+}

@@ -5,9 +5,9 @@ license="All rights reserved"
 modId="wildlands" #mandatory
 version="1.0.0" #mandatory
 displayName="Wild Lands" #mandatory
-credits="weastian (Assets) & superlord9362 (Code)" #optional
+credits="weastian (Assets), VakyPanda (Assets), & superlord9362 (Code)" #optional
 authors="superlord9362" #optional
-description='''Temporary description'''
+description='''Wild Lands is a vanilla-styled biome and wildlife mod, aiming to expand the vanilla world, as well as add to it. This ranges from adding new plants and animals to existing biomes, and adding fully fleshed out new biomes, such as the Bayou! The mod aims to feel very vanilla in what is added, with many interesting aspects and behaviors for many of the added animals!'''
 [[dependencies.examplemod]]
     modId="minecraft"
     mandatory=true

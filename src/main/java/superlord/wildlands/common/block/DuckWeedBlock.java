@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.BushBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.BoatEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +26,9 @@ public class DuckWeedBlock extends BushBlock {
 
 	@Override
 	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-		entityIn.setMotionMultiplier(state, new Vector3d(0.8D, 0, 0.8D));
+		if (!(entityIn instanceof BoatEntity)) {
+			entityIn.setMotionMultiplier(state, new Vector3d(0.4D, 1, 0.4D));
+		}
 	}
 
 	@Override

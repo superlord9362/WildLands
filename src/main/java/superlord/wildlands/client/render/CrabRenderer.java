@@ -10,6 +10,7 @@ import superlord.wildlands.common.entity.CrabEntity;
 public class CrabRenderer extends MobRenderer<CrabEntity, CrabModel<CrabEntity>> {
 	
 	private static final ResourceLocation TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/crab/crab.png");
+	private static final ResourceLocation FIGHTER = new ResourceLocation(WildLands.MOD_ID, "textures/entity/crab/crab_fighter.png");
 
 	public CrabRenderer(EntityRendererManager renderManagerIn) {
 		super(renderManagerIn, new CrabModel<>(), 0.375F);
@@ -17,7 +18,11 @@ public class CrabRenderer extends MobRenderer<CrabEntity, CrabModel<CrabEntity>>
 
 	@Override
 	public ResourceLocation getEntityTexture(CrabEntity entity) {
-		return TEXTURE;
+		if (entity.isFighter()) {
+			return FIGHTER;
+		} else {
+			return TEXTURE;
+		}
 	}
 	
 }

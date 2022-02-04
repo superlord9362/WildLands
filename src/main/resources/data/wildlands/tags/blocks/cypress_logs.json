@@ -4,7 +4,6 @@
     "wildlands:cypress_log",
 	"wildlands:stripped_cypress_log",
 	"wildlands:cypress_wood",
-	"wildlands:stripped_cypress_wood",
-	"wildlands:wet_cypress_log"
+	"wildlands:stripped_cypress_wood"
   ]
 }
