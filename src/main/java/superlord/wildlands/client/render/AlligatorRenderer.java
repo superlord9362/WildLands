@@ -1,5 +1,8 @@
 package superlord.wildlands.client.render;
 
+import java.util.Map;
+
+import com.google.common.collect.Maps;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
@@ -7,6 +10,7 @@ import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.client.model.AlligatorModel;
 import superlord.wildlands.client.model.AlligatorThreatenModel;
@@ -14,10 +18,12 @@ import superlord.wildlands.common.entity.AlligatorEntity;
 
 public class AlligatorRenderer extends MobRenderer<AlligatorEntity, EntityModel<AlligatorEntity>> {
 
-	private static final ResourceLocation NORMAL = new ResourceLocation(WildLands.MOD_ID, "textures/entity/gator/gator_green.png");
-	private static final ResourceLocation LIGHT = new ResourceLocation(WildLands.MOD_ID, "textures/entity/gator/gator_light_green.png");
-	private static final ResourceLocation DARK = new ResourceLocation(WildLands.MOD_ID, "textures/entity/gator/gator_dark_green.png");
-	private static final ResourceLocation ALBINO = new ResourceLocation(WildLands.MOD_ID, "textures/entity/gator/gator_albino.png");
+    public static final Map<Integer, ResourceLocation> TEXTURES = Util.make(Maps.newHashMap(), (hashMap) -> {
+    	hashMap.put(0, new ResourceLocation(WildLands.MOD_ID, "textures/entity/gator/gator_green.png"));
+    	hashMap.put(1, new ResourceLocation(WildLands.MOD_ID, "textures/entity/gator/gator_light_green.png"));
+    	hashMap.put(2, new ResourceLocation(WildLands.MOD_ID, "textures/entity/gator/gator_dark_green.png"));
+    	hashMap.put(3, new ResourceLocation(WildLands.MOD_ID, "textures/entity/gator/gator_albino.png"));
+    });
 	private static final AlligatorModel<AlligatorEntity> IDLE = new AlligatorModel<>();
 	private static final AlligatorThreatenModel<AlligatorEntity> WARNING = new AlligatorThreatenModel<>();
 
@@ -38,27 +44,7 @@ public class AlligatorRenderer extends MobRenderer<AlligatorEntity, EntityModel<
 	}
 
 	public ResourceLocation getEntityTexture(AlligatorEntity entity) {
-		if (entity.isChild()) {
-			if (entity.isLight()) {
-				return LIGHT;
-			} else if (entity.isDark()) {
-				return DARK;
-			} else if(entity.isAlbino()) {
-				return ALBINO;
-			} else {
-				return NORMAL;
-			}
-		} else {
-			if (entity.isLight()) {
-				return LIGHT;
-			} else if (entity.isDark()) {
-				return DARK;
-			} else if(entity.isAlbino()) {
-				return ALBINO;
-			} else {
-				return NORMAL;
-			}	
-		}
+        return TEXTURES.getOrDefault(entity.getVariant(), TEXTURES.get(0));
 	}
 
 }

@@ -59,17 +59,14 @@ import superlord.wildlands.init.WildLandsSounds;
 
 public class AlligatorEntity extends AnimalEntity {
 
-
-	private static final DataParameter<Boolean> ALBINO = EntityDataManager.createKey(AlligatorEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> NORMAL = EntityDataManager.createKey(AlligatorEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> DARK = EntityDataManager.createKey(AlligatorEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> LIGHT = EntityDataManager.createKey(AlligatorEntity.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> VARIANT = EntityDataManager.createKey(AlligatorEntity.class, DataSerializers.VARINT);
 	private static final DataParameter<Boolean> WARNING = EntityDataManager.createKey(AlligatorEntity.class, DataSerializers.BOOLEAN);
 	private int warningSoundTicks;
 
 	public AlligatorEntity(EntityType<? extends AlligatorEntity> type, World worldIn) {
 		super(type, worldIn);
 		this.moveController = new AlligatorEntity.MoveHelperController(this);
+		this.stepHeight = 1.0F;
 	}
 
 	protected void registerGoals() {
@@ -106,37 +103,13 @@ public class AlligatorEntity extends AnimalEntity {
 		return WildLandsSounds.ALLIGATOR_DEATH;
 	}
 
-	public boolean isAlbino() {
-		return this.dataManager.get(ALBINO);
-	}
+	public int getVariant() {
+        return this.dataManager.get(VARIANT);
+    }
 
-	private void setAlbino(boolean isAlbino) {
-		this.dataManager.set(ALBINO, isAlbino);
-	}
-
-	public boolean isNormal() {
-		return this.dataManager.get(NORMAL);
-	}
-
-	private void setNormal(boolean isNormal) {
-		this.dataManager.set(NORMAL, isNormal);
-	}
-
-	public boolean isLight() {
-		return this.dataManager.get(LIGHT);
-	}
-
-	private void setLight(boolean isLight) {
-		this.dataManager.set(LIGHT, isLight);
-	}
-
-	public boolean isDark() {
-		return this.dataManager.get(DARK);
-	}
-
-	private void setDark(boolean isDark) {
-		this.dataManager.set(DARK, isDark);
-	}
+    private void setVariant(int variant) {
+        this.dataManager.set(VARIANT, variant);
+    }
 
 	public boolean isWarning() {
 		return this.dataManager.get(WARNING);
@@ -187,10 +160,7 @@ public class AlligatorEntity extends AnimalEntity {
 
 	private void setBucketData(ItemStack bucket) {
 		CompoundNBT nbt = bucket.getOrCreateTag();
-		nbt.putBoolean("Albino", this.isAlbino());
-		nbt.putBoolean("Normal", this.isNormal());
-		nbt.putBoolean("Dark", this.isDark());
-		nbt.putBoolean("Light", this.isLight());
+        nbt.putInt("Variant", this.getVariant());
 		nbt.putInt("GrowingAge", this.getGrowingAge());
 		if (this.hasCustomName()) {
 			bucket.setDisplayName(this.getCustomName());
@@ -243,47 +213,32 @@ public class AlligatorEntity extends AnimalEntity {
 
 	protected void registerData() {
 		super.registerData();
-		this.dataManager.register(ALBINO, false);
-		this.dataManager.register(NORMAL, false);
-		this.dataManager.register(LIGHT, false);
-		this.dataManager.register(DARK, false);
+		this.dataManager.register(VARIANT, 0);
 		this.dataManager.register(WARNING, false);
 	}
 
 	public void readAdditional(CompoundNBT compound) {
 		super.readAdditional(compound);
-		this.setAlbino(compound.getBoolean("Albino"));
-		this.setLight(compound.getBoolean("Light"));
-		this.setDark(compound.getBoolean("Dark"));
-		this.setNormal(compound.getBoolean("Normal"));
 		this.setWarning(compound.getBoolean("Warning"));
+		this.setVariant(compound.getInt("Variant"));
 	}
 
 	public void writeAdditional(CompoundNBT compound) {
 		super.writeAdditional(compound);
-		compound.putBoolean("Albino", this.isAlbino());
-		compound.putBoolean("Normal", this.isNormal());
-		compound.putBoolean("Light", this.isLight());
-		compound.putBoolean("Dark", this.isDark());
+		compound.putInt("Variant", this.getVariant());
 		compound.putBoolean("Warning", this.isWarning());
 	}
 
 	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-		setColor();
-		return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-	}
-
-	public void setColor() {
-		int color = rand.nextInt(99);
-		if (color <= 32) {
-			this.setLight(true);
-		} else if (color > 32 && color <= 65) {
-			this.setNormal(true);
-		} else if (color > 65 && color <= 98) {
-			this.setDark(true);
-		} else {
-			this.setAlbino(true);
-		}
+		spawnDataIn = super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        if (dataTag == null) {
+            setVariant(rand.nextInt(3));
+        } else {
+            if (dataTag.contains("Variant", 3)){
+                this.setVariant(dataTag.getInt("Variant"));
+            }
+        }
+		return spawnDataIn;
 	}
 
 	static class MoveHelperController extends MovementController {
@@ -295,6 +250,7 @@ public class AlligatorEntity extends AnimalEntity {
 		}
 
 		public void tick() {
+
 			if (this.alligator.areEyesInFluid(FluidTags.WATER)) {
 				this.alligator.setMotion(this.alligator.getMotion().add(0.0D, 0.005D, 0.0D));
 			}
