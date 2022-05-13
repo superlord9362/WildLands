@@ -6,7 +6,6 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -54,7 +53,7 @@ import superlord.wildlands.init.WildLandsEntities;
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = WildLands.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientEvents {
-	
+
 	public static ModelLayerLocation ALLIGATOR = new ModelLayerLocation(new ResourceLocation(WildLands.MOD_ID, "alligator"), "alligator");
 	public static ModelLayerLocation ALLIGATOR_WARNING = new ModelLayerLocation(new ResourceLocation(WildLands.MOD_ID, "alligator_warning"), "alligator_warning");
 	public static ModelLayerLocation ANCHOVY = new ModelLayerLocation(new ResourceLocation(WildLands.MOD_ID, "anchovy"), "anchovy");
@@ -69,7 +68,7 @@ public class ClientEvents {
 	public static ModelLayerLocation JELLYFISH = new ModelLayerLocation(new ResourceLocation(WildLands.MOD_ID, "jellyfish"), "jellyfish");
 	public static ModelLayerLocation OCTOPUS = new ModelLayerLocation(new ResourceLocation(WildLands.MOD_ID, "octopus"), "octopus");
 	public static ModelLayerLocation SEA_LION = new ModelLayerLocation(new ResourceLocation(WildLands.MOD_ID, "sea_lion"), "sea_lion");
-	
+
 	@SubscribeEvent
 	public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerEntityRenderer(WildLandsEntities.ALLIGATOR.get(), AlligatorRenderer::new);
@@ -85,10 +84,10 @@ public class ClientEvents {
 		event.registerEntityRenderer(WildLandsEntities.JELLYFISH.get(), JellyfishRenderer::new);
 		event.registerEntityRenderer(WildLandsEntities.OCTOPUS.get(), OctopusRenderer::new);
 		event.registerEntityRenderer(WildLandsEntities.SEA_LION.get(), SeaLionRenderer::new);
-		
+		event.registerBlockEntityRenderer(WLTileEntities.WL_SIGNS.get(), WLSignTileEntityRenderer::new);
 		//RenderingRegistry.registerEntityRenderingHandler(WildLandsEntities.CLAM.get(), manager -> new ClamRenderer());
 	}
-	
+
 	@SubscribeEvent
 	public static void registerLayerDefinition(EntityRenderersEvent.RegisterLayerDefinitions event) {
 		event.registerLayerDefinition(ALLIGATOR, AlligatorModel::createBodyLayer);
@@ -106,33 +105,32 @@ public class ClientEvents {
 		event.registerLayerDefinition(OCTOPUS, OctopusModel::createBodyLayer);
 		event.registerLayerDefinition(SEA_LION, SeaLionModel::createBodyLayer);
 	}
-	
+
 	@SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
-    public static void itemColors(ColorHandlerEvent.Item event) {
-        ItemColors handler = event.getItemColors();
-        ItemColor eggColor = (stack, tintIndex) -> ((WLSpawnEggItem) stack.getItem()).getColor(tintIndex);
-        for (WLSpawnEggItem e : WLSpawnEggItem.UNADDED_EGGS) handler.register(eggColor, e);
-    }
-	
+	@OnlyIn(Dist.CLIENT)
+	public static void itemColors(ColorHandlerEvent.Item event) {
+		ItemColors handler = event.getItemColors();
+		ItemColor eggColor = (stack, tintIndex) -> ((WLSpawnEggItem) stack.getItem()).getColor(tintIndex);
+		for (WLSpawnEggItem e : WLSpawnEggItem.UNADDED_EGGS) handler.register(eggColor, e);
+	}
+
 	@SubscribeEvent
-    public static void registerModels(ModelRegistryEvent event)
-    {
+	public static void registerModels(ModelRegistryEvent event)
+	{
 		ItemBlockRenderTypes.setRenderLayer(WildLandsBlocks.CYPRESS_SIGN.get(), RenderType.cutout());
 		ItemBlockRenderTypes.setRenderLayer(WildLandsBlocks.CYPRESS_WALL_SIGN.get(), RenderType.cutout());
 		ItemBlockRenderTypes.setRenderLayer(WildLandsBlocks.COCONUT_SIGN.get(), RenderType.cutout());
 		ItemBlockRenderTypes.setRenderLayer(WildLandsBlocks.COCONUT_WALL_SIGN.get(), RenderType.cutout());
-		BlockEntityRenderers.register(WLTileEntities.WL_SIGNS.get(), WLSignTileEntityRenderer::new);
-    }
+	}
 
-    @SubscribeEvent
-    public static void onStitchEvent(TextureStitchEvent.Pre event)
-    {
-        ResourceLocation stitching = event.getAtlas().location();
-        if (!stitching.equals(Sheets.SIGN_SHEET))
-            return;
+	@SubscribeEvent
+	public static void onStitchEvent(TextureStitchEvent.Pre event)
+	{
+		ResourceLocation stitching = event.getAtlas().location();
+		if (!stitching.equals(Sheets.SIGN_SHEET))
+			return;
 
-        WLWoodTypes.getValues().forEach(woodType -> event.addSprite(new ResourceLocation(WildLands.MOD_ID, "entity/signs/" + woodType.name())));
-    }
+		WLWoodTypes.getValues().forEach(woodType -> event.addSprite(new ResourceLocation(WildLands.MOD_ID, "entity/signs/" + woodType.name())));
+	}
 
 }

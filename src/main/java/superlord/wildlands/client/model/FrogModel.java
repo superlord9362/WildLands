@@ -26,10 +26,10 @@ public class FrogModel extends EntityModel<FrogEntity> {
 	private final ModelPart LeftLeg;
 	private final ModelPart RightLeg;
 	private final ModelPart poach;
-	private final ModelPart RightLegfront;
-	private final ModelPart LeftLegfront;
+	private final ModelPart RightLegFront;
+	private final ModelPart LeftLegFront;
 	private final ModelPart Leftfoot;
-	private final ModelPart Leftfoot_1;
+	private final ModelPart Leftfoot2;
 	@SuppressWarnings("unused")
 	private float jumpRotation;
 
@@ -38,10 +38,10 @@ public class FrogModel extends EntityModel<FrogEntity> {
 		this.LeftLeg = root.getChild("LeftLeg");
 		this.RightLeg = root.getChild("RightLeg");
 		this.poach = root.getChild("poach");
-		this.LeftLegfront = Body.getChild("LeftLegfront");
-		this.RightLegfront = Body.getChild("RightLegfront");
+		this.LeftLegFront = Body.getChild("LeftLegFront");
+		this.RightLegFront = Body.getChild("RightLegFront");
 		this.Leftfoot = LeftLeg.getChild("Leftfoot");
-		this.Leftfoot_1 = RightLeg.getChild("Leftfoot_1");
+		this.Leftfoot2 = RightLeg.getChild("Leftfoot2");
 	}
 
 	@SuppressWarnings("unused")
@@ -85,9 +85,9 @@ public class FrogModel extends EntityModel<FrogEntity> {
         this.LeftLeg.xRot = (limbSwingAmount * 50.0F) * ((float)Math.PI / 180F);
         this.RightLeg.xRot = (limbSwingAmount * 50.0F) * ((float)Math.PI / 180F);
         this.Leftfoot.xRot = limbSwingAmount * 50.0F * ((float)Math.PI / 180F);
-        this.Leftfoot_1.xRot = limbSwingAmount * 50.0F * ((float)Math.PI / 180F);
-        this.LeftLegfront.xRot = (limbSwingAmount * -40.0F + 15.0F) * ((float)Math.PI / 180F);
-        this.RightLegfront.xRot = (limbSwingAmount * -40.0F + 15.0F) * ((float)Math.PI / 180F);
+        this.Leftfoot2.xRot = limbSwingAmount * 50.0F * ((float)Math.PI / 180F);
+        this.LeftLegFront.xRot = (limbSwingAmount * -40.0F + 15.0F) * ((float)Math.PI / 180F);
+        this.RightLegFront.xRot = (limbSwingAmount * -40.0F + 15.0F) * ((float)Math.PI / 180F);
 	}
 
 	@Override

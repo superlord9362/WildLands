@@ -32,11 +32,11 @@ public interface RegistrationProvider<T> {
             final var loader = ServiceLoader.load(Factory.class);
             final var it = loader.iterator();
             if (!it.hasNext()) {
-                throw new RuntimeException("No BygRegistrationProvider Factory was found on the classpath!");
+                throw new RuntimeException("No WLRegistrationProvider Factory was found on the classpath!");
             } else {
                 final Factory factory = it.next();
                 if (it.hasNext()) {
-                    throw new RuntimeException("More than one BygRegistrationProvider Factory was found on the classpath!");
+                    throw new RuntimeException("More than one WLRegistrationProvider Factory was found on the classpath!");
                 }
                 return factory;
             }
