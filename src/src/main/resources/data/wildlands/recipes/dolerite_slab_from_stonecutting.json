@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "wildlands:dolerite"
+  },
+  "result": "wildlands:dolerite_slab",
+  "count": 2
+}

@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "wildlands:block/magenta_starfish"
+      },
+      {
+        "model": "wildlands:block/magenta_starfish",
+        "y": 90
+      },
+      {
+        "model": "wildlands:block/magenta_starfish",
+        "y": 180
+      },
+      {
+        "model": "wildlands:block/magenta_starfish",
+        "y": 270
+      }
+    ]
+  }
+}

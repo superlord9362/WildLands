@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "wildlands:charred_log",
+	"wildlands:stripped_charred_log",
+	"wildlands:charred_wood",
+	"wildlands:stripped_charred_wood"
+  ]
+}

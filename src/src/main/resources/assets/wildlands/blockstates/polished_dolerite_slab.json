@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "wildlands:block/polished_dolerite_slab"
+    },
+    "type=double": {
+      "model": "wildlands:block/polished_dolerite"
+    },
+    "type=top": {
+      "model": "wildlands:block/polished_dolerite_slab_top"
+    }
+  }
+}

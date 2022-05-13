@@ -1,0 +1,37 @@
+{
+  "variants": {
+    "experience=0": {
+      "model": "wildlands:block/olivine_lamp_off"
+    },
+	"experience=1": {
+		"model": "wildlands:block/olivine_lamp_low"
+	},
+	"experience=2": {
+		"model": "wildlands:block/olivine_lamp_low"
+	},
+	"experience=3": {
+		"model": "wildlands:block/olivine_lamp_low"
+	},
+	"experience=4": {
+		"model": "wildlands:block/olivine_lamp_medium"
+	},
+	"experience=5": {
+		"model": "wildlands:block/olivine_lamp_medium"
+	},
+	"experience=6": {
+		"model": "wildlands:block/olivine_lamp_medium"
+	},
+	"experience=7": {
+		"model": "wildlands:block/olivine_lamp_high"
+	},
+	"experience=8": {
+		"model": "wildlands:block/olivine_lamp_high"
+	},
+	"experience=9": {
+		"model": "wildlands:block/olivine_lamp_high"
+	},
+	"experience=10": {
+		"model": "wildlands:block/olivine_lamp_max"
+	}
+  }
+}

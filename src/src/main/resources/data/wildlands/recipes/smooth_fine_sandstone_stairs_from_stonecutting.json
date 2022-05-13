@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "wildlands:smooth_fine_sandstone"
+  },
+  "result": "wildlands:smooth_fine_sandstone_stairs",
+  "count": 1
+}

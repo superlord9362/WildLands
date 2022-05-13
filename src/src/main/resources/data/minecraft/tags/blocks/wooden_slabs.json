@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "wildlands:cypress_slab",
+	"wildlands:coconut_slab",
+	"wildlands:charred_slab"
+  ]
+}

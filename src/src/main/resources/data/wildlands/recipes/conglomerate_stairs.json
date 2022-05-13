@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "wildlands:conglomerate"
+    }
+  },
+  "result": {
+    "item": "wildlands:conglomerate_stairs",
+    "count": 4
+  }
+}

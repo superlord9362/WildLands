@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "wildlands:block/coconut"
+    },
+	"facing=east": {
+		"model": "wildlands:block/coconut",
+		"y": 90
+	},
+	"facing=west": {
+		"model": "wildlands:block/coconut",
+		"y": 270
+	},
+	"facing=south": {
+		"model": "wildlands:block/coconut",
+		"y": 180
+	}
+  }
+}

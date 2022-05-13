@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "wildlands:block/gabbro_slab"
+    },
+    "type=double": {
+      "model": "wildlands:block/gabbro"
+    },
+    "type=top": {
+      "model": "wildlands:block/gabbro_slab_top"
+    }
+  }
+}

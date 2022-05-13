@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "wildlands:block/conglomerate_brick_slab"
+    },
+    "type=double": {
+      "model": "wildlands:block/conglomerate_bricks"
+    },
+    "type=top": {
+      "model": "wildlands:block/conglomerate_brick_slab_top"
+    }
+  }
+}

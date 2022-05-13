@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "wildlands:anchovy"
+  },
+  "result": "wildlands:cooked_anchovy",
+  "experience": 0.35,
+  "cookingtime": 200
+}

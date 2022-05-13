@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "wildlands:block/dolerite",
+    "top": "wildlands:block/dolerite",
+    "side": "wildlands:block/dolerite"
+  }
+}

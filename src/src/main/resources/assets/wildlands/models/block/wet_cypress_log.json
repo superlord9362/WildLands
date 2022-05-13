@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "wildlands:block/wet_cypress_log_top",
+    "side": "wildlands:block/wet_cypress_log_side"
+  }
+}

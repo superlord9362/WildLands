@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "wildlands:cypress_stairs",
+	"wildlands:conglomerate_stairs",
+	"wildlands:conglomerate_brick_stairs",
+	"wildlands:gabbro_stairs",
+	"wildlands:polished_gabbro_stairs",
+	"wildlands:dolerite_stairs",
+	"wildlands:polished_dolerite_stairs",
+	"wildlands:fine_sandstone_stairs",
+	"wildlands:smooth_fine_sandstone_stairs",
+	"wildlands:coconut_stairs",
+	"wildlands:charred_stairs",
+	"wildlands:dried_mud_brick_stairs"
+  ]
+}

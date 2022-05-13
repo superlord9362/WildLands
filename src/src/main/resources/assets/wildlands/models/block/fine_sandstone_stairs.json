@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "wildlands:block/fine_sandstone_bottom",
+    "top": "wildlands:block/smooth_fine_sandstone",
+    "side": "wildlands:block/fine_sandstone"
+  }
+}

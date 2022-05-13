@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "wildlands:conglomerate"
+  },
+  "result": "wildlands:conglomerate_brick_wall",
+  "count": 1
+}

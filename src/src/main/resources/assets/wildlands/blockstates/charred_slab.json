@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "wildlands:block/charred_slab"
+    },
+    "type=double": {
+      "model": "wildlands:block/charred_planks"
+    },
+    "type=top": {
+      "model": "wildlands:block/charred_slab_top"
+    }
+  }
+}

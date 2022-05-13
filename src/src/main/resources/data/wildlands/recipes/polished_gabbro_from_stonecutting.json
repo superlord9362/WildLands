@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "wildlands:gabbro"
+  },
+  "result": "wildlands:polished_gabbro",
+  "count": 1
+}

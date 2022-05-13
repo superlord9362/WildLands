@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "wildlands:block/pink_starfish"
+      },
+      {
+        "model": "wildlands:block/pink_starfish",
+        "y": 90
+      },
+      {
+        "model": "wildlands:block/pink_starfish",
+        "y": 180
+      },
+      {
+        "model": "wildlands:block/pink_starfish",
+        "y": 270
+      }
+    ]
+  }
+}
