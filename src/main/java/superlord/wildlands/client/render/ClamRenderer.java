@@ -1,18 +1,6 @@
 package superlord.wildlands.client.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.util.ResourceLocation;
-import superlord.wildlands.WildLands;
-import superlord.wildlands.client.model.ClamModel;
-import superlord.wildlands.client.model.ClamOpenModel;
-import superlord.wildlands.common.entity.ClamEntity;
-
-public class ClamRenderer extends MobRenderer<ClamEntity, EntityModel<ClamEntity>> {
+public class ClamRenderer {/** extends MobRenderer<ClamEntity, EntityModel<ClamEntity>> {
 	
 	private static final ResourceLocation CLAM_1 = new ResourceLocation(WildLands.MOD_ID, "textures/entity/clam/clam1.png");
 	private static final ResourceLocation CLAM_2 = new ResourceLocation(WildLands.MOD_ID, "textures/entity/clam/clam2.png");
@@ -45,5 +33,5 @@ public class ClamRenderer extends MobRenderer<ClamEntity, EntityModel<ClamEntity
 			return CLAM_3;
 		}
 	}
-
+*/
 }

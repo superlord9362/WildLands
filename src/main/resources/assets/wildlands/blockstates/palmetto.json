@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
-      "model": "wildlands:block/palmetto"
+    "half=lower": {
+      "model": "wildlands:block/palmetto_bottom"
+    },
+    "half=upper": {
+      "model": "wildlands:block/palmetto_top"
     }
   }
 }

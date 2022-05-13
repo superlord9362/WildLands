@@ -1,189 +1,179 @@
 package superlord.wildlands.common.entity;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.BoatEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.IndirectEntityDamageSource;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.fml.network.NetworkHooks;
 import superlord.wildlands.init.WildLandsBlocks;
 import superlord.wildlands.init.WildLandsEntities;
 import superlord.wildlands.init.WildLandsItems;
 
-public class WLBoatEntity extends BoatEntity {
-	
-	private static final DataParameter<Integer> WL_BOAT_TYPE = EntityDataManager.createKey(WLBoatEntity.class, DataSerializers.VARINT);
-	private BoatEntity.Status status;
+public class WLBoatEntity extends Boat {
+
+	private static final EntityDataAccessor<Integer> WL_BOAT_TYPE = SynchedEntityData.defineId(WLBoatEntity.class, EntityDataSerializers.INT);
+	private Boat.Status status;
 	@SuppressWarnings("unused")
 	private double lastYd;
-	
-	public WLBoatEntity(World world, double x, double y, double z) {
+
+	public WLBoatEntity(Level world, double x, double y, double z) {
 		this(WildLandsEntities.BOAT.get(), world);
-		this.setPosition(x, y, z);
-		this.setMotion(Vector3d.ZERO);
-		this.prevPosX = x;
-		this.prevPosY = y;
-		this.prevPosZ = z;
+		this.setPos(x, y, z);
+		this.xo = x;
+		this.yo = y;
+		this.zo = z;
 	}
-	
-	public WLBoatEntity(EntityType<? extends BoatEntity> boatEntityType, World world) {
+
+	public WLBoatEntity(EntityType<? extends Boat> boatEntityType, Level world) {
 		super(boatEntityType, world);
 	}
-	
-	public WLBoatEntity(FMLPlayMessages.SpawnEntity packet, World world) {
-		super(WildLandsEntities.BOAT.get(), world);
-	}
-	
+
 	@Override
-	public Item getItemBoat() {
+	public Item getDropItem() {
 		switch(this.getWLBoatType()) {
-			default:
-				return WildLandsItems.BALD_CYPRESS_BOAT.get();
-			case COCONUT:
-				return WildLandsItems.COCONUT_BOAT.get();
-			case CHARRED:
-				return WildLandsItems.CHARRED_BOAT.get();
+		default:
+			return WildLandsItems.BALD_CYPRESS_BOAT.get();
+		case COCONUT:
+			return WildLandsItems.COCONUT_BOAT.get();
+		case CHARRED:
+			return WildLandsItems.CHARRED_BOAT.get();
 		}
 	}
-	
+
 	public Block getPlanks() {
 		switch(this.getWLBoatType()) {
-			default:
-				return WildLandsBlocks.CYPRESS_PLANKS.get();
-			case COCONUT:
-				return WildLandsBlocks.COCONUT_PLANKS.get();
-			case CHARRED:
-				return WildLandsBlocks.CHARRED_PLANKS.get();
+		default:
+			return WildLandsBlocks.CYPRESS_PLANKS.get();
+		case COCONUT:
+			return WildLandsBlocks.COCONUT_PLANKS.get();
+		case CHARRED:
+			return WildLandsBlocks.CHARRED_PLANKS.get();
 		}
 	}
-	
+
 	public WLType getWLBoatType() {
-		return WLType.byId(this.dataManager.get(WL_BOAT_TYPE));
+		return WLType.byId(this.entityData.get(WL_BOAT_TYPE));
 	}
-	
+
 	public void setWLBoatType(WLType boatType) {
-		this.dataManager.set(WL_BOAT_TYPE, boatType.ordinal());
+		this.entityData.set(WL_BOAT_TYPE, boatType.ordinal());
 	}
-	
+
 	@Override
-	protected void registerData() {
-		super.registerData();
-		this.dataManager.register(WL_BOAT_TYPE, WLType.BALD_CYPRESS.ordinal());
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		this.entityData.define(WL_BOAT_TYPE, WLType.BALD_CYPRESS.ordinal());
 	}
-	
+
 	@Override
-	protected void writeAdditional(CompoundNBT compound) {
+	protected void addAdditionalSaveData(CompoundTag compound) {
 		compound.putString("WLType", this.getWLBoatType().getName());
 	}
-	
+
 	@Override
-	protected void readAdditional(CompoundNBT compound) {
+	protected void readAdditionalSaveData(CompoundTag compound) {
 		if (compound.contains("WLType", 8)) {
 			this.setWLBoatType(WLType.getTypeFromString(compound.getString("WLType")));
 		}
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void performHurtAnimation() {
-		this.setForwardDirection(-this.getForwardDirection());
-		this.setTimeSinceHit(10);
-		this.setDamageTaken(this.getDamageTaken() * 11.0F);
+	public void animateHurt() {
+		this.setHurtDir(-this.getHurtDir());
+		this.setHurtTime(10);
+		this.setDamage(this.getDamage() * 11.0F);
 	}
-	
-	@SuppressWarnings("deprecation")
+
 	@Override
-	protected void updateFallState(double y, boolean onGround, BlockState state, BlockPos pos) {
-		this.lastYd = this.getMotion().y;
+	protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
+		this.lastYd = this.getDeltaMovement().y;
 		if (!this.isPassenger()) {
 			if (onGround) {
 				if (this.fallDistance > 3.0F) {
-					if (this.status != BoatEntity.Status.ON_LAND) {
+					if (this.status != Boat.Status.ON_LAND) {
 						this.fallDistance = 0.0f;
 						return;
 					}
-					this.onLivingFall(this.fallDistance, 1.0F);
-					if (!this.world.isRemote && !this.removed) {
-						this.remove();
-						if(this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
+					this.causeFallDamage(this.fallDistance, 1.0F, DamageSource.FALL);
+					if (!this.level.isClientSide && !this.isRemoved()) {
+						this.kill();
+						if(this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
 							for(int i = 0; i < 3; ++i) {
-								this.entityDropItem(this.getPlanks());
+								this.spawnAtLocation(this.getPlanks());
 							}
 							for (int j = 0; j < 2; ++j) {
-								this.entityDropItem(Items.STICK);
+								this.spawnAtLocation(Items.STICK);
 							}
-							this.entityDropItem(Blocks.AIR);
+							this.spawnAtLocation(Blocks.AIR);
 						}
 					}
 				}
 				this.fallDistance = 0.0F;
-			} else if (!this.world.getFluidState((new BlockPos(this.getPositionVec())).down()).isTagged(FluidTags.WATER) && y < 0.0D) {
+			} else if (!this.level.getFluidState((new BlockPos(this.blockPosition())).below()).is(FluidTags.WATER) && y < 0.0D) {
 				this.fallDistance = (float) ((double) this.fallDistance - y);
 			}
 		}
 	}
-	
-	@SuppressWarnings("deprecation")
+
 	@Override
-	public boolean attackEntityFrom(DamageSource source, float amount) {
+	public boolean hurt(DamageSource source, float amount) {
 		if (this.isInvulnerableTo(source)) {
 			return false;
-		} else if (!this.world.isRemote && !this.removed) {
-			if (source instanceof IndirectEntityDamageSource && source.getTrueSource() != null && this.isPassenger(source.getTrueSource())) {
-				return false;
-			} else {
-				this.setForwardDirection(-this.getForwardDirection());
-				this.setTimeSinceHit(10);
-				this.setDamageTaken(this.getDamageTaken() + amount * 10.0F);
-				this.markVelocityChanged();
-				boolean flag = source.getTrueSource() instanceof PlayerEntity && ((PlayerEntity)source.getTrueSource()).abilities.isCreativeMode;
-				if (flag || this.getDamageTaken() > 40.0F) {
-					if (!flag && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-						this.entityDropItem(this.getItemBoat());
-					}
-					this.remove();
+		} else if (!this.level.isClientSide && !this.isRemoved()) {
+			this.setHurtDir(-this.getHurtDir());
+			this.setHurtTime(10);
+			this.setDamage(this.getDamage() + amount * 10.0F);
+			this.markHurt();
+			this.gameEvent(GameEvent.ENTITY_DAMAGED, source.getEntity());
+			boolean flag = source.getEntity() instanceof Player && ((Player)source.getEntity()).getAbilities().instabuild;
+			if (flag || this.getDamage() > 40.0F) {
+				if (!flag && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+					this.spawnAtLocation(this.getDropItem());
 				}
-				return true;
+
+				this.discard();
 			}
+
+			return true;
 		} else {
 			return true;
 		}
 	}
-	
+
 	@Override
-	public IPacket<?> createSpawnPacket() {
-		return NetworkHooks.getEntitySpawningPacket(this);
+	public Packet<?> getAddEntityPacket() {
+		return new ClientboundAddEntityPacket(this);
 	}
-	
+
 	public enum WLType {
 		BALD_CYPRESS("bald_cypress"),
 		COCONUT("coconut"),
 		CHARRED("charred");
-		
+
 		private final String name;
-		
+
 		WLType(String name) {
 			this.name = name;
 		}
-		
+
 		public static WLType byId(int id) {
 			WLType[] aWLBoatEntityType$WLType = values();
 			if (id < 0 || id >= aWLBoatEntityType$WLType.length) {
@@ -191,7 +181,7 @@ public class WLBoatEntity extends BoatEntity {
 			}
 			return aWLBoatEntityType$WLType[id];
 		}
-		
+
 		public static WLType getTypeFromString(String name) {
 			WLType[] aWLBoatEntity$WLType = values();
 			for (WLType WLType : aWLBoatEntity$WLType) {
@@ -201,11 +191,11 @@ public class WLBoatEntity extends BoatEntity {
 			}
 			return aWLBoatEntity$WLType[0];
 		}
-		
+
 		public String getName() {
 			return this.name;
 		}
-		
+
 		public String toString() {
 			return this.name;
 		}

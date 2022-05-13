@@ -1,102 +1,102 @@
 package superlord.wildlands.client.model;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.entity.model.IHasArm;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.HandSide;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+
+import net.minecraft.client.model.ArmedModel;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import superlord.wildlands.common.entity.GrizzlyEntity;
 
 /**
  * Grizzly - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class GrizzlySittingModel<T extends Entity> extends EntityModel<T> implements IHasArm {
-    public ModelRenderer Body;
-    public ModelRenderer FrontLeftLeg;
-    public ModelRenderer FrontRightLeg;
-    public ModelRenderer HindLeftLeg;
-    public ModelRenderer HindRightLeg;
-    public ModelRenderer Head;
-    public ModelRenderer Snout;
-    public ModelRenderer RightEar;
-    public ModelRenderer LeftEar;
+public class GrizzlySittingModel extends EntityModel<GrizzlyEntity> implements ArmedModel {
+	private final ModelPart Body;
+	private final ModelPart FrontLeftLeg;
+	private final ModelPart FrontRightLeg;
+	private final ModelPart HindLeftLeg;
+	private final ModelPart HindRightLeg;
+	private final ModelPart Head;
 
-    public GrizzlySittingModel() {
-        this.textureWidth = 128;
-        this.textureHeight = 64;
-        this.Body = new ModelRenderer(this, 0, 0);
-        this.Body.setRotationPoint(0.0F, 17.0F, 3.0F);
-        this.Body.addBox(-11.0F, -9.0F, -20.0F, 22.0F, 18.0F, 27.0F, 0.0F, 0.0F, 0.0F);
-        this.setRotateAngle(Body, -1.5707963267948966F, 0.0F, 0.0F);
-        this.RightEar = new ModelRenderer(this, 0, 0);
-        this.RightEar.setRotationPoint(-5.0F, -6.0F, -4.0F);
-        this.RightEar.addBox(-2.0F, -3.0F, -1.0F, 4.0F, 3.0F, 3.0F, 0.0F, 0.0F, 0.0F);
-        this.FrontLeftLeg = new ModelRenderer(this, 100, 44);
-        this.FrontLeftLeg.setRotationPoint(6.0F, 5.0F, -7.0F);
-        this.FrontLeftLeg.addBox(-4.0F, 0.0F, -3.0F, 7.0F, 10.0F, 7.0F, 0.0F, 0.0F, 0.0F);
-        this.FrontRightLeg = new ModelRenderer(this, 100, 27);
-        this.FrontRightLeg.setRotationPoint(-6.0F, 5.0F, -7.0F);
-        this.FrontRightLeg.addBox(-3.0F, 0.0F, -3.0F, 7.0F, 10.0F, 7.0F, 0.0F, 0.0F, 0.0F);
-        this.HindRightLeg = new ModelRenderer(this, 50, 45);
-        this.HindRightLeg.setRotationPoint(-6.0F, 20.0F, -3.0F);
-        this.HindRightLeg.addBox(-3.0F, 0.0F, -3.0F, 7.0F, 10.0F, 7.0F, 0.0F, 0.0F, 0.0F);
-        this.setRotateAngle(HindRightLeg, -1.5707963267948966F, 0.45535640450848164F, 0.0F);
-        this.LeftEar = new ModelRenderer(this, 0, 0);
-        this.LeftEar.setRotationPoint(5.0F, -6.0F, -4.0F);
-        this.LeftEar.addBox(-2.0F, -3.0F, -1.0F, 4.0F, 3.0F, 3.0F, 0.0F, 0.0F, 0.0F);
-        this.HindLeftLeg = new ModelRenderer(this, 50, 45);
-        this.HindLeftLeg.setRotationPoint(6.0F, 20.0F, -3.0F);
-        this.HindLeftLeg.addBox(-4.0F, 0.0F, -3.0F, 7.0F, 10.0F, 7.0F, 0.0F, 0.0F, 0.0F);
-        this.setRotateAngle(HindLeftLeg, -1.5707963267948966F, -0.45535640450848164F, 0.0F);
-        this.Head = new ModelRenderer(this, 71, 3);
-        this.Head.setRotationPoint(0.0F, -3.0F, -1.0F);
-        this.Head.addBox(-8.0F, -6.0F, -11.0F, 16.0F, 13.0F, 11.0F, 0.0F, 0.0F, 0.0F);
-        this.Snout = new ModelRenderer(this, 78, 45);
-        this.Snout.setRotationPoint(0.0F, 1.0F, -11.0F);
-        this.Snout.addBox(-3.0F, 0.0F, -5.0F, 6.0F, 6.0F, 5.0F, 0.0F, 0.0F, 0.0F);
-        this.Head.addChild(this.RightEar);
-        this.Head.addChild(this.LeftEar);
-        this.Head.addChild(this.Snout);
-    }
-
-    @Override
-    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) { 
-        ImmutableList.of(this.Body, this.FrontLeftLeg, this.FrontRightLeg, this.HindRightLeg, this.HindLeftLeg, this.Head).forEach((modelRenderer) -> { 
-            modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        });
-    }
-
-    @Override
-    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		this.Head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
-		this.Head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
-    }
-
-    /**
-     * This is a helper function from Tabula to set the rotation of model parts
-     */
-    public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
-    }
-    
-    public void translateHand(HandSide sideIn, MatrixStack matrixStackIn) {
-		float f = sideIn == HandSide.RIGHT ? 1.0F : -1.0F;
-		ModelRenderer modelrenderer = this.getArmForSide(sideIn);
-		modelrenderer.rotationPointX += f;
-		modelrenderer.translateRotate(matrixStackIn);
-		modelrenderer.rotationPointX -= f;
-		matrixStackIn.translate(-0.1, -0.3, 0);
+	public GrizzlySittingModel(ModelPart root) {
+		this.Body = root.getChild("Body");
+		this.FrontLeftLeg = root.getChild("FrontLeftLeg");
+		this.FrontRightLeg = root.getChild("FrontRightLeg");
+		this.HindLeftLeg = root.getChild("HindLeftLeg");
+		this.HindRightLeg = root.getChild("HindRightLeg");
+		this.Head = root.getChild("Head");
 	}
 
-	protected ModelRenderer getArmForSide(HandSide side) {
-		return side == HandSide.LEFT ? this.FrontLeftLeg : this.FrontRightLeg;
+	@SuppressWarnings("unused")
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
+
+		PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+		PartDefinition Body_r1 = Body.addOrReplaceChild("Body_r1", CubeListBuilder.create().texOffs(0, 0).addBox(-11.0F, -12.0F, -27.0F, 22.0F, 18.0F, 27.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -1.5708F, 0.0F, 0.0F));
+
+		PartDefinition FrontLeftLeg = partdefinition.addOrReplaceChild("FrontLeftLeg", CubeListBuilder.create().texOffs(100, 44).addBox(2.0F, -10.0F, -10.0F, 7.0F, 10.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 15.0F, 0.0F));
+
+		PartDefinition FrontRightLeg = partdefinition.addOrReplaceChild("FrontRightLeg", CubeListBuilder.create().texOffs(100, 27).addBox(-9.0F, -10.0F, -10.0F, 7.0F, 10.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 15.0F, 0.0F));
+
+		PartDefinition HindLeftLeg = partdefinition.addOrReplaceChild("HindLeftLeg", CubeListBuilder.create().texOffs(50, 45).addBox(2.0F, -10.0F, 7.0F, 7.0F, 10.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(5.0F, 10.0F, -15.0F, -1.5708F, -0.4554F, 0.0F));
+
+		PartDefinition HindRightLeg = partdefinition.addOrReplaceChild("HindRightLeg", CubeListBuilder.create().texOffs(50, 45).addBox(-9.0F, -10.0F, 7.0F, 7.0F, 10.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, 10.0F, -15.0F, -1.5708F, 0.4554F, 0.0F));
+
+		PartDefinition Head = partdefinition.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(71, 3).addBox(-8.0F, -24.0F, -24.0F, 16.0F, 13.0F, 11.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 15.0F, 12.0F));
+
+		PartDefinition Snout = Head.addOrReplaceChild("Snout", CubeListBuilder.create().texOffs(78, 45).addBox(-3.0F, 0.0F, -16.0F, 6.0F, 6.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -17.0F, -13.0F));
+
+		PartDefinition RightEar = Head.addOrReplaceChild("RightEar", CubeListBuilder.create().texOffs(0, 0).addBox(-7.0F, -27.0F, -18.0F, 4.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition LeftEar = Head.addOrReplaceChild("LeftEar", CubeListBuilder.create().texOffs(0, 0).addBox(3.0F, -27.0F, -18.0F, 4.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		return LayerDefinition.create(meshdefinition, 128, 64);
+	}
+
+	@Override
+	public void setupAnim(GrizzlyEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		this.Head.xRot = Mth.abs(0.2F * 1F * Mth.sin((0.75F * ageInTicks) / 10));
+		this.FrontRightLeg.xRot = -Mth.abs(-0.75F * 1F * Mth.sin((1.5F * ageInTicks) / 10));
+		this.FrontRightLeg.zRot = -Mth.abs(-0.75F * 1F * Mth.sin((1.5F * ageInTicks) / 10));
+		this.FrontLeftLeg.xRot = -Mth.abs(-0.5F * 1F * Mth.sin((1.5F * ageInTicks) / 10));
+		this.FrontLeftLeg.zRot = Mth.abs(-0.5F * 1F * Mth.sin((1.5F * ageInTicks) / 10));
+	}
+
+	@Override
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		Body.render(poseStack, buffer, packedLight, packedOverlay);
+		FrontLeftLeg.render(poseStack, buffer, packedLight, packedOverlay);
+		FrontRightLeg.render(poseStack, buffer, packedLight, packedOverlay);
+		HindLeftLeg.render(poseStack, buffer, packedLight, packedOverlay);
+		HindRightLeg.render(poseStack, buffer, packedLight, packedOverlay);
+		Head.render(poseStack, buffer, packedLight, packedOverlay);
+	}
+
+	public void translateToHand(HumanoidArm sideIn, PoseStack matrixStackIn) {
+		float f = sideIn == HumanoidArm.RIGHT ? 1.0F : -1.0F;
+		ModelPart modelrenderer = this.getArmForSide(sideIn);
+		modelrenderer.x += f;
+		modelrenderer.translateAndRotate(matrixStackIn);
+		modelrenderer.x -= f;
+		matrixStackIn.translate(0.1, -0.1, 0);
+	}
+
+	protected ModelPart getArmForSide(HumanoidArm side) {
+		return side == HumanoidArm.LEFT ? this.FrontLeftLeg : this.FrontRightLeg;
 	}
 }

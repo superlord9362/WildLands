@@ -4,14 +4,14 @@ import java.util.Queue;
 
 import com.google.common.collect.Lists;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.FluidState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import superlord.wildlands.init.WildLandsBlocks;
 
 public class DriedMudBlock extends Block {
@@ -20,25 +20,25 @@ public class DriedMudBlock extends Block {
 		super(properties);
 	}
 	
-	public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-		if (!oldState.isIn(state.getBlock())) {
-			this.tryAbsorb(worldIn, pos);
+	public void onBlockAdded(BlockState state, Level LevelIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+		if (!oldState.is(state.getBlock())) {
+			this.tryAbsorb(LevelIn, pos);
 		}
 	}
 	
 	@SuppressWarnings("deprecation")
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-		this.tryAbsorb(worldIn, pos);
-		super.neighborChanged(state, worldIn, pos, blockIn, fromPos, isMoving);
+	public void neighborChanged(BlockState state, Level LevelIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+		this.tryAbsorb(LevelIn, pos);
+		super.neighborChanged(state, LevelIn, pos, blockIn, fromPos, isMoving);
 	}
 
-	protected void tryAbsorb(World worldIn, BlockPos pos) {
-		if (this.absorb(worldIn, pos)) {
-			worldIn.setBlockState(pos, WildLandsBlocks.MUD.get().getDefaultState(), 2);
+	protected void tryAbsorb(Level LevelIn, BlockPos pos) {
+		if (this.absorb(LevelIn, pos)) {
+			LevelIn.setBlock(pos, WildLandsBlocks.MUD.get().defaultBlockState(), 2);
 		}
 	}
 	
-	private boolean absorb(World worldIn, BlockPos pos) {
+	private boolean absorb(Level LevelIn, BlockPos pos) {
 		Queue<Tuple<BlockPos, Integer>> queue = Lists.newLinkedList();
 		queue.add(new Tuple<>(pos, 0));
 		int i = 0;
@@ -48,9 +48,9 @@ public class DriedMudBlock extends Block {
 			BlockPos blockpos = tuple.getA();
 
 			for(Direction direction : Direction.values()) {
-				BlockPos blockpos1 = blockpos.offset(direction);
-				FluidState fluidstate = worldIn.getFluidState(blockpos1);
-				if (fluidstate.isTagged(FluidTags.WATER)) {
+				BlockPos blockpos1 = blockpos.relative(direction);
+				FluidState fluidstate = LevelIn.getFluidState(blockpos1);
+				if (fluidstate.is(FluidTags.WATER)) {
 					i++;
 				}
 			}

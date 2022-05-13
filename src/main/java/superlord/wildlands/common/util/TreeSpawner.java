@@ -18,32 +18,32 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 package superlord.wildlands.common.util;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import superlord.wildlands.common.world.feature.config.WLTreeConfig;
+import java.util.Random;
 
 import javax.annotation.Nullable;
-import java.util.Random;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import superlord.wildlands.common.world.feature.config.WLTreeConfig;
 
 public abstract class TreeSpawner {
     @Nullable
     protected abstract ConfiguredFeature<WLTreeConfig, ?> getTreeFeature(Random random);
 
-    public boolean spawn(ISeedReader worldIn, ChunkGenerator chunkGenerator, BlockPos pos, BlockState blockUnder, Random random) {
+    public boolean spawn(ServerLevel worldIn, ChunkGenerator chunkGenerator, BlockPos pos, BlockState blockUnder, Random random) {
         ConfiguredFeature<WLTreeConfig, ?> configuredTreeFeature = this.getTreeFeature(random);
         if (configuredTreeFeature == null) {
             return false;
         } else {
-            worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 4);
-            configuredTreeFeature.config.forcePlacement();
-            if (configuredTreeFeature.generate(worldIn, chunkGenerator, random, pos)) {
+            worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 4);
+            if (configuredTreeFeature.place(worldIn, chunkGenerator, random, pos)) {
                 return true;
             } else {
-                worldIn.setBlockState(pos, blockUnder, 4);
+                worldIn.setBlock(pos, blockUnder, 4);
                 return false;
             }
         }

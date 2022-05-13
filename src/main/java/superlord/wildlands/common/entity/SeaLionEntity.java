@@ -2,103 +2,232 @@ package superlord.wildlands.common.entity;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Random;
 import java.util.function.Predicate;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.pattern.BlockStateMatcher;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.controller.MovementController;
-import net.minecraft.entity.ai.goal.BreatheAirGoal;
-import net.minecraft.entity.ai.goal.BreedGoal;
-import net.minecraft.entity.ai.goal.FollowParentGoal;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.MoveToBlockGoal;
-import net.minecraft.entity.ai.goal.RandomSwimmingGoal;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ItemParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.PathFinder;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.pathfinding.SwimmerPathNavigator;
-import net.minecraft.pathfinding.WalkAndSwimNodeProcessor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.goal.BreathAirGoal;
+import net.minecraft.world.entity.ai.goal.BreedGoal;
+import net.minecraft.world.entity.ai.goal.FollowParentGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
+import net.minecraft.world.level.pathfinder.AmphibiousNodeEvaluator;
+import net.minecraft.world.level.pathfinder.PathFinder;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.wildlands.init.WildLandsEntities;
 import superlord.wildlands.init.WildLandsItems;
 import superlord.wildlands.init.WildLandsSounds;
 
-public class SeaLionEntity extends AnimalEntity {
-	public int eatTicks;
+public class SeaLionEntity extends Animal {
 
-	public SeaLionEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
+	public int ticksSinceEaten;
+
+	@SuppressWarnings("deprecation")
+	public SeaLionEntity(EntityType<? extends SeaLionEntity> type, Level worldIn) {
 		super(type, worldIn);
-		this.moveController = new SeaLionEntity.MoveHelperController(this);
+		this.setCanPickUpLoot(true);
+		this.moveControl = new SeaLionEntity.MoveHelperController(this);
+		this.maxUpStep = 1.0F;
 	}
-	
+
+
+	public boolean canDespawn(double distanceToClosestPlayer) {
+		return false;
+	}
+
 	protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.25D));
-		this.goalSelector.addGoal(3, new RandomWalkingGoal(this, 1.0D));
-		this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-		this.goalSelector.addGoal(7, new LookRandomlyGoal(this));
+		this.goalSelector.addGoal(1, new RandomStrollGoal(this, 1.0D));
+		this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F));
+		this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
 		this.goalSelector.addGoal(2, new BreedGoal(this, 1.0D));
 		this.goalSelector.addGoal(5, new SeaLionEntity.GoToWaterGoal(this, 1.2));
 		this.goalSelector.addGoal(3, new SeaLionEntity.FishingGoal(this));
 		this.goalSelector.addGoal(1, new SeaLionEntity.SwimGoal(this));
 		this.goalSelector.addGoal(3, new SeaLionEntity.FindItemsGoal());
-		this.goalSelector.addGoal(0, new BreatheAirGoal(this));
+		this.goalSelector.addGoal(0, new BreathAirGoal(this));
 	}
-	
-	@Override
-	public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
-		ItemStack heldItem = player.getHeldItem(hand);
-		if (heldItem.getItem() == WildLandsItems.ANCHOVY.get() && this.isAlive() && this.hasItemInSlot(EquipmentSlotType.MAINHAND)) {
-			ItemStack seaLionItem = this.getHeldItemMainhand();
-			heldItem.shrink(1);
-			int dropChance = this.rand.nextInt(3);
-			if(dropChance == 0) {
-				this.spawnItem(seaLionItem);
-				this.setHeldItem(Hand.MAIN_HAND, new ItemStack(Items.AIR));
+
+	private void dropItemStack(ItemStack stackIn) {
+		ItemEntity itementity = new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), stackIn);
+		this.level.addFreshEntity(itementity);
+	}
+
+	protected void pickUpItem(ItemEntity itemEntity) {
+		ItemStack itemstack = itemEntity.getItem();
+		if (this.canHoldItem(itemstack)) {
+			int i = itemstack.getCount();
+			if (i > 1) {
+				this.dropItemStack(itemstack.split(i - 1));
+			}
+			this.spitOutItem(this.getItemBySlot(EquipmentSlot.MAINHAND));
+			this.onItemPickup(itemEntity);
+			this.setItemSlot(EquipmentSlot.MAINHAND, itemstack.split(1));
+			this.handDropChances[EquipmentSlot.MAINHAND.getIndex()] = 2.0F;
+			this.take(itemEntity, itemstack.getCount());
+			itemEntity.discard();
+			this.ticksSinceEaten = 0;
+		}
+
+	}
+
+	private void spitOutItem(ItemStack p_28602_) {
+		if (!p_28602_.isEmpty() && !this.level.isClientSide) {
+			ItemEntity itementity = new ItemEntity(this.level, this.getX() + this.getLookAngle().x, this.getY() + 1.0D, this.getZ() + this.getLookAngle().z, p_28602_);
+			itementity.setPickUpDelay(40);
+			itementity.setThrower(this.getUUID());
+			this.playSound(SoundEvents.FOX_SPIT, 1.0F, 1.0F);
+			this.level.addFreshEntity(itementity);
+		}
+	}
+
+
+	@OnlyIn(Dist.CLIENT)
+	public void handleEntityEvent(byte id) {
+		if (id == 45) {
+			ItemStack itemstack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+			if (!itemstack.isEmpty()) {
+				for(int i = 0; i < 8; ++i) {
+					Vec3 vec3 = (new Vec3(((double)this.random.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D)).xRot(-this.getXRot() * ((float)Math.PI / 180F)).yRot(-this.getYRot() * ((float)Math.PI / 180F));
+					this.level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, itemstack), this.getX() + this.getLookAngle().x / 2.0D, this.getY(), this.getZ() + this.getLookAngle().z / 2.0D, vec3.x, vec3.y + 0.05D, vec3.z);
+				}
+			}
+		} else {
+			super.handleEntityEvent(id);
+		}
+
+	}
+
+	public void aiStep() {
+		if (!this.level.isClientSide && this.isAlive() && this.isEffectiveAi()) {
+			++this.ticksSinceEaten;
+			ItemStack itemstack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+			if (this.canEatItem(itemstack)) {
+				if (this.ticksSinceEaten > 100) {
+					ItemStack itemstack1 = itemstack.finishUsingItem(this.level, this);
+					if (!itemstack1.isEmpty()) {
+						this.setItemSlot(EquipmentSlot.MAINHAND, itemstack1);
+					}
+					this.ticksSinceEaten = 0;
+					itemstack.shrink(1);
+				}
+			}
+
+		}
+		super.aiStep();
+	}
+
+	private boolean canEatItem(ItemStack itemStackIn) {
+		return itemStackIn.getItem() == WildLandsItems.ANCHOVY.get();
+	}
+
+	public boolean canEquipItem(ItemStack stack) {
+		ItemStack itemstack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+		return itemstack.isEmpty() && this.canEatItem(stack) && !this.isSleeping();
+	}
+
+	class FindItemsGoal extends Goal {
+		public FindItemsGoal() {
+	         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
+		}
+
+		public boolean canUse() {
+			if (!SeaLionEntity.this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty()) {
+				return false;
+			} 
+			if (SeaLionEntity.this.getRandom().nextInt(reducedTickDelay(10)) != 0) {
+				return false;
+			} else {
+				List<ItemEntity> list = SeaLionEntity.this.level.getEntitiesOfClass(ItemEntity.class, SeaLionEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+				return !list.isEmpty() && SeaLionEntity.this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty();
 			}
 		}
-		return super.func_230254_b_(player, hand);
+
+
+		public void tick() {
+			List<ItemEntity> list = SeaLionEntity.this.level.getEntitiesOfClass(ItemEntity.class, SeaLionEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+			ItemStack itemstack = SeaLionEntity.this.getItemBySlot(EquipmentSlot.MAINHAND);
+			if (itemstack.isEmpty() && !list.isEmpty()) {
+				SeaLionEntity.this.getNavigation().moveTo(list.get(0), (double)1.2F);
+			}
+
+		}
+
+		public void start() {
+			List<ItemEntity> list = SeaLionEntity.this.level.getEntitiesOfClass(ItemEntity.class, SeaLionEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+			if (!list.isEmpty()) {
+				SeaLionEntity.this.getNavigation().moveTo(list.get(0), (double)1.2F);
+			}
+
+		}
 	}
-	
+
+	@Override
+	public ItemStack getPickedResult(HitResult target) {
+		return new ItemStack(WildLandsItems.SEA_LION_SPAWN_EGG.get());
+	}
+
+	@Override
+	public InteractionResult mobInteract(Player player, InteractionHand hand) {
+		ItemStack heldItem = player.getItemInHand(hand);
+		if (heldItem.getItem() == WildLandsItems.ANCHOVY.get() && this.isAlive() && this.hasItemInSlot(EquipmentSlot.MAINHAND)) {
+			ItemStack seaLionItem = this.getMainHandItem();
+			heldItem.shrink(1);
+			int dropChance = this.random.nextInt(3);
+			if(dropChance == 0) {
+				this.spitOutItem(seaLionItem);
+				this.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(WildLandsItems.ANCHOVY.get()));
+			}
+		}
+		return super.mobInteract(player, hand);
+	}
+
 	protected SoundEvent getAmbientSound() {
 		return WildLandsSounds.SEA_LION_IDLE;
 	}
@@ -110,27 +239,23 @@ public class SeaLionEntity extends AnimalEntity {
 	protected SoundEvent getDeathSound() {
 		return WildLandsSounds.SEA_LION_DEATH;
 	}
-	
-	class WalkAndSwimPathNavigator extends SwimmerPathNavigator {
-		WalkAndSwimPathNavigator(SeaLionEntity seaLion, World worldIn) {
-			super(seaLion, worldIn);
+
+	class WalkAndSwimPathNavigator extends WaterBoundPathNavigation {
+		WalkAndSwimPathNavigator(SeaLionEntity sealion, Level worldIn) {
+			super(sealion, worldIn);
 		}
-		protected boolean canNavigate() {
+
+		protected boolean canUpdatePath() {
 			return true;
 		}
 
-		protected PathFinder getPathFinder(int p_179679_1_) {
-			this.nodeProcessor = new WalkAndSwimNodeProcessor();
-			return new PathFinder(this.nodeProcessor, p_179679_1_);
+		protected PathFinder createPathFinder(int p_179679_1_) {
+			this.nodeEvaluator = new AmphibiousNodeEvaluator(true);
+			return new PathFinder(this.nodeEvaluator, p_179679_1_);
 		}
 
-		@SuppressWarnings("deprecation")
-		public boolean canEntityStandOnPos(BlockPos pos) {
-			if (this.entity instanceof SeaLionEntity) {
-				return this.world.getBlockState(pos).isIn(Blocks.WATER);
-			}
-
-			return !this.world.getBlockState(pos.down()).isAir();
+		public boolean isStableDestination(BlockPos pos) {
+			return !this.level.getBlockState(pos.below()).isAir();
 		}
 	}
 
@@ -141,12 +266,12 @@ public class SeaLionEntity extends AnimalEntity {
 	protected int determineNextAir(int currentAir) {
 		return this.getMaxAir();
 	}
-	
+
 	protected float getWaterSlowDown() {
 		return 0.98F;
 	}
-	
-	static class MoveHelperController extends MovementController {
+
+	static class MoveHelperController extends MoveControl {
 		private final SeaLionEntity seaLion;
 
 		MoveHelperController(SeaLionEntity seaLion) {
@@ -155,33 +280,33 @@ public class SeaLionEntity extends AnimalEntity {
 		}
 
 		public void tick() {
-			if (this.seaLion.areEyesInFluid(FluidTags.WATER)) {
-				this.seaLion.setMotion(this.seaLion.getMotion().add(0.0D, 0.005D, 0.0D));
+			if (this.seaLion.isInWater()) {
+				this.seaLion.setDeltaMovement(this.seaLion.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
 			}
 
-			if (this.action == MovementController.Action.MOVE_TO && !this.seaLion.getNavigator().noPath()) {
-				float f = (float)(this.speed * this.seaLion.getAttributeValue(Attributes.MOVEMENT_SPEED));
-				this.seaLion.setAIMoveSpeed(MathHelper.lerp(0.125F, this.seaLion.getAIMoveSpeed(), f));
-				double d0 = this.posX - this.seaLion.getPosX();
-				double d1 = this.posY - this.seaLion.getPosY();
-				double d2 = this.posZ - this.seaLion.getPosZ();
+			if (this.operation == MoveControl.Operation.MOVE_TO && !this.seaLion.getNavigation().isDone()) {
+				float f = (float)(this.speedModifier * this.seaLion.getAttributeValue(Attributes.MOVEMENT_SPEED));
+				this.seaLion.setSpeed(Mth.lerp(0.125F, this.seaLion.getSpeed(), f));
+				double d0 = this.wantedX - this.seaLion.getX();
+				double d1 = this.wantedY - this.seaLion.getY();
+				double d2 = this.wantedZ - this.seaLion.getZ();
 				if (d1 != 0.0D) {
-					double d3 = (double)MathHelper.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
-					this.seaLion.setMotion(this.seaLion.getMotion().add(0.0D, (double)this.seaLion.getAIMoveSpeed() * (d1 / d3) * 0.1D, 0.0D));
+					double d3 = (double)Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+					this.seaLion.setDeltaMovement(this.seaLion.getDeltaMovement().add(0.0D, (double)this.seaLion.getSpeed() * (d1 / d3) * 0.1D, 0.0D));
 				}
 
 				if (d0 != 0.0D || d2 != 0.0D) {
-					float f1 = (float)(MathHelper.atan2(d2, d0) * (double)(180F / (float)Math.PI)) - 90.0F;
-					this.seaLion.rotationYaw = this.limitAngle(this.seaLion.rotationYaw, f1, 90.0F);
-					this.seaLion.renderYawOffset = this.seaLion.rotationYaw;
+					float f1 = (float)(Mth.atan2(d2, d0) * (double)(180F / (float)Math.PI)) - 90.0F;
+					this.seaLion.yRotO = this.rotlerp(this.seaLion.getYRot(), f1, 90.0F);
+					this.seaLion.yBodyRot = this.seaLion.getYRot();
 				}
 
 			} else {
-				this.seaLion.setAIMoveSpeed(0.0F);
+				this.seaLion.setSpeed(0.0F);
 			}
 		}
 	}
-	
+
 	static class SwimGoal extends RandomSwimmingGoal {
 		private final SeaLionEntity seaLion;
 
@@ -190,183 +315,117 @@ public class SeaLionEntity extends AnimalEntity {
 			this.seaLion = seaLion;
 		}
 
-		public boolean shouldExecute() {
-			return this.seaLion.func_212800_dy() && super.shouldExecute();
+		public boolean canUse() {
+			return this.seaLion.func_212800_dy() && super.canUse();
 		}
 	}
-	
+
 	protected boolean func_212800_dy() {
 		return true;
 	}
-	
+
 	public boolean isBreedingItem(ItemStack stack) {
 		return stack.getItem() == Items.TROPICAL_FISH;
 	}
 
-	public static AttributeModifierMap.MutableAttribute createAttributes() {
-		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 30.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 20.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D).createMutableAttribute(Attributes.ATTACK_DAMAGE, 2.0D);
+	public static boolean canSeaLionSpawn(EntityType<? extends Animal> animal, LevelAccessor levelIn, MobSpawnType reason, BlockPos pos, Random random) {
+		return (levelIn.getBlockState(pos.below()).is(Blocks.GRASS_BLOCK) || levelIn.getBlockState(pos.below()).is(net.minecraftforge.common.Tags.Blocks.SAND)) && isBrightEnoughToSpawn(levelIn, pos);
 	}
 
-	protected PathNavigator createNavigator(World worldIn) {
+	public static AttributeSupplier.Builder createAttributes() {
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 30.0D).add(Attributes.FOLLOW_RANGE, 20.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.ATTACK_DAMAGE, 2.0D);
+	}
+
+	protected PathNavigation createNavigation(Level worldIn) {
 		return new SeaLionEntity.WalkAndSwimPathNavigator(this, worldIn);
-	}
-
-
-	private void spawnItem(ItemStack stackIn) {
-		ItemEntity itementity = new ItemEntity(this.world, this.getPosX(), this.getPosY(), this.getPosZ(), stackIn);
-		this.world.addEntity(itementity);
-	}
-
-	protected void updateEquipmentIfNeeded(ItemEntity itemEntity) {
-		ItemStack itemstack = itemEntity.getItem();
-		if (this.canEquipItem(itemstack)) {
-			int i = itemstack.getCount();
-			if (i > 1) {
-				this.spawnItem(itemstack.split(i - 1));
-			}
-			this.triggerItemPickupTrigger(itemEntity);
-			this.setItemStackToSlot(EquipmentSlotType.MAINHAND, itemstack.split(1));
-			this.inventoryHandsDropChances[EquipmentSlotType.MAINHAND.getIndex()] = 2.0F;
-			this.onItemPickup(itemEntity, itemstack.getCount());
-			itemEntity.remove();
-			this.eatTicks = 0;
-		}
-
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	public void handleStatusUpdate(byte id) {
-		if (id == 45) {
-			ItemStack itemstack = this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
-			if (!itemstack.isEmpty()) {
-				for(int i = 0; i < 8; ++i) {
-					Vector3d vector3d = (new Vector3d(((double)this.rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D)).rotatePitch(-this.rotationPitch * ((float)Math.PI / 180F)).rotateYaw(-this.rotationYaw * ((float)Math.PI / 180F));
-					this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, itemstack), this.getPosX() + this.getLookVec().x / 2.0D, this.getPosY(), this.getPosZ() + this.getLookVec().z / 2.0D, vector3d.x, vector3d.y + 0.05D, vector3d.z);
-				}
-			}
-		} else {
-			super.handleStatusUpdate(id);
-		}
-
-	}
-
-	public void livingTick() {
-		if (!this.world.isRemote && this.isAlive() && this.isServerWorld()) {
-			++this.eatTicks;
-			ItemStack itemstack = this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
-			ItemStack air = Items.AIR.getDefaultInstance();
-			if (this.canEatItem(itemstack)) {
-				if (this.eatTicks > 100) {
-					this.eatTicks = 0;
-					itemstack.shrink(1);
-					this.setItemStackToSlot(EquipmentSlotType.MAINHAND, air);
-				}
-			}
-
-		}
-		super.livingTick();
-	}
-
-	private boolean canEatItem(ItemStack itemStackIn) {
-		return itemStackIn.getItem().isFood();
 	}
 
 	static class GoToWaterGoal extends MoveToBlockGoal {
 		private final SeaLionEntity seaLion;
 
 		private GoToWaterGoal(SeaLionEntity seaLion, double speedIn) {
-			super(seaLion, seaLion.isChild() ? 2.0D : speedIn, 24);
+			super(seaLion, seaLion.isBaby() ? 2.0D : speedIn, 24);
 			this.seaLion = seaLion;
-			this.field_203112_e = -1;
+			this.verticalSearchStart = -1;
 		}
 
-		/**
-		 * Returns whether an in-progress EntityAIBase should continue executing
-		 */
-		public boolean shouldContinueExecuting() {
-			return !this.seaLion.isInWater() && this.timeoutCounter <= 1200 && this.shouldMoveTo(this.seaLion.world, this.destinationBlock);
+		public boolean canContinueToUse() {
+			return !this.seaLion.isInWater() && this.tryTicks <= 1200 && this.isValidTarget(this.seaLion.level, this.blockPos);
 		}
 
-		/**
-		 * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
-		 * method as well.
-		 */
-		public boolean shouldExecute() {
-			if (this.seaLion.isChild() && !this.seaLion.isInWater()) {
-				return super.shouldExecute();
+		public boolean canUse() {
+			if (this.seaLion.isBaby() && !this.seaLion.isInWater()) {
+				return super.canUse();
 			} else {
-				return !this.seaLion.isInWater() ? super.shouldExecute() : false;
+				return !this.seaLion.isInWater() ? super.canUse() : false;
 			}
 		}
 
-		public boolean shouldMove() {
-			return this.timeoutCounter % 160 == 0;
+		public boolean shouldRecalculatePath() {
+			return this.tryTicks % 160 == 0;
 		}
 
-		/**
-		 * Return true to set given position as destination
-		 */
-		protected boolean shouldMoveTo(IWorldReader worldIn, BlockPos pos) {
-			return worldIn.getBlockState(pos).isIn(Blocks.WATER);
+		protected boolean isValidTarget(LevelReader worldIn, BlockPos pos) {
+			return worldIn.getBlockState(pos).is(Blocks.WATER);
 		}
 	}
 
 	@Override
-	public AgeableEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
-		SeaLionEntity entity = new SeaLionEntity(WildLandsEntities.SEA_LION.get(), this.world);
-		entity.onInitialSpawn(p_241840_1_, this.world.getDifficultyForLocation(new BlockPos(entity.getPositionVec())), SpawnReason.BREEDING, (ILivingEntityData)null, (CompoundNBT)null);
+	public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob mob) {
+		SeaLionEntity entity = new SeaLionEntity(WildLandsEntities.SEA_LION.get(), this.level);
+		entity.finalizeSpawn(level, this.level.getCurrentDifficultyAt(new BlockPos(entity.getEyePosition())), MobSpawnType.BREEDING, (SpawnGroupData)null, (CompoundTag)null);
 		return entity;
 	}
-	
+
 	static class FishingGoal extends Goal {
 		private static final ResourceLocation FISHING_LOOT = new ResourceLocation("gameplay/fishing");
-        private static final Predicate<BlockState> IS_WATER = BlockStateMatcher.forBlock(Blocks.WATER);
-		
+		private static final Predicate<BlockState> IS_WATER = BlockStatePredicate.forBlock(Blocks.WATER);
+
 		private final SeaLionEntity entity;
 		private int fishingTimer;
 		private int fishTimer;
-		
+
 		public FishingGoal(SeaLionEntity entity) {
 			this.entity = entity;
-			setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.JUMP, Goal.Flag.LOOK));
+			this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.JUMP, Goal.Flag.LOOK));
 		}
-		
+
 		@Override
-		public boolean shouldExecute() {
+		public boolean canUse() {
 			if (fishTimer > 0) {
 				--fishTimer;
 				return false;
 			}
-			if (entity.getRNG().nextInt(entity.isChild() ? 100 : 1000) != 0) {
+			if (entity.getRandom().nextInt(entity.isBaby() ? 100 : 1000) != 0) {
 				return false;
 			} else {
-				BlockPos blockpos = entity.getPosition();
-				if (IS_WATER.test(entity.world.getBlockState(blockpos))) {
+				BlockPos blockpos = entity.blockPosition();
+				if (IS_WATER.test(entity.level.getBlockState(blockpos))) {
 					return true;
 				} else {
-					return entity.world.getBlockState(blockpos.down()).isIn(Blocks.WATER);
+					return entity.level.getBlockState(blockpos.below()).is(Blocks.WATER);
 				}
 			}
 		}
-		
+
 		@Override
-		public void startExecuting() {
+		public void start() {
 			fishingTimer = 40;
 			fishTimer = 6000;
-			entity.world.setEntityState(entity, (byte) 10);
-			entity.getNavigator().clearPath();
+			entity.level.broadcastEntityEvent(entity, (byte) 10);
+			entity.getNavigation().stop();
 		}
-		
+
 		@Override
-		public void resetTask() {
+		public void stop() {
 			fishingTimer = 0;
 		}
-		
+
 		@Override
-		public boolean shouldContinueExecuting() {
+		public boolean canContinueToUse() {
 			return fishingTimer > 0;
 		}
-		
+
 		@Override
 		public void tick() {
 			if (fishTimer > 0) {
@@ -376,71 +435,17 @@ public class SeaLionEntity extends AnimalEntity {
 				--fishingTimer;
 			}
 			if (fishingTimer == 25) {
-				BlockPos blockpos = entity.getPosition();
-				BlockPos blockpos1 = blockpos.down();
-				if (entity.world.getBlockState(blockpos1).isIn(Blocks.WATER)) {
-					entity.world.playEvent(2001, blockpos1, Block.getStateId(Blocks.WATER.getDefaultState()));
-					MinecraftServer server = entity.world.getServer();
+				BlockPos blockpos = entity.blockPosition();
+				BlockPos blockpos1 = blockpos.below();
+				if (entity.level.getBlockState(blockpos1).is(Blocks.WATER)) {
+					MinecraftServer server = entity.level.getServer();
 					if (server != null) {
-						List<ItemStack> items = server.getLootTableManager().getLootTableFromLocation(FISHING_LOOT).generate(new LootContext.Builder((ServerWorld) entity.world).withRandom(entity.getRNG()).build(LootParameterSets.EMPTY));
-						InventoryHelper.dropItems(entity.world, blockpos, NonNullList.from(ItemStack.EMPTY, items.toArray(new ItemStack[0])));
+						List<ItemStack> items = server.getLootTables().get(FISHING_LOOT).getRandomItems(new LootContext.Builder((ServerLevel) entity.level).withRandom(entity.getRandom()).create(LootContextParamSet.builder().build()));
+						Containers.dropContents(entity.level, blockpos, NonNullList.of(ItemStack.EMPTY, items.toArray(new ItemStack[0])));
 					}
 				}
 			}
 		}
-	}
-	
-	class FindItemsGoal extends Goal {
-	      public FindItemsGoal() {
-	         this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
-	      }
-
-	      /**
-	       * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
-	       * method as well.
-	       */
-	      public boolean shouldExecute() {
-	         if (!SeaLionEntity.this.getItemStackFromSlot(EquipmentSlotType.MAINHAND).isEmpty()) {
-	            return false;
-	         } else if (SeaLionEntity.this.getAttackTarget() == null && SeaLionEntity.this.getRevengeTarget() == null) {
-	        	 if (SeaLionEntity.this.getRNG().nextInt(10) != 0) {
-	               return false;
-	            } else {
-	               List<ItemEntity> list = SeaLionEntity.this.world.getEntitiesWithinAABB(ItemEntity.class, SeaLionEntity.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
-	               return !list.isEmpty() && SeaLionEntity.this.getItemStackFromSlot(EquipmentSlotType.MAINHAND).isEmpty();
-	            }
-	         } else {
-	            return false;
-	         }
-	      }
-
-	      /**
-	       * Keep ticking a continuous task that has already been started
-	       */
-	      public void tick() {
-	         List<ItemEntity> list = SeaLionEntity.this.world.getEntitiesWithinAABB(ItemEntity.class, SeaLionEntity.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
-	         ItemStack itemstack = SeaLionEntity.this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
-	         if (itemstack.isEmpty() && !list.isEmpty()) {
-	        	 SeaLionEntity.this.getNavigator().tryMoveToEntityLiving(list.get(0), (double)1.2F);
-	         }
-
-	      }
-
-	      /**
-	       * Execute a one shot task or start executing a continuous task
-	       */
-	      public void startExecuting() {
-	         List<ItemEntity> list = SeaLionEntity.this.world.getEntitiesWithinAABB(ItemEntity.class, SeaLionEntity.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
-	         if (!list.isEmpty()) {
-	        	 SeaLionEntity.this.getNavigator().tryMoveToEntityLiving(list.get(0), (double)1.2F);
-	         }
-
-	      }
-	   }
-	
-	@Override
-	public ItemStack getPickedResult(RayTraceResult target) {
-		return new ItemStack(WildLandsItems.SEA_LION_SPAWN_EGG.get());
 	}
 
 }

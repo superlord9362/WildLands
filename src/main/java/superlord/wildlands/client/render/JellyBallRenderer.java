@@ -1,13 +1,12 @@
 package superlord.wildlands.client.render;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.SpriteRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import superlord.wildlands.common.entity.JellyBallEntity;
 
-public class JellyBallRenderer extends SpriteRenderer<JellyBallEntity> {
+public class JellyBallRenderer extends ThrownItemRenderer<JellyBallEntity> {
 
-    public JellyBallRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, Minecraft.getInstance().getItemRenderer());
+    public JellyBallRenderer(EntityRendererProvider.Context renderManagerIn) {
+        super(renderManagerIn);
     }
 }

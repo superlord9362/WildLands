@@ -1,138 +1,145 @@
 package superlord.wildlands.client.model;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import superlord.wildlands.common.entity.AlligatorEntity;
 
 /**
  * Alligator - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class AlligatorThreatenModel<T extends Entity> extends EntityModel<T> {
-    public ModelRenderer Body;
-    public ModelRenderer Head;
-    public ModelRenderer leftlegfront;
-    public ModelRenderer leftlegback;
-    public ModelRenderer rightlegfront;
-    public ModelRenderer rightlegback;
-    public ModelRenderer Tail;
-    public ModelRenderer Tail2;
-    public ModelRenderer UpperJaw;
-    public ModelRenderer LeftEye;
-    public ModelRenderer LeftEye_1;
-    public ModelRenderer Teeth;
-    public ModelRenderer leftfootfront;
-    public ModelRenderer leftfootback;
-    public ModelRenderer rightfootfront;
-    public ModelRenderer leftfootback_1;
+public class AlligatorThreatenModel<T extends Entity> extends EntityModel<AlligatorEntity> {
+	private final ModelPart Body;
+	private final ModelPart Head;
+	private final ModelPart Tail1;
+	private final ModelPart leftlegfront;
+	private final ModelPart leftlegback;
+	private final ModelPart rightlegback;
+	private final ModelPart rightlegfront;
 
-    public AlligatorThreatenModel() {
-        this.textureWidth = 128;
-        this.textureHeight = 80;
-        this.Body = new ModelRenderer(this, 0, 0);
-        this.Body.setRotationPoint(0.0F, 16.0F, 0.0F);
-        this.Body.addBox(-6.5F, -2.0F, -10.0F, 13.0F, 8.0F, 20.0F, 0.0F, 0.0F, 0.0F);
-        this.leftfootback_1 = new ModelRenderer(this, 93, 12);
-        this.leftfootback_1.mirror = true;
-        this.leftfootback_1.setRotationPoint(1.0F, 6.0F, 1.0F);
-        this.leftfootback_1.addBox(-5.0F, 0.0F, -6.0F, 6.0F, 0.0F, 8.0F, 0.0F, 0.0F, 0.0F);
-        this.Head = new ModelRenderer(this, 49, 50);
-        this.Head.setRotationPoint(0.0F, 18.0F, -7.0F);
-        this.Head.addBox(-4.5F, 0.0F, -17.0F, 9.0F, 2.0F, 14.0F, 0.0F, 0.0F, 0.0F);
-        this.rightlegfront = new ModelRenderer(this, 54, 0);
-        this.rightlegfront.setRotationPoint(-8.0F, 18.0F, -6.0F);
-        this.rightlegfront.addBox(-1.5F, 0.0F, -2.0F, 3.0F, 6.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.leftfootback = new ModelRenderer(this, 93, 12);
-        this.leftfootback.setRotationPoint(-1.0F, 6.0F, 1.0F);
-        this.leftfootback.addBox(-1.0F, 0.0F, -6.0F, 6.0F, 0.0F, 8.0F, 0.0F, 0.0F, 0.0F);
-        this.UpperJaw = new ModelRenderer(this, 0, 59);
-        this.UpperJaw.setRotationPoint(0.0F, 0.0F, -3.0F);
-        this.UpperJaw.addBox(-4.5F, -4.0F, -15.0F, 9.0F, 4.0F, 15.0F, 0.0F, 0.0F, 0.0F);
-        this.setRotateAngle(UpperJaw, -0.6981317007977318F, 0.0F, 0.0F);
-        this.leftlegback = new ModelRenderer(this, 103, 0);
-        this.leftlegback.setRotationPoint(8.5F, 18.0F, 8.0F);
-        this.leftlegback.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 5.0F, 0.0F, 0.0F, 0.0F);
-        this.LeftEye = new ModelRenderer(this, 0, 0);
-        this.LeftEye.setRotationPoint(0.5F, -2.0F, 0.0F);
-        this.LeftEye.addBox(0.0F, -4.0F, -4.0F, 3.0F, 2.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.leftfootfront = new ModelRenderer(this, 48, 12);
-        this.leftfootfront.setRotationPoint(0.0F, 6.0F, 0.0F);
-        this.leftfootfront.addBox(-1.5F, 0.0F, -4.0F, 5.0F, 0.0F, 6.0F, 0.0F, 0.0F, 0.0F);
-        this.Tail2 = new ModelRenderer(this, 47, 5);
-        this.Tail2.setRotationPoint(0.0F, 0.0F, 0.0F);
-        this.Tail2.addBox(-3.5F, -4.0F, 0.0F, 7.0F, 3.0F, 24.0F, 0.0F, 0.0F, 0.0F);
-        this.Tail = new ModelRenderer(this, 0, 28);
-        this.Tail.setRotationPoint(0.0F, 1.0F, 10.0F);
-        this.Tail.addBox(-3.5F, -1.0F, 0.0F, 7.0F, 7.0F, 24.0F, 0.0F, 0.0F, 0.0F);
-        this.setRotateAngle(Tail, -0.0911061832922575F, 0.0F, 0.0F);
-        this.LeftEye_1 = new ModelRenderer(this, 0, 0);
-        this.LeftEye_1.mirror = true;
-        this.LeftEye_1.setRotationPoint(-0.5F, -2.0F, 0.0F);
-        this.LeftEye_1.addBox(-3.0F, -4.0F, -4.0F, 3.0F, 2.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.rightlegback = new ModelRenderer(this, 103, 0);
-        this.rightlegback.setRotationPoint(-8.5F, 18.0F, 8.0F);
-        this.rightlegback.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 5.0F, 0.0F, 0.0F, 0.0F);
-        this.rightfootfront = new ModelRenderer(this, 48, 12);
-        this.rightfootfront.mirror = true;
-        this.rightfootfront.setRotationPoint(0.0F, 6.0F, 0.0F);
-        this.rightfootfront.addBox(-3.5F, 0.0F, -4.0F, 5.0F, 0.0F, 6.0F, 0.0F, 0.0F, 0.0F);
-        this.leftlegfront = new ModelRenderer(this, 54, 0);
-        this.leftlegfront.setRotationPoint(8.0F, 18.0F, -6.0F);
-        this.leftlegfront.addBox(-1.5F, 0.0F, -2.0F, 3.0F, 6.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.Teeth = new ModelRenderer(this, 40, 33);
-        this.Teeth.setRotationPoint(0.0F, 0.0F, 0.0F);
-        this.Teeth.addBox(-4.5F, 0.0F, -15.0F, 9.0F, 1.0F, 15.0F, 0.0F, 0.0F, 0.0F);
-        this.rightlegback.addChild(this.leftfootback_1);
-        this.leftlegback.addChild(this.leftfootback);
-        this.Head.addChild(this.UpperJaw);
-        this.UpperJaw.addChild(this.LeftEye);
-        this.leftlegfront.addChild(this.leftfootfront);
-        this.Tail.addChild(this.Tail2);
-        this.Body.addChild(this.Tail);
-        this.UpperJaw.addChild(this.LeftEye_1);
-        this.rightlegfront.addChild(this.rightfootfront);
-        this.UpperJaw.addChild(this.Teeth);
-    }
+	public AlligatorThreatenModel(ModelPart root) {
+		this.Body = root.getChild("Body");
+		this.Head = root.getChild("Head");
+		this.Tail1 = Body.getChild("Tail1");
+		this.leftlegfront = root.getChild("leftlegfront");
+		this.leftlegback = root.getChild("leftlegback");
+		this.rightlegback = root.getChild("rightlegback");
+		this.rightlegfront = root.getChild("rightlegfront");
+	}
 
-    @Override
-    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) { 
-        ImmutableList.of(this.Body, this.Head, this.rightlegfront, this.leftlegback, this.rightlegback, this.leftlegfront).forEach((modelRenderer) -> { 
-            modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        });
-    }
+	@SuppressWarnings("unused")
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
 
-    @Override
-    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-    	float speed = 1.0f;
+		PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -10.0F, -10.0F, 13.0F, 8.0F, 20.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+		PartDefinition Tail1 = Body.addOrReplaceChild("Tail1", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition Tail1_r1 = Tail1.addOrReplaceChild("Tail1_r1", CubeListBuilder.create().texOffs(0, 28).addBox(-3.5F, -1.0F, 0.0F, 7.0F, 7.0F, 24.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.5F, -7.0F, 10.0F, -0.0911F, 0.0F, 0.0F));
+
+		PartDefinition Tail2 = Tail1.addOrReplaceChild("Tail2", CubeListBuilder.create(), PartPose.offset(0.5F, -7.0F, 10.0F));
+
+		PartDefinition Tail2_r1 = Tail2.addOrReplaceChild("Tail2_r1", CubeListBuilder.create().texOffs(47, 5).addBox(-3.0F, -4.0F, 0.0F, 7.0F, 3.0F, 24.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.5F, 0.0F, 0.0F, -0.0911F, 0.0F, 0.0F));
+
+		PartDefinition Head = partdefinition.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(49, 50).addBox(-4.0F, -6.0F, -24.0F, 9.0F, 2.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+		PartDefinition UpperJaw = Head.addOrReplaceChild("UpperJaw", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition UpperJaw_r1 = UpperJaw.addOrReplaceChild("UpperJaw_r1", CubeListBuilder.create().texOffs(0, 59).addBox(-5.0F, -4.0F, -15.0F, 9.0F, 4.0F, 15.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.0F, -6.0F, -10.0F, -0.5236F, 0.0F, 0.0F));
+
+		PartDefinition RightEye = UpperJaw.addOrReplaceChild("RightEye", CubeListBuilder.create(), PartPose.offset(1.0F, -6.0F, -10.0F));
+
+		PartDefinition RightEye_r1 = RightEye.addOrReplaceChild("RightEye_r1", CubeListBuilder.create().texOffs(0, 0).addBox(0.0F, -6.0F, -4.0F, 3.0F, 2.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.5236F, 0.0F, 0.0F));
+
+		PartDefinition LeftEye = UpperJaw.addOrReplaceChild("LeftEye", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition LeftEye_r1 = LeftEye.addOrReplaceChild("LeftEye_r1", CubeListBuilder.create().texOffs(0, 0).mirror().addBox(-4.0F, -6.0F, -4.0F, 3.0F, 2.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(1.0F, -6.0F, -10.0F, -0.5236F, 0.0F, 0.0F));
+
+		PartDefinition Teeth = UpperJaw.addOrReplaceChild("Teeth", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition Teeth_r1 = Teeth.addOrReplaceChild("Teeth_r1", CubeListBuilder.create().texOffs(40, 33).addBox(-5.0F, 0.0F, -15.0F, 9.0F, 1.0F, 15.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(1.0F, -6.0F, -10.0F, -0.5236F, 0.0F, 0.0F));
+
+		PartDefinition leftlegfront = partdefinition.addOrReplaceChild("leftlegfront", CubeListBuilder.create().texOffs(54, 0).addBox(6.5F, -6.0F, -8.0F, 3.0F, 6.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+		PartDefinition leftfootfront = leftlegfront.addOrReplaceChild("leftfootfront", CubeListBuilder.create().texOffs(48, 12).addBox(-1.5F, 6.0F, -4.0F, 5.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(8.0F, -6.0F, -6.0F));
+
+		PartDefinition leftlegback = partdefinition.addOrReplaceChild("leftlegback", CubeListBuilder.create().texOffs(103, 0).addBox(-2.0F, -6.0F, 12.0F, 4.0F, 6.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(8.0F, 24.0F, -6.0F));
+
+		PartDefinition leftfootback = leftlegback.addOrReplaceChild("leftfootback", CubeListBuilder.create().texOffs(93, 12).addBox(-2.0F, 0.0F, 9.0F, 6.0F, 0.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition rightlegback = partdefinition.addOrReplaceChild("rightlegback", CubeListBuilder.create().texOffs(103, 0).addBox(-9.0F, -6.0F, 6.0F, 4.0F, 6.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+		PartDefinition leftfootback2 = rightlegback.addOrReplaceChild("leftfootback2", CubeListBuilder.create().texOffs(93, 12).mirror().addBox(-4.0F, 6.0F, -5.0F, 6.0F, 0.0F, 8.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-7.0F, -6.0F, 8.0F));
+
+		PartDefinition rightlegfront = partdefinition.addOrReplaceChild("rightlegfront", CubeListBuilder.create().texOffs(54, 0).addBox(-8.5F, -6.0F, -8.0F, 3.0F, 6.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+		PartDefinition rightfootfront = rightlegfront.addOrReplaceChild("rightfootfront", CubeListBuilder.create().texOffs(48, 12).mirror().addBox(-10.5F, 0.0F, -10.0F, 5.0F, 0.0F, 6.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		return LayerDefinition.create(meshdefinition, 128, 80);
+	}
+
+	@Override
+	public void setupAnim(AlligatorEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		float speed = 1.0f;
 		float degree = 1.0f;
-		this.Head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
-		this.Tail.rotateAngleY = MathHelper.cos(limbSwing * speed * 0.05F) * degree * 0.75F * limbSwingAmount;
-		this.Head.rotateAngleX = (MathHelper.cos(limbSwing * speed * 0.02F) * degree * 0.25F * limbSwingAmount) + (headPitch * ((float)Math.PI / 180F));
-		this.leftlegfront.rotateAngleX = MathHelper.cos(limbSwing * speed * 0.25F) * degree * 1.0F * limbSwingAmount;
-		this.leftlegback.rotateAngleX = MathHelper.cos(3.0F + limbSwing * speed * 0.25F) * degree * 1.0F * limbSwingAmount;
-		this.rightlegfront.rotateAngleX = MathHelper.cos(3.0F + limbSwing * speed * 0.25F) * degree * 1.0F * limbSwingAmount;
-		this.rightlegback.rotateAngleX = MathHelper.cos(limbSwing * speed * 0.25F) * degree * 1.0F * limbSwingAmount;
-		this.Tail.rotateAngleY = 0;
-		this.leftlegfront.rotationPointY = Math.abs(MathHelper.cos(limbSwing * speed * 0.2F) * degree * 0.2F * limbSwingAmount) + 17.5F;
-		this.leftlegback.rotationPointY = Math.abs(MathHelper.cos(3.0F + limbSwing * speed * 0.2F) * degree * 0.2F * limbSwingAmount) + 17.5F;
-		this.rightlegfront.rotationPointY = Math.abs(MathHelper.cos(3.0F + limbSwing * speed * 0.2F) * degree * 0.2F * limbSwingAmount) + 17.5F;
-		this.rightlegback.rotationPointY = Math.abs(MathHelper.cos(limbSwing * speed * 0.2F) * degree * 0.2F * limbSwingAmount) + 17.5F;
-    }
+		if (entity.isInWater()) {
+			this.Body.yRot = Mth.cos(limbSwing * speed * 0.25F) * degree * 0.5F * limbSwingAmount;
+			this.Tail1.yRot = Mth.cos(-1.0F + limbSwing * speed * 0.25F) * degree * 1.0F * limbSwingAmount;
+			this.leftlegback.xRot = Mth.cos(limbSwing * speed * 0.25F) * degree * 0.1F * limbSwingAmount + 1.0F;
+			this.leftlegback.yRot = Mth.cos(-1.0F + limbSwing * speed * 0.25F) * degree * 0.75F * limbSwingAmount;
+			this.leftlegback.x = (Mth.cos(limbSwing * speed * 0.25F) * degree * 0.25F * limbSwingAmount) - 7;
+			this.rightlegback.xRot = Mth.cos(limbSwing * speed * 0.25F) * degree * 0.1F * limbSwingAmount + 1.0F;
+			this.rightlegback.yRot = Mth.cos(-1.0F + limbSwing * speed * 0.25F) * degree * 0.75F * limbSwingAmount;
+			this.rightlegback.x = (Mth.cos(limbSwing * speed * 0.25F) * degree * 0.25F * limbSwingAmount) + 7;
+			this.leftlegfront.xRot = Mth.cos(limbSwing * speed * 0.25F) * degree * 0.1F * limbSwingAmount + 1.0F;
+			this.leftlegfront.yRot = Mth.cos(limbSwing * speed * 0.25F) * degree * 0.5F * limbSwingAmount;
+			this.rightlegfront.xRot = Mth.cos(limbSwing * speed * 0.25F) * degree * 0.1F * limbSwingAmount + 1.0F;
+			this.rightlegfront.yRot = Mth.cos(limbSwing * speed * 0.25F) * degree * 0.5F * limbSwingAmount;
+			this.Head.x = Mth.cos(1.0F + limbSwing * speed * 0.25F) * degree * 0.1F * limbSwingAmount;
+		} else {
+			this.Body.yRot = Mth.cos(limbSwing * speed * 0.25F) * degree * 0.25F * limbSwingAmount;
+			this.Tail1.yRot = Mth.cos(-1.0F + limbSwing * speed * 0.25F) * degree * 0.5F * limbSwingAmount;
+			this.Head.yRot = Mth.cos(1.0F + limbSwing * speed * 0.25F) * degree * 0.5F * limbSwingAmount;
+			this.Head.xRot = Mth.cos(1.0F + limbSwing * speed * 0.5F) * degree * 0.1F * limbSwingAmount;
+			this.rightlegfront.z = (Mth.cos(limbSwing * speed * 0.25F) * degree * 0.5F * limbSwingAmount) - 6;
+			this.rightlegfront.y = (Mth.cos(0.8F + limbSwing * speed * 0.25F) * degree * 0.2F * limbSwingAmount) + 18;
+			this.rightlegfront.xRot = Mth.cos(limbSwing * speed * 0.25F) * degree * 0.5F * limbSwingAmount;
+			this.Body.zRot = Mth.cos(limbSwing * speed * 0.25F) * degree * 0.25F * limbSwingAmount;
+			this.leftlegfront.z = (Mth.cos(limbSwing * speed * 0.25F) * degree * -0.5F * limbSwingAmount) - 6;
+			this.leftlegfront.y = (Mth.cos(0.8F + limbSwing * speed * 0.25F) * degree * -0.2F * limbSwingAmount) + 18;
+			this.leftlegfront.xRot = Mth.cos(limbSwing * speed * 0.25F) * degree * -0.5F * limbSwingAmount;
+			this.rightlegback.z = (Mth.cos(-1.0F + limbSwing * speed * 0.25F) * degree * -0.25F * limbSwingAmount) + 8;
+			this.rightlegback.y = (Mth.cos(1.0F + limbSwing * speed * 0.25F) * degree * -0.2F * limbSwingAmount) + 18;
+			this.rightlegback.xRot = Mth.cos(limbSwing * speed * 0.25F) * degree * -0.5F * limbSwingAmount;
+			this.leftlegback.z = (Mth.cos(-1.0F + limbSwing * speed * 0.25F) * degree * 0.25F * limbSwingAmount) + 8;
+			this.leftlegback.y = (Mth.cos(1.0F + limbSwing * speed * 0.25F) * degree * 0.2F * limbSwingAmount) + 18;
+			this.leftlegback.xRot = Mth.cos(limbSwing * speed * 0.25F) * degree * 0.5F * limbSwingAmount;
+		}
+	}
 
-    /**
-     * This is a helper function from Tabula to set the rotation of model parts
-     */
-    public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
-    }
+	@Override
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		Body.render(poseStack, buffer, packedLight, packedOverlay);
+		Head.render(poseStack, buffer, packedLight, packedOverlay);
+		leftlegfront.render(poseStack, buffer, packedLight, packedOverlay);
+		leftlegback.render(poseStack, buffer, packedLight, packedOverlay);
+		rightlegback.render(poseStack, buffer, packedLight, packedOverlay);
+		rightlegfront.render(poseStack, buffer, packedLight, packedOverlay);
+	}
+
 }

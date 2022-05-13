@@ -1,15 +1,16 @@
 package superlord.wildlands.common.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.BlockHitResult;
 
 public class OlivineLampBlock extends Block {
 
@@ -18,24 +19,61 @@ public class OlivineLampBlock extends Block {
 
 	public OlivineLampBlock(Properties properties) {
 		super(properties);
-		this.setDefaultState(this.stateContainer.getBaseState().with(XP_0_10, 0));
+		this.registerDefaultState(this.stateDefinition.any().setValue(XP_0_10, 0));
 	}
 
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		int experience = player.experienceLevel;
-		int i = state.get(XP_0_10);
+	   public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hamd, BlockHitResult result) {
+		int playerExperience = player.totalExperience;
+		int newPlayerExperience;
+		int i = state.getValue(XP_0_10);
 		this.experience = i;
-		if (experience > 0 && i <= 9) {
-			player.addExperienceLevel(-1);
-			i++;
-			worldIn.setBlockState(pos, this.getDefaultState().with(XP_0_10, i));
+		if (playerExperience >= 7 && i == 0) {
+			worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 1), 0);
+			newPlayerExperience = playerExperience - 7;
+			player.totalExperience = newPlayerExperience;
+		} else if (playerExperience >= 15 && i == 1) {
+			worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 2), 0);
+			newPlayerExperience = playerExperience - 15;
+			player.totalExperience = newPlayerExperience;
+		} else if (playerExperience >= 26 && i ==  2) {
+			worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 3), 0);
+			newPlayerExperience = playerExperience - 26;
+			player.totalExperience = newPlayerExperience;
+		} else if (playerExperience >= 39 && i == 3) {
+			worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 4), 0);
+			newPlayerExperience = playerExperience - 39;
+			player.totalExperience = newPlayerExperience;
+		} else if (playerExperience >= 56 && i == 4) {
+			worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 5), 0);
+			newPlayerExperience = playerExperience - 56;
+			player.totalExperience = newPlayerExperience;
+		} else if (playerExperience >= 75 && i == 5) {
+			worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 6), 0);
+			newPlayerExperience = playerExperience - 75;
+			player.totalExperience = newPlayerExperience;
+		} else if (playerExperience >= 96 && i == 6) {
+			worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 7), 0);
+			newPlayerExperience = playerExperience - 96;
+			player.totalExperience = newPlayerExperience;
+		} else if (playerExperience >= 119 && i == 7) {
+			worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 8), 0);
+			newPlayerExperience = playerExperience - 119;
+			player.totalExperience = newPlayerExperience;
+		} else if (playerExperience >= 144 && i == 8) {
+			worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 9), 0);
+			newPlayerExperience = playerExperience - 144;
+			player.totalExperience = newPlayerExperience;
+		} else if (playerExperience >= 171 && i == 9) {
+			worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 10), 0);
+			newPlayerExperience = playerExperience - 171;
+			player.totalExperience = newPlayerExperience;
 		} else {
-			return ActionResultType.func_233537_a_(worldIn.isRemote);
+			return InteractionResult.sidedSuccess(worldIn.isClientSide());
 		}
-		return ActionResultType.func_233537_a_(worldIn.isRemote);
+		return InteractionResult.sidedSuccess(worldIn.isClientSide());
 	}
 
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(XP_0_10);
 	}
 
@@ -66,7 +104,7 @@ public class OlivineLampBlock extends Block {
 	}
 
 	@Override
-	public int getExpDrop(BlockState state, net.minecraft.world.IWorldReader reader, BlockPos pos, int fortune, int silktouch) {
+	public int getExpDrop(BlockState state, LevelReader reader, BlockPos pos, int fortune, int silktouch) {
 		return this.getExperience();
 	}
 

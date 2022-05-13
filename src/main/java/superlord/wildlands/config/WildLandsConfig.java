@@ -5,13 +5,13 @@ import superlord.wildlands.WildLands;
 
 public class WildLandsConfig {
 	
-	public static int catfishSpawnWeight = 1;
-	public static int alligatorSpawnWeight = 10;
+	public static int catfishSpawnWeight = 4;
+	public static int alligatorSpawnWeight = 20;
 	public static int frogSpawnWeight = 15;
 	public static int crabSpawnWeight = 5;
 	public static int seaLionSpawnWeight = 10;
 	public static int anchovySpawnWeight = 1;
-	public static int clamSpawnWeight = 1;
+	//public static int clamSpawnWeight = 1;
 	public static int hammerheadSharkSpawnWeight = 5;
 	public static int octopusSpawnWeight = 3;
 	public static int jellyfishSpawnWeight = 6;
@@ -39,7 +39,7 @@ public class WildLandsConfig {
 			burntForestScale = WLConfigHolder.SERVER.burntForestScale.get();
 			grizzlyBearSpawnWeight = WLConfigHolder.SERVER.grizzlyBearSpawnWeight.get();
 			superSecretSettings = WLConfigHolder.SERVER.superSecretSettings.get();
-			clamSpawnWeight = WLConfigHolder.SERVER.clamSpawnWeight.get();
+			//clamSpawnWeight = WLConfigHolder.SERVER.clamSpawnWeight.get();
 		} catch (Exception e) {
 			WildLands.LOGGER.warn("An exception was caused trying to load the config for Wild Lands");
 			e.printStackTrace();

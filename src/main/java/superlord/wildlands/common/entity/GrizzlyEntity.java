@@ -4,84 +4,162 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
 
-import net.minecraft.block.BeehiveBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SweetBerryBushBlock;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.BreedGoal;
-import net.minecraft.entity.ai.goal.FollowParentGoal;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.MoveToBlockGoal;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.PolarBearEntity;
-import net.minecraft.entity.passive.fish.SalmonEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.ItemParticleData;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import javax.annotation.Nullable;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgeableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.BreedGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.FollowParentGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Salmon;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.BeehiveBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CaveVines;
+import net.minecraft.world.level.block.SweetBerryBushBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.wildlands.init.WildLandsEntities;
 import superlord.wildlands.init.WildLandsItems;
 import superlord.wildlands.init.WildLandsParticles;
 import superlord.wildlands.init.WildLandsSounds;
 
-public class GrizzlyEntity extends AnimalEntity {
+public class GrizzlyEntity extends Animal
+{
 	private int warningSoundTicks;
 
-	public GrizzlyEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
+	public GrizzlyEntity(EntityType<? extends Animal> type, Level worldIn) {
 		super(type, worldIn);
+		this.setCanPickUpLoot(true);
 	}
 
-	private static final DataParameter<Integer> FOOD_COUNT = EntityDataManager.createKey(GrizzlyEntity.class, DataSerializers.VARINT);
-	private static final DataParameter<Boolean> SLEEPING = EntityDataManager.createKey(GrizzlyEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> SITTING = EntityDataManager.createKey(GrizzlyEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> HONEY = EntityDataManager.createKey(GrizzlyEntity.class, DataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Integer> FOOD_COUNT = SynchedEntityData.defineId(GrizzlyEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Boolean> SLEEPING = SynchedEntityData.defineId(GrizzlyEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> SITTING = SynchedEntityData.defineId(GrizzlyEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> HONEY = SynchedEntityData.defineId(GrizzlyEntity.class, EntityDataSerializers.BOOLEAN);
+	int eatTicks;
+	int snoreTicks = 0;
+	int honeyTicks = 12000;
 
-	protected void registerData() {
-		super.registerData();
-		this.dataManager.register(FOOD_COUNT, 0);
-		this.dataManager.register(SLEEPING, false);
-		this.dataManager.register(SITTING, false);
-		this.dataManager.register(HONEY, false);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		this.entityData.define(FOOD_COUNT, 0);
+		this.entityData.define(SLEEPING, false);
+		this.entityData.define(SITTING, false);
+		this.entityData.define(HONEY, false);
 	}
 
 	protected void playWarningSound() {
 		if (this.warningSoundTicks <= 0) {
-			this.playSound(WildLandsSounds.GRIZZLY_WARNING, 1.0F, this.getSoundPitch());
+			this.playSound(WildLandsSounds.GRIZZLY_WARNING, 1.0F, this.getSoundVolume());
 			this.warningSoundTicks = 40;
 		}
 
+	}
+
+	public int getEatTicks() {
+		return eatTicks;
+	}
+
+	private void dropItemStack(ItemStack stackIn) {
+		ItemEntity itementity = new ItemEntity(this.level, this.getX(), this.getY(), this.getZ(), stackIn);
+		this.level.addFreshEntity(itementity);
+	}
+
+	protected void pickUpItem(ItemEntity itemEntity) {
+		ItemStack itemstack = itemEntity.getItem();
+		if (this.canHoldItem(itemstack)) {
+			int i = itemstack.getCount();
+			if (i > 1) {
+				this.dropItemStack(itemstack.split(i - 1));
+			}
+			this.spitOutItem(this.getItemBySlot(EquipmentSlot.MAINHAND));
+			this.onItemPickup(itemEntity);
+			this.setItemSlot(EquipmentSlot.MAINHAND, itemstack.split(1));
+			this.handDropChances[EquipmentSlot.MAINHAND.getIndex()] = 2.0F;
+			this.take(itemEntity, itemstack.getCount());
+			itemEntity.discard();
+			this.eatTicks = 0;
+		}
+
+	}
+
+	private void spitOutItem(ItemStack p_28602_) {
+		if (!p_28602_.isEmpty() && !this.level.isClientSide) {
+			ItemEntity itementity = new ItemEntity(this.level, this.getX() + this.getLookAngle().x, this.getY() + 1.0D, this.getZ() + this.getLookAngle().z, p_28602_);
+			itementity.setPickUpDelay(40);
+			itementity.setThrower(this.getUUID());
+			this.playSound(SoundEvents.FOX_SPIT, 1.0F, 1.0F);
+			this.level.addFreshEntity(itementity);
+		}
+	}
+
+
+	@OnlyIn(Dist.CLIENT)
+	public void handleEntityEvent(byte id) {
+		if (id == 45) {
+			ItemStack itemstack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+			if (!itemstack.isEmpty()) {
+				for(int i = 0; i < 8; ++i) {
+					Vec3 vec3 = (new Vec3(((double)this.random.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D)).xRot(-this.getXRot() * ((float)Math.PI / 180F)).yRot(-this.getYRot() * ((float)Math.PI / 180F));
+					this.level.addParticle(new ItemParticleOption(ParticleTypes.ITEM, itemstack), this.getX() + this.getLookAngle().x / 2.0D, this.getY(), this.getZ() + this.getLookAngle().z / 2.0D, vec3.x, vec3.y + 0.05D, vec3.z);
+				}
+			}
+		} else {
+			super.handleEntityEvent(id);
+		}
+
+	}
+
+	private boolean canEatItem(ItemStack itemStackIn) {
+		return itemStackIn.isEdible() || itemStackIn.getItem() == Items.HONEYCOMB;
+	}
+
+	public boolean canEquipItem(ItemStack stack) {
+		ItemStack itemstack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+		return itemstack.isEmpty() && this.canEatItem(stack) && !this.isSleeping();
 	}
 
 	protected SoundEvent getAmbientSound() {
@@ -101,47 +179,47 @@ public class GrizzlyEntity extends AnimalEntity {
 	}
 
 	public int getFoodCount() {
-		return MathHelper.clamp(dataManager.get(FOOD_COUNT), 0, 20);
+		return Mth.clamp(entityData.get(FOOD_COUNT), 0, 10);
 	}
 
 	public void setFoodCount(int type) {
-		dataManager.set(FOOD_COUNT, type);
+		entityData.set(FOOD_COUNT, type);
 	}
 
 	public boolean isSleeping() {
-		return dataManager.get(SLEEPING);
+		return entityData.get(SLEEPING);
 	}
 
 	public void setSleeping(boolean sleeping) {
-		dataManager.set(SLEEPING, sleeping);
+		entityData.set(SLEEPING, sleeping);
 	}
 
 	public boolean isSitting() {
-		return dataManager.get(SITTING);
+		return entityData.get(SITTING);
 	}
 
 	public void setSitting(boolean sitting) {
-		dataManager.set(SITTING, sitting);
+		entityData.set(SITTING, sitting);
 	}
 
 	public boolean hasHoney() {
-		return dataManager.get(HONEY);
+		return entityData.get(HONEY);
 	}
 
 	public void setHoney(boolean honey) {
-		dataManager.set(HONEY, honey);
+		entityData.set(HONEY, honey);
 	}
-
-	public void writeAdditional(CompoundNBT compound) {
-		super.writeAdditional(compound);
+	
+	public void addAdditionalSaveData(CompoundTag compound) {
+		super.addAdditionalSaveData(compound);
 		compound.putInt("FoodCount", this.getFoodCount());
 		compound.putBoolean("Sleeping", this.isSleeping());
 		compound.putBoolean("Sitting", this.isSitting());
 		compound.putBoolean("Honey", this.hasHoney());
 	}
 
-	public void readAdditional(CompoundNBT compound) {
-		super.readAdditional(compound);
+	public void readAdditionalSaveData(CompoundTag compound) {
+		super.readAdditionalSaveData(compound);
 		this.setFoodCount(compound.getInt("FoodCount"));
 		this.setSleeping(compound.getBoolean("Sleeping"));
 		this.setSitting(compound.getBoolean("Sitting"));
@@ -153,109 +231,130 @@ public class GrizzlyEntity extends AnimalEntity {
 	}
 
 	protected void playStepSound(BlockPos pos, BlockState blockIn) {
-		this.playSound(SoundEvents.ENTITY_POLAR_BEAR_STEP, 0.15F, 1.0F);
+		this.playSound(SoundEvents.POLAR_BEAR_STEP, 0.15F, 1.0F);
 	}
 
-	public boolean attackEntityFrom(DamageSource source, float amount) {
-		if (source.getDamageType() == DamageSource.SWEET_BERRY_BUSH.damageType) {
+	public boolean hurt(DamageSource source, float amount) {
+		if (source == DamageSource.SWEET_BERRY_BUSH) {
 			return false;
 		} else {
-			return super.attackEntityFrom(source, amount);
+			return super.hurt(source, amount);
 		}
 	}
 
 	protected void registerGoals() {
 		super.registerGoals();
-		this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<>(this, SalmonEntity.class, false));
-		this.goalSelector.addGoal(10, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+		this.targetSelector.addGoal(7, new NearestAttackableTargetGoal<Salmon>(this, Salmon.class, false));
+		this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
 		this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.25D));
-		this.goalSelector.addGoal(10, new LookRandomlyGoal(this));
-		this.goalSelector.addGoal(1, new SwimGoal(this));
+		this.goalSelector.addGoal(10, new GrizzlyEntity.GrizzlyLookRandomlyGoal(this));
+		this.goalSelector.addGoal(1, new FloatGoal(this));
 		this.goalSelector.addGoal(9, new GrizzlyEntity.HibernateGoal());
 		this.goalSelector.addGoal(2, new GrizzlyEntity.EatHoneyGoal((double)1.2F, 12, 2));
 		this.goalSelector.addGoal(3, new GrizzlyEntity.EatBerriesGoal((double)1.2F, 12, 2));
-		this.goalSelector.addGoal(5, new GrizzlyEntity.MeleeAttackGoal());
-		this.goalSelector.addGoal(1, new GrizzlyEntity.PanicGoal());
+		this.goalSelector.addGoal(0, new GrizzlyEntity.GrizzlyMeleeAttackGoal());
+		this.goalSelector.addGoal(1, new GrizzlyEntity.GrizzlyPanicGoal());
 		this.goalSelector.addGoal(7, new BreedGoal(this, 1.0D));
-		this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-		this.targetSelector.addGoal(1, new GrizzlyEntity.HurtByTargetGoal());
-		this.targetSelector.addGoal(2, new GrizzlyEntity.AttackPlayerGoal());
+		this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+		this.targetSelector.addGoal(0, new GrizzlyEntity.GrizzlyHurtByTargetGoal());
+		this.targetSelector.addGoal(0, new GrizzlyEntity.AttackPlayerGoal());
 		this.goalSelector.addGoal(5, new GrizzlyEntity.FindItemsGoal());
-	}
-
-	public boolean canPickUpItem(ItemStack itemstackIn) {
-		EquipmentSlotType equipmentslottype = MobEntity.getSlotForItemStack(itemstackIn);
-		if (!this.getItemStackFromSlot(equipmentslottype).isEmpty()) {
-			return false;
-		} else {
-			return equipmentslottype == EquipmentSlotType.MAINHAND && super.canPickUpItem(itemstackIn);
-		}
-	}
-
-	private void spitOutItem(ItemStack stackIn) {
-		if (!stackIn.isEmpty() && !this.world.isRemote) {
-			ItemEntity itementity = new ItemEntity(this.world, this.getPosX() + this.getLookVec().x, this.getPosY() + 1.0D, this.getPosZ() + this.getLookVec().z, stackIn);
-			itementity.setPickupDelay(40);
-			itementity.setThrowerId(this.getUniqueID());
-			this.playSound(SoundEvents.ENTITY_FOX_SPIT, 1.0F, 1.0F);
-			this.world.addEntity(itementity);
-		}
 	}
 
 	public void tick() {
 		super.tick();
-		int ticks = 1200;
-		int eatTicks = 0;
 		if (this.warningSoundTicks > 0) {
 			--this.warningSoundTicks;
 		}
 		if (this.hasHoney()) {
-			ticks--;
-			if (ticks == 0) {
-				ticks = 1200;
+			if (this.isInWater()) {
+				this.setHoney(false);
+			}
+			honeyTicks--;
+			if (honeyTicks == 0) {
+				honeyTicks = 1200;
 				this.setHoney(false);
 			}
 		}
 
-		if(this.isSleeping()) {
-			world.addParticle(WildLandsParticles.SNORE_PARTICLE, this.getPosX(), this.getPosY() + 0.2F, this.getPosZ(), 0, 0, 0);
+		if (this.isSitting() || this.isSleeping()) {
+			this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0);
+		} else {
+			this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.25D);
 		}
 
-		if (this.getItemStackFromSlot(EquipmentSlotType.MAINHAND) == Items.SWEET_BERRIES.getDefaultInstance() || this.getItemStackFromSlot(EquipmentSlotType.MAINHAND) == Items.HONEYCOMB.getDefaultInstance() || this.getItemStackFromSlot(EquipmentSlotType.MAINHAND) == Items.SALMON.getDefaultInstance()) {
-			ItemStack itemstack = this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
-			eatTicks++;
-			if (eatTicks <= 800) {
-				Vector3d vector3d = (new Vector3d(((double)this.rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D)).rotatePitch(-this.rotationPitch * ((float)Math.PI / 180F)).rotateYaw(-this.rotationYaw * ((float)Math.PI / 180F));
-				this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, itemstack), this.getPosX() + this.getLookVec().x / 2.0D, this.getPosY(), this.getPosZ() + this.getLookVec().z / 2.0D, vector3d.x, vector3d.y + 0.05D, vector3d.z);
+		if(this.isSleeping()) {
+			snoreTicks++;
+			if (snoreTicks % 10 == 0) {
+				level.addParticle(WildLandsParticles.SNORE_PARTICLE, this.getX(), this.getY() + 0.2F, this.getZ(), 0, 0, 0);
 			}
-			if (eatTicks == 1000) {
-				this.setItemStackToSlot(EquipmentSlotType.MAINHAND, Items.AIR.getDefaultInstance());
-				eatTicks = 0;
-			}
-		} else if (this.getItemStackFromSlot(EquipmentSlotType.MAINHAND) != null && !(this.getItemStackFromSlot(EquipmentSlotType.MAINHAND) == Items.SWEET_BERRIES.getDefaultInstance() || this.getItemStackFromSlot(EquipmentSlotType.MAINHAND) == Items.HONEYCOMB.getDefaultInstance() || this.getItemStackFromSlot(EquipmentSlotType.MAINHAND) == Items.SALMON.getDefaultInstance())) {
-			ItemStack itemstack = this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
-			this.spitOutItem(itemstack);
 		}
 
 	}
 
-	public boolean attackEntityAsMob(Entity entityIn) {
-		boolean flag = entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+	public void aiStep() {
+		int foodCount = this.getFoodCount();
+		if (!this.level.isClientSide && this.isAlive() && this.isEffectiveAi()) {
+			++this.eatTicks;
+			ItemStack itemstack = this.getItemBySlot(EquipmentSlot.MAINHAND);
+			if (this.canEatItem(itemstack)) {
+				if (itemstack.getItem() == Items.HONEYCOMB) {
+					this.setHoney(true);
+				}
+				this.setSitting(true);
+				if (this.eatTicks > 200) {
+					level.playSound((Player)null, this.getX(), this.getY(), this.getZ(), WildLandsSounds.GRIZZLY_EATING, SoundSource.NEUTRAL, 1, 1);
+					ItemStack itemstack1 = itemstack.finishUsingItem(this.level, this);
+					if (!itemstack1.isEmpty()) {
+						this.setItemSlot(EquipmentSlot.MAINHAND, itemstack1);
+					}
+					this.eatTicks = 0;
+					itemstack.shrink(1);
+					this.setSitting(false);
+					this.setFoodCount(foodCount + 1);
+				}
+				if (eatTicks % 20 == 0) {
+					level.playSound((Player)null, this.getX(), this.getY(), this.getZ(), WildLandsSounds.GRIZZLY_EATING, SoundSource.NEUTRAL, 1, 1);
+				}
+				if (this.getTarget() != null) {
+					this.eatTicks = 0;
+					ItemStack itemstack1 = itemstack.finishUsingItem(this.level, this);
+					this.setItemSlot(EquipmentSlot.MAINHAND, itemstack1);
+					this.setSitting(false);
+				}
+			}
+		}
+		super.aiStep();
+	}
+
+	public boolean doHurtTarget(Entity entityIn) {
+		boolean flag = entityIn.hurt(DamageSource.mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
 		if (flag) {
-			this.applyEnchantments(this, entityIn);
+			this.doEnchantDamageEffects(this, entityIn);
 		}
 		return flag;
 	}
 
-	public static AttributeModifierMap.MutableAttribute createAttributes() {
-		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 30.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 20.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D).createMutableAttribute(Attributes.ATTACK_DAMAGE, 6.0D);
+	public static AttributeSupplier.Builder createAttributes() {
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 30.0D).add(Attributes.FOLLOW_RANGE, 20.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.ATTACK_DAMAGE, 6.0D);
 	}
 
 	@Override
-	public AgeableEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
-		GrizzlyEntity entity = new GrizzlyEntity(WildLandsEntities.GRIZZLY.get(), this.world);
-		entity.onInitialSpawn(p_241840_1_, this.world.getDifficultyForLocation(new BlockPos(entity.getPositionVec())), SpawnReason.BREEDING, (ILivingEntityData)null, (CompoundNBT)null);
+	public AgeableMob getBreedOffspring(ServerLevel p_241840_1_, AgeableMob p_241840_2_) {
+		GrizzlyEntity entity = new GrizzlyEntity(WildLandsEntities.GRIZZLY.get(), this.level);
+		entity.finalizeSpawn(p_241840_1_, this.level.getCurrentDifficultyAt(new BlockPos(entity.getEyePosition())), MobSpawnType.BREEDING, (SpawnGroupData)null, (CompoundTag)null);
 		return entity;
+	}
+
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+		if (spawnDataIn == null) {
+			spawnDataIn = new AgeableMob.AgeableMobGroupData(1.0F);
+		}
+		int sleepChance = random.nextInt(10);
+		if (sleepChance == 0) {
+			this.setFoodCount(10);
+		}
+		return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 	}
 
 	public class HibernateGoal extends Goal {
@@ -263,8 +362,8 @@ public class GrizzlyEntity extends AnimalEntity {
 		int tickTimer;
 
 		@Override
-		public boolean shouldExecute() {
-			if (GrizzlyEntity.this.getFoodCount() >= 20) {
+		public boolean canUse() {
+			if (GrizzlyEntity.this.getFoodCount() >= 10) {
 				return true;
 			} else return false;
 		}
@@ -275,34 +374,34 @@ public class GrizzlyEntity extends AnimalEntity {
 		}
 
 		@Override
-		public boolean shouldContinueExecuting() {
-			List<PlayerEntity> players = GrizzlyEntity.this.world.getEntitiesWithinAABB(PlayerEntity.class, GrizzlyEntity.this.getBoundingBox().grow(5, 5, 5));
+		public boolean canContinueToUse() {
+			List<Player> players = GrizzlyEntity.this.level.getEntitiesOfClass(Player.class, GrizzlyEntity.this.getBoundingBox().inflate(5, 5, 5));
 			if (!players.isEmpty()) {
-				for (PlayerEntity player : players) {
+				for (Player player : players) {
 					if (!player.isCreative()) {
 						return false;
 					}
 				}
 			}
-			if (tickTimer >= 96000 || GrizzlyEntity.this.getRevengeTarget() != null) {
+			if (tickTimer >= 96000 || GrizzlyEntity.this.getTarget() != null) {
 				return false;
 			} else return true;
 		}
 
 		@Override
-		public void startExecuting() {
+		public void start() {
 			GrizzlyEntity.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0);
 			GrizzlyEntity.this.setSleeping(true);
 			GrizzlyEntity.this.setFoodCount(0);
 		}
 
-		public void resetTask() {
+		public void stop() {
 			GrizzlyEntity.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.25D);
 			GrizzlyEntity.this.setSleeping(false);
-			List<PlayerEntity> players = GrizzlyEntity.this.world.getEntitiesWithinAABB(PlayerEntity.class, GrizzlyEntity.this.getBoundingBox().grow(5, 5, 5));
+			List<Player> players = GrizzlyEntity.this.level.getEntitiesOfClass(Player.class, GrizzlyEntity.this.getBoundingBox().inflate(5, 5, 5));
 			if (!players.isEmpty()) {
-				for (PlayerEntity player : players) {
-					GrizzlyEntity.this.setAttackTarget(player);
+				for (Player player : players) {
+					GrizzlyEntity.this.setTarget(player);
 				}
 			}
 		}
@@ -316,58 +415,72 @@ public class GrizzlyEntity extends AnimalEntity {
 			super(GrizzlyEntity.this, p_i50737_2_, p_i50737_4_, p_i50737_5_);
 		}
 
-		public double getTargetDistanceSq() {
+		public double acceptedDistance() {
 			return 2.0D;
 		}
 
-		public boolean shouldMove() {
-			return this.timeoutCounter % 100 == 0;
+		public boolean shouldRecalculatePath() {
+			return this.tryTicks % 100 == 0;
 		}
 
 		/**
 		 * Return true to set given position as destination
 		 */
-		protected boolean shouldMoveTo(IWorldReader worldIn, BlockPos pos) {
+		protected boolean isValidTarget(LevelReader worldIn, BlockPos pos) {
 			BlockState blockstate = worldIn.getBlockState(pos);
-			return blockstate.isIn(Blocks.SWEET_BERRY_BUSH) && blockstate.get(SweetBerryBushBlock.AGE) >= 2;
+			return blockstate.is(Blocks.SWEET_BERRY_BUSH) && blockstate.getValue(SweetBerryBushBlock.AGE) >= 2 || CaveVines.hasGlowBerries(blockstate);
 		}
 
 		/**
 		 * Keep ticking a continuous task that has already been started
 		 */
 		public void tick() {
-			if (this.getIsAboveDestination()) {
+			if (this.isReachedTarget()) {
 				if (this.field_220731_g >= 40) {
-					this.eatBerry();
+					this.onReachedTarget();
 				} else {
 					++this.field_220731_g;
 				}
-			} else if (!this.getIsAboveDestination() && GrizzlyEntity.this.rand.nextFloat() < 0.05F) {
 			}
 
 			super.tick();
 		}
 
-		protected void eatBerry() {
-			if (net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(GrizzlyEntity.this.world, GrizzlyEntity.this)) {
-				BlockState blockstate = GrizzlyEntity.this.world.getBlockState(this.destinationBlock);
-				if (blockstate.isIn(Blocks.SWEET_BERRY_BUSH)) {
-					int i = blockstate.get(SweetBerryBushBlock.AGE);
-					blockstate.with(SweetBerryBushBlock.AGE, Integer.valueOf(1));
-					GrizzlyEntity.this.setSitting(true);
-					int j = 1 + GrizzlyEntity.this.world.rand.nextInt(2) + (i == 3 ? 1 : 0);
-					ItemStack itemstack = GrizzlyEntity.this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
+		protected void onReachedTarget() {
+			if (net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(GrizzlyEntity.this.level, GrizzlyEntity.this)) {
+				BlockState blockstate = GrizzlyEntity.this.level.getBlockState(this.blockPos);
+				if (blockstate.is(Blocks.SWEET_BERRY_BUSH)) {
+					this.eatBerry(blockstate);
+				} else if (CaveVines.hasGlowBerries(blockstate)) {
+					this.pickGlowBerry(blockstate);
+				}
+
+			}
+		}
+
+		private void pickGlowBerry(BlockState p_148927_) {
+			CaveVines.use(p_148927_, GrizzlyEntity.this.level, this.blockPos);
+		}
+
+		private void eatBerry(BlockState p_148929_) {
+			if (net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(GrizzlyEntity.this.level, GrizzlyEntity.this)) {
+				BlockState blockstate = GrizzlyEntity.this.level.getBlockState(this.blockPos);
+				if (blockstate.is(Blocks.SWEET_BERRY_BUSH)) {
+					int i = blockstate.getValue(SweetBerryBushBlock.AGE);
+					blockstate.setValue(SweetBerryBushBlock.AGE, Integer.valueOf(1));
+					int j = 1 + GrizzlyEntity.this.level.random.nextInt(2) + (i == 3 ? 1 : 0);
+					ItemStack itemstack = GrizzlyEntity.this.getItemBySlot(EquipmentSlot.MAINHAND);
 					if (itemstack.isEmpty()) {
-						GrizzlyEntity.this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.SWEET_BERRIES));
+						GrizzlyEntity.this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.SWEET_BERRIES));
 						--j;
 					}
 
 					if (j > 0) {
-						Block.spawnAsEntity(GrizzlyEntity.this.world, this.destinationBlock, new ItemStack(Items.SWEET_BERRIES, j));
+						Block.popResource(GrizzlyEntity.this.level, this.blockPos, new ItemStack(Items.SWEET_BERRIES, j));
 					}
 
-					GrizzlyEntity.this.playSound(SoundEvents.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, 1.0F, 1.0F);
-					GrizzlyEntity.this.world.setBlockState(this.destinationBlock, blockstate.with(SweetBerryBushBlock.AGE, Integer.valueOf(1)), 2);
+					GrizzlyEntity.this.playSound(SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, 1.0F, 1.0F);
+					GrizzlyEntity.this.level.setBlock(this.blockPos, blockstate.setValue(SweetBerryBushBlock.AGE, Integer.valueOf(1)), 2);
 				}
 			}
 		}
@@ -376,23 +489,20 @@ public class GrizzlyEntity extends AnimalEntity {
 		 * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
 		 * method as well.
 		 */
-		public boolean shouldExecute() {
-			return !GrizzlyEntity.this.isSleeping() && super.shouldExecute();
+		public boolean canUse() {
+			return !GrizzlyEntity.this.isSleeping() && super.canUse();
 		}
 
 		/**
 		 * Execute a one shot task or start executing a continuous task
 		 */
-		public void startExecuting() {
+		public void start() {
 			this.field_220731_g = 0;
-			super.startExecuting();
-			GrizzlyEntity.this.setFoodCount(GrizzlyEntity.this.getFoodCount() + 1);
+			super.start();
 		}
 
-		public void resetTask() {
-			super.resetTask();
-			GrizzlyEntity.this.setSitting(false);
-			GrizzlyEntity.this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.AIR));
+		public void stop() {
+			super.stop();
 		}
 	}
 
@@ -403,57 +513,55 @@ public class GrizzlyEntity extends AnimalEntity {
 			super(GrizzlyEntity.this, p_i50737_2_, p_i50737_4_, p_i50737_5_);
 		}
 
-		public double getTargetDistanceSq() {
+		public double acceptedDistance() {
 			return 2.0D;
 		}
 
-		public boolean shouldMove() {
-			return this.timeoutCounter % 100 == 0;
+		public boolean shouldRecalculatePath() {
+			return this.tryTicks % 100 == 0;
 		}
 
 		/**
 		 * Return true to set given position as destination
 		 */
-		protected boolean shouldMoveTo(IWorldReader worldIn, BlockPos pos) {
+		protected boolean isValidTarget(LevelReader worldIn, BlockPos pos) {
 			BlockState blockstate = worldIn.getBlockState(pos);
-			return (blockstate.isIn(Blocks.BEE_NEST) && blockstate.get(BeehiveBlock.HONEY_LEVEL) >= 5) || (blockstate.isIn(Blocks.BEEHIVE) && blockstate.get(BeehiveBlock.HONEY_LEVEL) >= 5);
+			return (blockstate.is(Blocks.BEEHIVE) && blockstate.getValue(BeehiveBlock.HONEY_LEVEL) >= 5) ||  (blockstate.is(Blocks.BEE_NEST) && blockstate.getValue(BeehiveBlock.HONEY_LEVEL) >= 5);
 		}
 
 		/**
 		 * Keep ticking a continuous task that has already been started
 		 */
 		public void tick() {
-			if (this.getIsAboveDestination()) {
+			if (this.isReachedTarget()) {
 				if (this.field_220731_g >= 40) {
-					this.eatBerry();
+					this.eatHoney();
 				} else {
 					++this.field_220731_g;
 				}
-			} else if (!this.getIsAboveDestination() && GrizzlyEntity.this.rand.nextFloat() < 0.05F) {
 			}
 
 			super.tick();
 		}
 
-		protected void eatBerry() {
-			if (net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(GrizzlyEntity.this.world, GrizzlyEntity.this)) {
-				BlockState blockstate = GrizzlyEntity.this.world.getBlockState(this.destinationBlock);
-				if (blockstate.isIn(Blocks.BEE_NEST) || blockstate.isIn(Blocks.BEEHIVE)) {
-					int i = blockstate.get(BeehiveBlock.HONEY_LEVEL);
-					blockstate.with(BeehiveBlock.HONEY_LEVEL, Integer.valueOf(0));
-					GrizzlyEntity.this.setSitting(true);
-					int j = 1 + GrizzlyEntity.this.world.rand.nextInt(2) + (i == 3 ? 1 : 0);
-					ItemStack itemstack = GrizzlyEntity.this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
+		protected void eatHoney() {
+			if (net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(GrizzlyEntity.this.level, GrizzlyEntity.this)) {
+				BlockState blockstate = GrizzlyEntity.this.level.getBlockState(this.blockPos);
+				if (blockstate.is(Blocks.BEEHIVE) || blockstate.is(Blocks.BEE_NEST)) {
+					int i = blockstate.getValue(BeehiveBlock.HONEY_LEVEL);
+					blockstate.setValue(BeehiveBlock.HONEY_LEVEL, Integer.valueOf(1));
+					int j = 1 + GrizzlyEntity.this.level.random.nextInt(2) + (i == 3 ? 1 : 0);
+					ItemStack itemstack = GrizzlyEntity.this.getItemBySlot(EquipmentSlot.MAINHAND);
 					if (itemstack.isEmpty()) {
-						GrizzlyEntity.this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.HONEYCOMB));
+						GrizzlyEntity.this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.HONEYCOMB));
 						GrizzlyEntity.this.setHoney(true);
 						--j;
 					}
 
 					if (j > 0) {
+						Block.popResource(GrizzlyEntity.this.level, this.blockPos, new ItemStack(Items.HONEYCOMB, j));
 					}
-
-					GrizzlyEntity.this.world.setBlockState(this.destinationBlock, blockstate.with(BeehiveBlock.HONEY_LEVEL, Integer.valueOf(0)), 2);
+					GrizzlyEntity.this.level.setBlock(this.blockPos, blockstate.setValue(BeehiveBlock.HONEY_LEVEL, Integer.valueOf(1)), 2);
 				}
 			}
 		}
@@ -462,46 +570,43 @@ public class GrizzlyEntity extends AnimalEntity {
 		 * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
 		 * method as well.
 		 */
-		public boolean shouldExecute() {
-			return !GrizzlyEntity.this.isSleeping() && super.shouldExecute();
+		public boolean canUse() {
+			return !GrizzlyEntity.this.isSleeping() && super.canUse();
 		}
 
 		/**
 		 * Execute a one shot task or start executing a continuous task
 		 */
-		public void startExecuting() {
+		public void start() {
 			this.field_220731_g = 0;
-			super.startExecuting();
-			GrizzlyEntity.this.setFoodCount(GrizzlyEntity.this.getFoodCount() + 1);
+			super.start();
 		}
 
-		public void resetTask() {
-			super.resetTask();
-			GrizzlyEntity.this.setSitting(false);
-			GrizzlyEntity.this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.AIR));
+		public void stop() {
+			super.stop();
 		}
 	}
 
-	class MeleeAttackGoal extends net.minecraft.entity.ai.goal.MeleeAttackGoal {
-		public MeleeAttackGoal() {
+	class GrizzlyMeleeAttackGoal extends MeleeAttackGoal {
+		public GrizzlyMeleeAttackGoal() {
 			super(GrizzlyEntity.this, 1.25D, true);
 		}
 
 		protected void checkAndPerformAttack(LivingEntity enemy, double distToEnemySqr) {
 			double d0 = this.getAttackReachSqr(enemy);
-			if (distToEnemySqr <= d0 && this.func_234040_h_()) {
-				this.func_234039_g_();
-				this.attacker.attackEntityAsMob(enemy);
+			if (distToEnemySqr <= d0 && this.isTimeToAttack()) {
+				this.resetAttackCooldown();
+				this.mob.doHurtTarget(enemy);
 			} else if (distToEnemySqr <= d0 * 2.0D) {
-				if (this.func_234040_h_()) {
-					this.func_234039_g_();
+				if (this.isTimeToAttack()) {
+					this.resetAttackCooldown();
 				}
 
-				if (this.func_234041_j_() <= 10) {
+				if (this.getTicksUntilNextAttack() <= 10) {
 					GrizzlyEntity.this.playWarningSound();
 				}
 			} else {
-				this.func_234039_g_();
+				this.resetAttackCooldown();
 			}
 
 		}
@@ -509,17 +614,17 @@ public class GrizzlyEntity extends AnimalEntity {
 		/**
 		 * Reset the task's internal state. Called when this task is interrupted by another one
 		 */
-		public void resetTask() {
-			super.resetTask();
+		public void stop() {
+			super.stop();
 		}
 
 		protected double getAttackReachSqr(LivingEntity attackTarget) {
-			return (double)(6.0F + attackTarget.getWidth());
+			return (double)(8.0F + attackTarget.getBbWidth());
 		}
 	}
 
-	class PanicGoal extends net.minecraft.entity.ai.goal.PanicGoal {
-		public PanicGoal() {
+	class GrizzlyPanicGoal extends PanicGoal {
+		public GrizzlyPanicGoal() {
 			super(GrizzlyEntity.this, 2.0D);
 		}
 
@@ -527,27 +632,27 @@ public class GrizzlyEntity extends AnimalEntity {
 		 * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
 		 * method as well.
 		 */
-		public boolean shouldExecute() {
-			return !GrizzlyEntity.this.isChild() && !GrizzlyEntity.this.isBurning() ? false : super.shouldExecute();
+		public boolean canUse() {
+			return !GrizzlyEntity.this.isBaby() && !GrizzlyEntity.this.isOnFire() ? false : super.canUse();
 		}
 	}
 
-	class AttackPlayerGoal extends NearestAttackableTargetGoal<PlayerEntity> {
+	class AttackPlayerGoal extends NearestAttackableTargetGoal<Player> {
 		public AttackPlayerGoal() {
-			super(GrizzlyEntity.this, PlayerEntity.class, 20, true, true, (Predicate<LivingEntity>)null);
+			super(GrizzlyEntity.this, Player.class, 20, true, true, (Predicate<LivingEntity>)null);
 		}
 
 		/**
 		 * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
 		 * method as well.
 		 */
-		public boolean shouldExecute() {
-			if (GrizzlyEntity.this.isChild()) {
+		public boolean canUse() {
+			if (GrizzlyEntity.this.isBaby()) {
 				return false;
 			} else {
-				if (super.shouldExecute()) {
-					for(GrizzlyEntity polarbearentity : GrizzlyEntity.this.world.getEntitiesWithinAABB(GrizzlyEntity.class, GrizzlyEntity.this.getBoundingBox().grow(8.0D, 4.0D, 8.0D))) {
-						if (polarbearentity.isChild()) {
+				if (super.canUse()) {
+					for(GrizzlyEntity polarbearentity : GrizzlyEntity.this.level.getEntitiesOfClass(GrizzlyEntity.class, GrizzlyEntity.this.getBoundingBox().inflate(8.0D, 4.0D, 8.0D))) {
+						if (polarbearentity.isBaby()) {
 							return true;
 						}
 					}
@@ -557,61 +662,61 @@ public class GrizzlyEntity extends AnimalEntity {
 			}
 		}
 
-		protected double getTargetDistance() {
-			return super.getTargetDistance() * 0.5D;
+		protected double getFollowDistance() {
+			return super.getFollowDistance() * 0.5D;
 		}
 	}
 
-	class HurtByTargetGoal extends net.minecraft.entity.ai.goal.HurtByTargetGoal {
-		public HurtByTargetGoal() {
+	class GrizzlyHurtByTargetGoal extends HurtByTargetGoal {
+		public GrizzlyHurtByTargetGoal() {
 			super(GrizzlyEntity.this);
 		}
 
 		/**
 		 * Execute a one shot task or start executing a continuous task
 		 */
-		public void startExecuting() {
-			super.startExecuting();
-			if (GrizzlyEntity.this.isChild()) {
+		public void start() {
+			super.start();
+			if (GrizzlyEntity.this.isBaby()) {
 				this.alertOthers();
-				this.resetTask();
+				this.stop();
 			}
 
 		}
 
-		protected void setAttackTarget(MobEntity mobIn, LivingEntity targetIn) {
-			if (mobIn instanceof PolarBearEntity && !mobIn.isChild()) {
-				super.setAttackTarget(mobIn, targetIn);
+		protected void alertOther(Mob mobIn, LivingEntity targetIn) {
+			if (mobIn instanceof GrizzlyEntity && !mobIn.isBaby()) {
+				super.alertOther(mobIn, targetIn);
 			}
 
 		}
 	}
 
 	@Override
-	public ItemStack getPickedResult(RayTraceResult target) {
+	public ItemStack getPickedResult(HitResult target) {
 		return new ItemStack(WildLandsItems.GRIZZLY_BEAR_SPAWN_EGG.get());
 	}
 
 	class FindItemsGoal extends Goal {
 		public FindItemsGoal() {
-			this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
+			this.setFlags(EnumSet.of(Goal.Flag.MOVE));
 		}
 
 		/**
 		 * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
 		 * method as well.
 		 */
-		public boolean shouldExecute() {
-			if (!GrizzlyEntity.this.getItemStackFromSlot(EquipmentSlotType.MAINHAND).isEmpty()) {
+		public boolean canUse() {
+			if (!GrizzlyEntity.this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty()) {
 				return false;
-			} else if (GrizzlyEntity.this.getAttackTarget() == null && GrizzlyEntity.this.getRevengeTarget() == null) {
+			} else if (GrizzlyEntity.this.getTarget() == null) {
 				if (!GrizzlyEntity.this.isSleeping()) {
 					return false;
-				} else if (GrizzlyEntity.this.getRNG().nextInt(10) != 0) {
+				} else if (GrizzlyEntity.this.getRandom().nextInt(10) != 0) {
 					return false;
 				} else {
-					List<ItemEntity> list = GrizzlyEntity.this.world.getEntitiesWithinAABB(ItemEntity.class, GrizzlyEntity.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
-					return !list.isEmpty() && GrizzlyEntity.this.getItemStackFromSlot(EquipmentSlotType.MAINHAND).isEmpty();
+					List<ItemEntity> list = GrizzlyEntity.this.level.getEntitiesOfClass(ItemEntity.class, GrizzlyEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+					return !list.isEmpty() && GrizzlyEntity.this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty();
 				}
 			} else {
 				return false;
@@ -622,10 +727,10 @@ public class GrizzlyEntity extends AnimalEntity {
 		 * Keep ticking a continuous task that has already been started
 		 */
 		public void tick() {
-			List<ItemEntity> list = GrizzlyEntity.this.world.getEntitiesWithinAABB(ItemEntity.class, GrizzlyEntity.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
-			ItemStack itemstack = GrizzlyEntity.this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
+			List<ItemEntity> list = GrizzlyEntity.this.level.getEntitiesOfClass(ItemEntity.class, GrizzlyEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
+			ItemStack itemstack = GrizzlyEntity.this.getItemBySlot(EquipmentSlot.MAINHAND);
 			if (itemstack.isEmpty() && !list.isEmpty()) {
-				GrizzlyEntity.this.getNavigator().tryMoveToEntityLiving(list.get(0), (double)1.2F);
+				GrizzlyEntity.this.getNavigation().moveTo(list.get(0), (double)1.2F);
 			}
 
 		}
@@ -633,13 +738,25 @@ public class GrizzlyEntity extends AnimalEntity {
 		/**
 		 * Execute a one shot task or start executing a continuous task
 		 */
-		public void startExecuting() {
-			List<ItemEntity> list = GrizzlyEntity.this.world.getEntitiesWithinAABB(ItemEntity.class, GrizzlyEntity.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
+		public void start() {
+			List<ItemEntity> list = GrizzlyEntity.this.level.getEntitiesOfClass(ItemEntity.class, GrizzlyEntity.this.getBoundingBox().inflate(8.0D, 8.0D, 8.0D));
 			if (!list.isEmpty()) {
-				GrizzlyEntity.this.getNavigator().tryMoveToEntityLiving(list.get(0), (double)1.2F);
+				GrizzlyEntity.this.getNavigation().moveTo(list.get(0), (double)1.2F);
 			}
 
 		}
+	}
+
+	class GrizzlyLookRandomlyGoal extends RandomLookAroundGoal {
+
+		public GrizzlyLookRandomlyGoal(Mob entitylivingIn) {
+			super(entitylivingIn);
+		}
+
+		public boolean canUse() {
+			return super.canUse() && !GrizzlyEntity.this.isSleeping();
+		}
+
 	}
 
 }

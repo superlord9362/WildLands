@@ -1,30 +1,24 @@
 package superlord.wildlands.common.world;
 
-import java.util.ArrayList;
-import java.util.List;
+import static superlord.wildlands.common.mixin.server.SurfaceRuleDataAccess.invokeSurfaceNoiseAbove;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
-import net.minecraft.world.gen.surfacebuilders.SurfaceBuilderConfig;
-import superlord.wildlands.common.util.WorldGenRegistrationHelper;
-import superlord.wildlands.common.world.surfacebuilder.BayouSB;
-import superlord.wildlands.common.world.surfacebuilder.BurntForestSB;
-import superlord.wildlands.init.WildLandsBlocks;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.SurfaceRules;
+import superlord.wildlands.init.WildLandsBiomes;
+import superlord.wildlands.init.WildLandsBlocks;;
 
 public class WLSurfaceBuilders {
-	
-	public static List<SurfaceBuilder<?>> surfaceBuilders = new ArrayList<>();
-	
-	public static final SurfaceBuilder<SurfaceBuilderConfig> BAYOU = WorldGenRegistrationHelper.createSurfaceBuilder("bayou", new BayouSB(SurfaceBuilderConfig.field_237203_a_));
-	public static final SurfaceBuilder<SurfaceBuilderConfig> BURNT_FOREST = WorldGenRegistrationHelper.createSurfaceBuilder("burnt_forest", new BurntForestSB(SurfaceBuilderConfig.field_237203_a_));
 
-	public static void init() {
-		
-	}
-	
-	public static class Configs {
-		public static final SurfaceBuilderConfig MUD = new SurfaceBuilderConfig(WildLandsBlocks.MUD.get().getDefaultState(), WildLandsBlocks.MUD.get().getDefaultState(), Blocks.DIRT.getDefaultState());
-		public static final SurfaceBuilderConfig CHARRED_GRASS = new SurfaceBuilderConfig(WildLandsBlocks.CHARRED_GRASS.getDefaultState(), Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState());
-	}
-	
+	public static final SurfaceRules.RuleSource BURNT_FOREST = SurfaceRules.ifTrue(SurfaceRules.isBiome(WildLandsBiomes.BURNT_FOREST), SurfaceRules.ifTrue(SurfaceRules.ON_FLOOR, SurfaceRules.state(WildLandsBlocks.CHARRED_GRASS.get().defaultBlockState())));
+
+	public static final SurfaceRules.RuleSource BAYOU = SurfaceRules.ifTrue(SurfaceRules.isBiome(WildLandsBiomes.BAYOU),
+			SurfaceRules.sequence(
+					SurfaceRules.ifTrue(invokeSurfaceNoiseAbove(1), SurfaceRules.sequence( SurfaceRules.ifTrue(SurfaceRules.UNDER_FLOOR, SurfaceRules.state(Blocks.DIRT.defaultBlockState())),
+							SurfaceRules.ifTrue(SurfaceRules.ON_FLOOR, SurfaceRules.state(WildLandsBlocks.MUD.get().defaultBlockState()))
+							)),
+					SurfaceRules.ifTrue(SurfaceRules.UNDER_FLOOR, SurfaceRules.state(Blocks.DIRT.defaultBlockState())),
+					SurfaceRules.ifTrue(SurfaceRules.ON_FLOOR, SurfaceRules.state(Blocks.GRASS.defaultBlockState()))
+					)
+			);
+
 }

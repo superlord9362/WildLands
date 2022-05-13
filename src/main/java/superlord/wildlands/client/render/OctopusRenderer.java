@@ -1,9 +1,10 @@
 package superlord.wildlands.client.render;
 
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import superlord.wildlands.WildLands;
+import superlord.wildlands.client.ClientEvents;
 import superlord.wildlands.client.model.OctopusModel;
 import superlord.wildlands.common.entity.OctopusEntity;
 
@@ -23,12 +24,12 @@ public class OctopusRenderer extends MobRenderer<OctopusEntity, OctopusModel<Oct
 	private static final ResourceLocation YELLOW = new ResourceLocation(WildLands.MOD_ID, "textures/entity/octopus/octopus_yellow_coral.png");
 	private static final ResourceLocation SWIMMING = new ResourceLocation(WildLands.MOD_ID, "textures/entity/octopus/octopus_swimming.png");
 
-	public OctopusRenderer(EntityRendererManager renderManager) {
-		super(renderManager, new OctopusModel<>(), 1.0F);
+	public OctopusRenderer(EntityRendererProvider.Context renderManager) {
+		super(renderManager, new OctopusModel<>(renderManager.bakeLayer(ClientEvents.OCTOPUS)), 1.0F);
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(OctopusEntity entity) {
+	public ResourceLocation getTextureLocation(OctopusEntity entity) {
 		if (entity.isOnBlueCoral()) {
 			return BLUE;
 		} else if (entity.isOnDirt()) {

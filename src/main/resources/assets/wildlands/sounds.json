@@ -582,5 +582,59 @@
 				"stream": true
 			}
 		]
+	},
+	"grizzly_eating": {
+		"category":"neutral",
+		"subtitle": "wildlands.subtitle.grizzlyEating",
+		"sounds": [
+			{
+				"name": "mob/panda/eat1",
+				"stream": true
+			},
+			{
+				"name": "mob/panda/eat2",
+				"stream": true
+			},
+			{
+				"name": "mob/panda/eat3",
+				"stream": true
+			},
+			{
+				"name": "mob/panda/eat4",
+				"stream": true
+			},
+			{
+				"name": "mob/panda/eat5",
+				"stream": true
+			},
+			{
+				"name": "mob/panda/eat6",
+				"stream": true
+			},
+			{
+				"name": "mob/panda/eat7",
+				"stream": true
+			},
+			{
+				"name": "mob/panda/eat8",
+				"stream": true
+			},
+			{
+				"name": "mob/panda/eat9",
+				"stream": true
+			},
+			{
+				"name": "mob/panda/eat10",
+				"stream": true
+			},
+			{
+				"name": "mob/panda/eat11",
+				"stream": true
+			},
+			{
+				"name": "mob/panda/eat12",
+				"stream": true
+			}
+		]
 	}
 }

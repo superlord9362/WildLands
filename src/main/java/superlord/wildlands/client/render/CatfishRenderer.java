@@ -1,9 +1,10 @@
 package superlord.wildlands.client.render;
 
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import superlord.wildlands.WildLands;
+import superlord.wildlands.client.ClientEvents;
 import superlord.wildlands.client.model.CatfishModel;
 import superlord.wildlands.common.entity.CatfishEntity;
 
@@ -11,12 +12,12 @@ public class CatfishRenderer extends MobRenderer<CatfishEntity, CatfishModel<Cat
 	
 	private static final ResourceLocation TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/catfish/catfish.png");
 
-	public CatfishRenderer(EntityRendererManager renderManagerIn) {
-		super(renderManagerIn, new CatfishModel<>(), 0.375F);
+	public CatfishRenderer(EntityRendererProvider.Context renderManagerIn) {
+		super(renderManagerIn, new CatfishModel<>(renderManagerIn.bakeLayer(ClientEvents.CATFISH)), 0.375F);
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(CatfishEntity entity) {
+	public ResourceLocation getTextureLocation(CatfishEntity entity) {
 		return TEXTURE;
 	}
 	

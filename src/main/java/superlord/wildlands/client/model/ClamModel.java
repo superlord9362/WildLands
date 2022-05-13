@@ -1,17 +1,10 @@
 package superlord.wildlands.client.model;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.common.entity.ClamEntity;
 
 @OnlyIn(Dist.CLIENT)
-public class ClamModel extends EntityModel<ClamEntity> {
+public class ClamModel {/**extends EntityModel<ClamEntity> {
     public ModelRenderer Base;
     public ModelRenderer Base2;
     public ModelRenderer Top;
@@ -47,12 +40,9 @@ public class ClamModel extends EntityModel<ClamEntity> {
     @Override
     public void setRotationAngles(ClamEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {}
 
-    /**
-     * This is a helper function from Tabula to set the rotation of model parts
-     */
     public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
         modelRenderer.rotateAngleX = x;
         modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleZ = z;
-    }
+    }*/
 }

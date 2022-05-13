@@ -1,44 +1,6 @@
 package superlord.wildlands.common.entity;
 
-import java.util.Random;
-
-import javax.annotation.Nullable;
-
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntitySize;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.Pose;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.fish.AbstractFishEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import superlord.wildlands.init.DamageSourceInit;
-import superlord.wildlands.init.WildLandsItems;
-import superlord.wildlands.init.WildLandsSounds;
-
-public class ClamEntity extends AbstractFishEntity {
+public class ClamEntity {/**extends AbstractFishEntity {
 	private static final DataParameter<Boolean> OPEN = EntityDataManager.createKey(ClamEntity.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> ONE = EntityDataManager.createKey(ClamEntity.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> TWO = EntityDataManager.createKey(ClamEntity.class, DataSerializers.BOOLEAN);
@@ -107,9 +69,6 @@ public class ClamEntity extends AbstractFishEntity {
 		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 12.0D);
 	}
 
-	/**
-	 * (abstract) Protected helper method to read subclass entity data from NBT.
-	 */
 	public void readAdditional(CompoundNBT compound) {
 		super.readAdditional(compound);
 		this.setOpen(compound.getBoolean("Open"));
@@ -204,5 +163,5 @@ public class ClamEntity extends AbstractFishEntity {
 	public ItemStack getPickedResult(RayTraceResult target) {
 		return new ItemStack(WildLandsItems.CLAM_SPAWN_EGG.get());
 	}
-
+*/
 }

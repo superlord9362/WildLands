@@ -1,27 +1,23 @@
 package superlord.wildlands;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntitySpawnPlacementRegistry;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.fish.AbstractFishEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.MobSpawnInfo;
-import net.minecraft.world.gen.GenerationStage;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.placement.Placement;
-import net.minecraft.world.gen.surfacebuilders.SurfaceBuilder;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.biome.Biome.BiomeCategory;
+import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -34,12 +30,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import superlord.wildlands.client.network.WLPacketHandler;
 import superlord.wildlands.common.CommonEvents;
-import superlord.wildlands.common.core.world.WLConfiguredFeatures;
-import superlord.wildlands.common.core.world.WLFeatures;
+import superlord.wildlands.common.core.world.WLPlacedFeatures;
 import superlord.wildlands.common.entity.AlligatorEntity;
 import superlord.wildlands.common.entity.AnchovyEntity;
 import superlord.wildlands.common.entity.CatfishEntity;
-import superlord.wildlands.common.entity.ClamEntity;
 import superlord.wildlands.common.entity.CrabEntity;
 import superlord.wildlands.common.entity.FrogEntity;
 import superlord.wildlands.common.entity.GrizzlyEntity;
@@ -47,12 +41,9 @@ import superlord.wildlands.common.entity.HammerheadEntity;
 import superlord.wildlands.common.entity.JellyfishEntity;
 import superlord.wildlands.common.entity.OctopusEntity;
 import superlord.wildlands.common.entity.SeaLionEntity;
-import superlord.wildlands.common.world.WLDecorators;
-import superlord.wildlands.common.world.WLSurfaceBuilders;
 import superlord.wildlands.config.WLConfigHolder;
 import superlord.wildlands.config.WildLandsConfig;
 import superlord.wildlands.init.WLTileEntities;
-import superlord.wildlands.init.WildLandsBiomes;
 import superlord.wildlands.init.WildLandsBlocks;
 import superlord.wildlands.init.WildLandsEffects;
 import superlord.wildlands.init.WildLandsEntities;
@@ -71,15 +62,14 @@ public class WildLands {
     	IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
     	modLoadingContext.registerConfig(ModConfig.Type.CLIENT, WLConfigHolder.CLIENT_SPEC);
     	modLoadingContext.registerConfig(ModConfig.Type.SERVER, WLConfigHolder.SERVER_SPEC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerCommon);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerClient);
+      	bus.addListener(this::commonSetup);
+        bus.addListener(this::registerEntityAttributes);
+        bus.addListener(this::registerClient);
         bus.addListener(this::setup);
     	WildLandsBlocks.REGISTER.register(bus);
     	WildLandsEntities.REGISTER.register(bus);
     	WildLandsItems.REGISTER.register(bus);
     	WLTileEntities.REGISTER.register(bus);
-    	WLFeatures.TREE_DECORATOR_REGISTRY.register(bus);
     	WildLandsEffects.EFFECTS.register(bus);
 		WLPacketHandler.registerPackets();
     }
@@ -87,54 +77,51 @@ public class WildLands {
     @SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void registerBiomes(BiomeLoadingEvent event) {
     	String name = event.getName().getPath();
-    	if (event.getCategory() == Biome.Category.OCEAN) {
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.UNDERGROUND_ORES).add(() -> WLConfiguredFeatures.DOLERITE_DISK);
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WLConfiguredFeatures.DOLERITE_ROCK);
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.UNDERGROUND_DECORATION).add(() -> WLConfiguredFeatures.GABBRO_DISK);
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WLConfiguredFeatures.GABBRO_ROCK);
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WLConfiguredFeatures.OLIVINE_GABBRO_ROCK);
-    		event.getSpawns().getSpawner(EntityClassification.WATER_CREATURE).add(new MobSpawnInfo.Spawners(WildLandsEntities.JELLYFISH.get(), WildLandsConfig.jellyfishSpawnWeight, 1, 3));
+    	if (event.getCategory() == BiomeCategory.OCEAN) {
+    		event.getGeneration().getFeatures(GenerationStep.Decoration.UNDERGROUND_ORES).add(WLPlacedFeatures.DISK_DOLERITE);
+    		event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(WLPlacedFeatures.DOLERITE_ROCK);
+    		event.getGeneration().getFeatures(GenerationStep.Decoration.UNDERGROUND_DECORATION).add(WLPlacedFeatures.DISK_GABBRO);
+    		event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(WLPlacedFeatures.GABBRO_ROCK);
+    		event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(WLPlacedFeatures.OLIVINE_GABBRO_ROCK);
+    		event.getSpawns().getSpawner(MobCategory.WATER_CREATURE).add(new MobSpawnSettings.SpawnerData(WildLandsEntities.JELLYFISH.get(), WildLandsConfig.jellyfishSpawnWeight, 1, 3));
     	}
-    	if (event.getCategory() == Biome.Category.FOREST || event.getCategory() == Biome.Category.TAIGA) {
-    		event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(WildLandsEntities.GRIZZLY.get(), WildLandsConfig.grizzlyBearSpawnWeight, 1, 2));
+    	if (event.getCategory() == BiomeCategory.FOREST || event.getCategory() == BiomeCategory.TAIGA) {
+    		event.getSpawns().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(WildLandsEntities.GRIZZLY.get(), WildLandsConfig.grizzlyBearSpawnWeight, 1, 2));
     	}
     	if (name.equals("lukewarm_ocean") || name.equals("deep_lukewarm_ocean") || name.equals("warm_ocean") || name.equals("deep_warm_ocean") || name.equals("beach")) {
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.UNDERGROUND_ORES).add(() -> WLConfiguredFeatures.FINE_SAND_DISK);
+    		event.getGeneration().getFeatures(GenerationStep.Decoration.UNDERGROUND_ORES).add(WLPlacedFeatures.DISK_FINE_SAND);
     	}
     	if (name.equals("lukewarm_ocean") || name.equals("deep_lukewarm_ocean") || name.equals("warm_ocean") || name.equals("deep_warm_ocean") || name.equals("ocean") || name.equals("deep_ocean")) {
-    		event.getSpawns().getSpawner(EntityClassification.WATER_CREATURE).add(new MobSpawnInfo.Spawners(WildLandsEntities.CLAM.get(), WildLandsConfig.clamSpawnWeight, 1, 1));
+    		//event.getSpawns().getSpawner(MobCategory.WATER_CREATURE).add(new MobSpawnSettings.SpawnerData(WildLandsEntities.CLAM.get(), WildLandsConfig.clamSpawnWeight, 1, 1));
     	}
     	if (name.equals("warm_ocean") || name.equals("deep_warm_ocean")) {
-    		event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(WildLandsEntities.CLAM.get(), 5, 1, 3));
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WLConfiguredFeatures.STARFISH);
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WLConfiguredFeatures.URCHIN);
+//    		event.getSpawns().getSpawner(MobCategory.AMBIENT).add(new MobSpawnSettings.SpawnerData(WildLandsEntities.CLAM.get(), 5, 1, 3));
+    		event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(WLPlacedFeatures.STARFISH);
+    		event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(WLPlacedFeatures.URCHIN);
     	}
     	if (name.equals("warm_ocean") || name.equals("deep_warm_ocean") || name.equals("lukewarm_ocean") || name.equals("deep_lukewarm_ocean")) {
-    		event.getSpawns().getSpawner(EntityClassification.WATER_CREATURE).add(new MobSpawnInfo.Spawners(WildLandsEntities.HAMMERHEAD.get(), WildLandsConfig.hammerheadSharkSpawnWeight, 3, 6));
-    		event.getSpawns().getSpawner(EntityClassification.WATER_CREATURE).add(new MobSpawnInfo.Spawners(WildLandsEntities.OCTOPUS.get(), WildLandsConfig.octopusSpawnWeight, 1, 2));
+    		event.getSpawns().getSpawner(MobCategory.WATER_CREATURE).add(new MobSpawnSettings.SpawnerData(WildLandsEntities.HAMMERHEAD.get(), WildLandsConfig.hammerheadSharkSpawnWeight, 3, 6));
+    		event.getSpawns().getSpawner(MobCategory.WATER_CREATURE).add(new MobSpawnSettings.SpawnerData(WildLandsEntities.OCTOPUS.get(), WildLandsConfig.octopusSpawnWeight, 1, 2));
     	}
-    	if (name.equals("ocean") || name.equals("deep_ocean") || name.equals("cold_ocean") || name.equals("deep_cold_ocean") || name.equals("frozen_ocean") || name.equals("deep_frozen_ocean") || name.equals("stone_shore")) {
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.UNDERGROUND_ORES).add(() -> WLConfiguredFeatures.CONGLOMERATE_DISK);
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WLConfiguredFeatures.CONGLOMERATE_ROCK);
-    	}
-    	if (name.equals("beach")) {
-    		event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(WildLandsEntities.CRAB.get(), WildLandsConfig.crabSpawnWeight, 1, 3));
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.UNDERGROUND_ORES).add(() -> WLConfiguredFeatures.FINE_SAND_DISK);
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WLConfiguredFeatures.RANDOM_COCONUT_TREE);
-    	}
-    	if (name.equals("swamp")) {
-    		event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(WildLandsEntities.FROG.get(), WildLandsConfig.frogSpawnWeight, 1, 3));
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.UNDERGROUND_ORES).add(() -> WLConfiguredFeatures.MUD_DISK);
-    	}
-    	if (name.equals("ocean") || name.equals("deep_ocean") || name.equals("cold_ocean") || name.equals("deep_cold_ocean")) {
-    		event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(WildLandsEntities.ANCHOVY.get(), WildLandsConfig.anchovySpawnWeight, 4, 7));
+    	if (name.equals("ocean") || name.equals("deep_ocean") || name.equals("cold_ocean") || name.equals("deep_cold_ocean") || name.equals("frozen_ocean") || name.equals("deep_frozen_ocean")) {
+    		event.getGeneration().getFeatures(GenerationStep.Decoration.UNDERGROUND_ORES).add(WLPlacedFeatures.DISK_CONGLOMERATE);
+    		event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(WLPlacedFeatures.CONGLOMERATE_ROCK);
     	}
     	if (name.equals("stone_shore")) {
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.UNDERGROUND_ORES).add(() -> WLConfiguredFeatures.FINE_SAND_DISK);
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.UNDERGROUND_ORES).add(() -> WLConfiguredFeatures.CONGLOMERATE_DISK);
-    		event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WLConfiguredFeatures.CONGLOMERATE_ROCK);
-    		event.getSpawns().getSpawner(EntityClassification.AMBIENT).add(new MobSpawnInfo.Spawners(WildLandsEntities.CRAB.get(), WildLandsConfig.crabSpawnWeight, 1, 3));
-    		event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(WildLandsEntities.SEA_LION.get(), WildLandsConfig.seaLionSpawnWeight, 3, 6));
+    		event.getGeneration().getFeatures(GenerationStep.Decoration.UNDERGROUND_ORES).add(WLPlacedFeatures.DISK_CONGLOMERATE);
+    	}
+    	if (name.equals("beach")) {
+    		event.getSpawns().getSpawner(MobCategory.AMBIENT).add(new MobSpawnSettings.SpawnerData(WildLandsEntities.CRAB.get(), WildLandsConfig.crabSpawnWeight, 1, 3));
+    		event.getGeneration().getFeatures(GenerationStep.Decoration.UNDERGROUND_ORES).add(WLPlacedFeatures.DISK_FINE_SAND);
+    		event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(WLPlacedFeatures.COCONUT_TREES);
+    		event.getSpawns().getSpawner(MobCategory.CREATURE).add(new MobSpawnSettings.SpawnerData(WildLandsEntities.SEA_LION.get(), WildLandsConfig.seaLionSpawnWeight, 3, 6));
+    	}
+    	if (name.equals("swamp")) {
+    		event.getSpawns().getSpawner(MobCategory.AMBIENT).add(new MobSpawnSettings.SpawnerData(WildLandsEntities.FROG.get(), WildLandsConfig.frogSpawnWeight, 1, 3));
+    		event.getGeneration().getFeatures(GenerationStep.Decoration.UNDERGROUND_ORES).add(WLPlacedFeatures.DISK_MUD);
+    	}
+    	if (name.equals("ocean") || name.equals("deep_ocean") || name.equals("cold_ocean") || name.equals("deep_cold_ocean")) {
+    		event.getSpawns().getSpawner(MobCategory.AMBIENT).add(new MobSpawnSettings.SpawnerData(WildLandsEntities.ANCHOVY.get(), WildLandsConfig.anchovySpawnWeight, 2, 3));
     	}
     }
     
@@ -147,89 +134,56 @@ public class WildLands {
         CommonEvents.setup();
 	}
     
-    public final static ItemGroup BLOCK_GROUP = new ItemGroup("wildlands_block_item_group") {
+    public final static CreativeModeTab BLOCK_GROUP = new CreativeModeTab("wildlands_block_item_group") {
         @Override
-        public ItemStack createIcon() {
+		public ItemStack makeIcon() {
             return new ItemStack(WildLandsBlocks.MUD.get().asItem());
         }
     };
     
-    public final static ItemGroup ITEM_GROUP = new ItemGroup("wildlands_item_item_group") {
-        @Override
-        public ItemStack createIcon() {
+    public final static CreativeModeTab ITEM_GROUP = new CreativeModeTab("wildlands_item_item_group") {
+		@Override
+		public ItemStack makeIcon() {
             return new ItemStack(WildLandsItems.OLIVINE.get());
-        }
+		}
     };
     
-    public final static ItemGroup SPAWN_EGG_GROUP = new ItemGroup("wildlands_spawn_item_group") {
+    public final static CreativeModeTab SPAWN_EGG_GROUP = new CreativeModeTab("wildlands_spawn_item_group") {
         @Override
-        public ItemStack createIcon() {
+		public ItemStack makeIcon() {
             return new ItemStack(WildLandsItems.CATFISH_SPAWN_EGG.get());
         }
     };
     
-    private void registerCommon(FMLCommonSetupEvent event) {
-        registerEntityAttributes();
-        }
-    
     private void commonSetup(FMLCommonSetupEvent event) {
-        EntitySpawnPlacementRegistry.register(WildLandsEntities.CATFISH.get(), EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractFishEntity::func_223363_b);
-        EntitySpawnPlacementRegistry.register(WildLandsEntities.ANCHOVY.get(), EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AbstractFishEntity::func_223363_b);
-        EntitySpawnPlacementRegistry.register(WildLandsEntities.ALLIGATOR.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
-        EntitySpawnPlacementRegistry.register(WildLandsEntities.GRIZZLY.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
-        EntitySpawnPlacementRegistry.register(WildLandsEntities.CRAB.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
-        EntitySpawnPlacementRegistry.register(WildLandsEntities.CLAM.get(), EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.OCEAN_FLOOR, ClamEntity::canSpawn);
-        EntitySpawnPlacementRegistry.register(WildLandsEntities.FROG.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
-        EntitySpawnPlacementRegistry.register(WildLandsEntities.SEA_LION.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
-        EntitySpawnPlacementRegistry.register(WildLandsEntities.HAMMERHEAD.get(), EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.OCEAN_FLOOR, HammerheadEntity::func_223364_b);
-        EntitySpawnPlacementRegistry.register(WildLandsEntities.OCTOPUS.get(), EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.OCEAN_FLOOR, OctopusEntity::canSpawn);
-        EntitySpawnPlacementRegistry.register(WildLandsEntities.JELLYFISH.get(), EntitySpawnPlacementRegistry.PlacementType.IN_WATER, Heightmap.Type.OCEAN_FLOOR, JellyfishEntity::canSpawn);
-        event.enqueueWork(() -> {
-    		WildLandsBiomes.addBiomeEntries();
-    		WildLandsBiomes.fillBiomeDictionary();
-    	});
+    	SpawnPlacements.register(WildLandsEntities.CATFISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules);
+        SpawnPlacements.register(WildLandsEntities.ANCHOVY.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules);
+        SpawnPlacements.register(WildLandsEntities.ALLIGATOR.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, AlligatorEntity::canAlligatorSpawn);
+        SpawnPlacements.register(WildLandsEntities.GRIZZLY.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
+        SpawnPlacements.register(WildLandsEntities.CRAB.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, CrabEntity::canCrabSpawn);
+       // SpawnPlacements.register(WildLandsEntities.CLAM.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Type.OCEAN_FLOOR, ClamEntity::canSpawn);
+        SpawnPlacements.register(WildLandsEntities.FROG.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
+        SpawnPlacements.register(WildLandsEntities.SEA_LION.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SeaLionEntity::canSeaLionSpawn);
+        SpawnPlacements.register(WildLandsEntities.HAMMERHEAD.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.OCEAN_FLOOR, HammerheadEntity::func_223364_b);
+        SpawnPlacements.register(WildLandsEntities.OCTOPUS.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.OCEAN_FLOOR, OctopusEntity::canSpawn);
+        SpawnPlacements.register(WildLandsEntities.JELLYFISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.OCEAN_FLOOR, JellyfishEntity::canSpawn);
     }
     
-    private void registerEntityAttributes() {
-        GlobalEntityTypeAttributes.put(WildLandsEntities.CATFISH.get(), CatfishEntity.createAttributes().create());
-        GlobalEntityTypeAttributes.put(WildLandsEntities.ANCHOVY.get(), AnchovyEntity.createAttributes().create());
-        GlobalEntityTypeAttributes.put(WildLandsEntities.ALLIGATOR.get(), AlligatorEntity.createAttributes().create());
-        GlobalEntityTypeAttributes.put(WildLandsEntities.CRAB.get(), CrabEntity.createAttributes().create());
-        GlobalEntityTypeAttributes.put(WildLandsEntities.CLAM.get(), ClamEntity.createAttributes().create());
-        GlobalEntityTypeAttributes.put(WildLandsEntities.FROG.get(), FrogEntity.createAttributes().create());
-        GlobalEntityTypeAttributes.put(WildLandsEntities.HAMMERHEAD.get(), HammerheadEntity.createAttributes().create());
-        GlobalEntityTypeAttributes.put(WildLandsEntities.OCTOPUS.get(), OctopusEntity.createAttributes().create());
-        GlobalEntityTypeAttributes.put(WildLandsEntities.SEA_LION.get(), SeaLionEntity.createAttributes().create());
-        GlobalEntityTypeAttributes.put(WildLandsEntities.JELLYFISH.get(), JellyfishEntity.createAttributes().create());
-        GlobalEntityTypeAttributes.put(WildLandsEntities.GRIZZLY.get(), GrizzlyEntity.createAttributes().create());
+    private void registerEntityAttributes(EntityAttributeCreationEvent event) {
+    	event.put(WildLandsEntities.CATFISH.get(), CatfishEntity.createAttributes().build());
+    	event.put(WildLandsEntities.ANCHOVY.get(), AnchovyEntity.createAttributes().build());
+    	event.put(WildLandsEntities.ALLIGATOR.get(), AlligatorEntity.createAttributes().build());
+    	event.put(WildLandsEntities.CRAB.get(), CrabEntity.createAttributes().build());
+    	event.put(WildLandsEntities.FROG.get(), FrogEntity.createAttributes().build());
+    	event.put(WildLandsEntities.HAMMERHEAD.get(), HammerheadEntity.createAttributes().build());
+    	event.put(WildLandsEntities.OCTOPUS.get(), OctopusEntity.createAttributes().build());
+    	event.put(WildLandsEntities.SEA_LION.get(), SeaLionEntity.createAttributes().build());
+    	event.put(WildLandsEntities.JELLYFISH.get(), JellyfishEntity.createAttributes().build());
+    	event.put(WildLandsEntities.GRIZZLY.get(), GrizzlyEntity.createAttributes().build());
     }
     
-    @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class WLWorldGenRegistries {
-    	@SubscribeEvent
-    	public static void registerBiomes(RegistryEvent.Register<Biome> event) {
-    		WildLandsBiomes.init();
-    		WildLandsBiomes.biomeList.sort(Comparator.comparingInt(WildLandsBiomes.PreserveBiomeOrder::getOrderPosition));
-    		WildLandsBiomes.biomeList.forEach(preserverBiomeOrder -> event.getRegistry().register(preserverBiomeOrder.getBiome()));
-    	}
-    	
-    	@SubscribeEvent
-        public static void registerFeatures(RegistryEvent.Register<Feature<?>> event) {
-    		  WLFeatures.init();
-              WLFeatures.features.forEach(feature -> event.getRegistry().register(feature));
-    	}
-    	
-    	@SubscribeEvent
-        public static void registerDecorators(RegistryEvent.Register<Placement<?>> event) {
-    		WLDecorators.init();
-    		WLDecorators.decorators.forEach(decorator -> event.getRegistry().register(decorator));
-    	}
-    	
-    	 @SubscribeEvent
-         public static void registerSurfaceBuilders(RegistryEvent.Register<SurfaceBuilder<?>> event) {
-    		 WLSurfaceBuilders.init();
-             WLSurfaceBuilders.surfaceBuilders.forEach(surfaceBuilder -> event.getRegistry().register(surfaceBuilder));
-    	 }
+    public static ResourceLocation createLocation(String path) {
+    	return new ResourceLocation(MOD_ID, path);
     }
 
 }

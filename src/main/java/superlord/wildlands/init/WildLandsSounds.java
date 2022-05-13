@@ -1,7 +1,7 @@
 package superlord.wildlands.init;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -45,6 +45,7 @@ public class WildLandsSounds {
 	public static final SoundEvent GRIZZLY_HURT;
 	public static final SoundEvent GRIZZLY_DEATH;
 	public static final SoundEvent GRIZZLY_WARNING;
+	public static final SoundEvent GRIZZLY_EATING;
 	
 	@SubscribeEvent
 	public static void registerSounds(final RegistryEvent.Register<SoundEvent> evt) {
@@ -82,6 +83,7 @@ public class WildLandsSounds {
 		evt.getRegistry().register(GRIZZLY_HURT);
 		evt.getRegistry().register(GRIZZLY_DEATH);
 		evt.getRegistry().register(GRIZZLY_WARNING);
+		evt.getRegistry().register(GRIZZLY_EATING);
 	}
 	
 	private static SoundEvent createEvent(final String soundName) {
@@ -124,6 +126,7 @@ public class WildLandsSounds {
 		GRIZZLY_HURT = createEvent("grizzly_hurt");
 		GRIZZLY_DEATH = createEvent("grizzly_death");
 		GRIZZLY_WARNING = createEvent("grizzly_warning");
+		GRIZZLY_EATING = createEvent("grizzly_eating");
 	}
 
 }

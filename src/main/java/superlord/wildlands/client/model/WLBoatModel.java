@@ -1,97 +1,84 @@
 package superlord.wildlands.client.model;
 
-import java.util.Arrays;
-
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
-import net.minecraft.client.renderer.entity.model.SegmentedModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.model.ListModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.common.entity.WLBoatEntity;
 
 @OnlyIn(Dist.CLIENT)
-public class WLBoatModel extends SegmentedModel<WLBoatEntity> {
-   private final ModelRenderer[] paddles = new ModelRenderer[2];
-   private final ModelRenderer noWater;
-   private final ImmutableList<ModelRenderer> field_228243_f_;
+@SuppressWarnings("unused")
+public class WLBoatModel extends ListModel<Boat> {
+   private static final String LEFT_PADDLE = "left_paddle";
+private static final String RIGHT_PADDLE = "right_paddle";
+   private static final String WATER_PATCH = "water_patch";
+   private static final String BOTTOM = "bottom";
+   private static final String BACK = "back";
+   private static final String FRONT = "front";
+   private static final String RIGHT = "right";
+   private static final String LEFT = "left";
+   private final ModelPart leftPaddle;
+   private final ModelPart rightPaddle;
+   private final ModelPart waterPatch;
+   private final ImmutableList<ModelPart> parts;
 
-   @SuppressWarnings("unused")
-   public WLBoatModel() {
-      ModelRenderer[] amodelrenderer = new ModelRenderer[]{(new ModelRenderer(this, 0, 0)).setTextureSize(128, 64), (new ModelRenderer(this, 0, 19)).setTextureSize(128, 64), (new ModelRenderer(this, 0, 27)).setTextureSize(128, 64), (new ModelRenderer(this, 0, 35)).setTextureSize(128, 64), (new ModelRenderer(this, 0, 43)).setTextureSize(128, 64)};
+   public WLBoatModel(ModelPart p_170462_) {
+      this.leftPaddle = p_170462_.getChild("left_paddle");
+      this.rightPaddle = p_170462_.getChild("right_paddle");
+      this.waterPatch = p_170462_.getChild("water_patch");
+      this.parts = ImmutableList.of(p_170462_.getChild("bottom"), p_170462_.getChild("back"), p_170462_.getChild("front"), p_170462_.getChild("right"), p_170462_.getChild("left"), this.leftPaddle, this.rightPaddle);
+   }
+
+   public static LayerDefinition createBodyModel() {
+      MeshDefinition meshdefinition = new MeshDefinition();
+      PartDefinition partdefinition = meshdefinition.getRoot();
       int i = 32;
       int j = 6;
       int k = 20;
       int l = 4;
       int i1 = 28;
-      amodelrenderer[0].addBox(-14.0F, -9.0F, -3.0F, 28.0F, 16.0F, 3.0F, 0.0F);
-      amodelrenderer[0].setRotationPoint(0.0F, 3.0F, 1.0F);
-      amodelrenderer[1].addBox(-13.0F, -7.0F, -1.0F, 18.0F, 6.0F, 2.0F, 0.0F);
-      amodelrenderer[1].setRotationPoint(-15.0F, 4.0F, 4.0F);
-      amodelrenderer[2].addBox(-8.0F, -7.0F, -1.0F, 16.0F, 6.0F, 2.0F, 0.0F);
-      amodelrenderer[2].setRotationPoint(15.0F, 4.0F, 0.0F);
-      amodelrenderer[3].addBox(-14.0F, -7.0F, -1.0F, 28.0F, 6.0F, 2.0F, 0.0F);
-      amodelrenderer[3].setRotationPoint(0.0F, 4.0F, -9.0F);
-      amodelrenderer[4].addBox(-14.0F, -7.0F, -1.0F, 28.0F, 6.0F, 2.0F, 0.0F);
-      amodelrenderer[4].setRotationPoint(0.0F, 4.0F, 9.0F);
-      amodelrenderer[0].rotateAngleX = ((float)Math.PI / 2F);
-      amodelrenderer[1].rotateAngleY = ((float)Math.PI * 1.5F);
-      amodelrenderer[2].rotateAngleY = ((float)Math.PI / 2F);
-      amodelrenderer[3].rotateAngleY = (float)Math.PI;
-      this.paddles[0] = this.makePaddle(true);
-      this.paddles[0].setRotationPoint(3.0F, -5.0F, 9.0F);
-      this.paddles[1] = this.makePaddle(false);
-      this.paddles[1].setRotationPoint(3.0F, -5.0F, -9.0F);
-      this.paddles[1].rotateAngleY = (float)Math.PI;
-      this.paddles[0].rotateAngleZ = 0.19634955F;
-      this.paddles[1].rotateAngleZ = 0.19634955F;
-      this.noWater = (new ModelRenderer(this, 0, 0)).setTextureSize(128, 64);
-      this.noWater.addBox(-14.0F, -9.0F, -3.0F, 28.0F, 16.0F, 3.0F, 0.0F);
-      this.noWater.setRotationPoint(0.0F, -3.0F, 1.0F);
-      this.noWater.rotateAngleX = ((float)Math.PI / 2F);
-      Builder<ModelRenderer> builder = ImmutableList.builder();
-      builder.addAll(Arrays.asList(amodelrenderer));
-      builder.addAll(Arrays.asList(this.paddles));
-      this.field_228243_f_ = builder.build();
-   }
-
-   /**
-    * Sets this entity's model rotation angles
-    */
-   public void setRotationAngles(WLBoatEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-      this.func_228244_a_(entityIn, 0, limbSwing);
-      this.func_228244_a_(entityIn, 1, limbSwing);
-   }
-
-   public ImmutableList<ModelRenderer> getParts() {
-      return this.field_228243_f_;
-   }
-
-   public ModelRenderer func_228245_c_() {
-      return this.noWater;
-   }
-
-   @SuppressWarnings("unused")
-   protected ModelRenderer makePaddle(boolean p_187056_1_) {
-      ModelRenderer modelrenderer = (new ModelRenderer(this, 62, p_187056_1_ ? 0 : 20)).setTextureSize(128, 64);
-      int i = 20;
-      int j = 7;
-      int k = 6;
+      partdefinition.addOrReplaceChild("bottom", CubeListBuilder.create().texOffs(0, 0).addBox(-14.0F, -9.0F, -3.0F, 28.0F, 16.0F, 3.0F), PartPose.offsetAndRotation(0.0F, 3.0F, 1.0F, ((float)Math.PI / 2F), 0.0F, 0.0F));
+      partdefinition.addOrReplaceChild("back", CubeListBuilder.create().texOffs(0, 19).addBox(-13.0F, -7.0F, -1.0F, 18.0F, 6.0F, 2.0F), PartPose.offsetAndRotation(-15.0F, 4.0F, 4.0F, 0.0F, ((float)Math.PI * 1.5F), 0.0F));
+      partdefinition.addOrReplaceChild("front", CubeListBuilder.create().texOffs(0, 27).addBox(-8.0F, -7.0F, -1.0F, 16.0F, 6.0F, 2.0F), PartPose.offsetAndRotation(15.0F, 4.0F, 0.0F, 0.0F, ((float)Math.PI / 2F), 0.0F));
+      partdefinition.addOrReplaceChild("right", CubeListBuilder.create().texOffs(0, 35).addBox(-14.0F, -7.0F, -1.0F, 28.0F, 6.0F, 2.0F), PartPose.offsetAndRotation(0.0F, 4.0F, -9.0F, 0.0F, (float)Math.PI, 0.0F));
+      partdefinition.addOrReplaceChild("left", CubeListBuilder.create().texOffs(0, 43).addBox(-14.0F, -7.0F, -1.0F, 28.0F, 6.0F, 2.0F), PartPose.offset(0.0F, 4.0F, 9.0F));
+      int j1 = 20;
+      int k1 = 7;
+      int l1 = 6;
       float f = -5.0F;
-      modelrenderer.addBox(-1.0F, 0.0F, -5.0F, 2.0F, 2.0F, 18.0F);
-      modelrenderer.addBox(p_187056_1_ ? -1.001F : 0.001F, -3.0F, 8.0F, 1.0F, 6.0F, 7.0F);
-      return modelrenderer;
+      partdefinition.addOrReplaceChild("left_paddle", CubeListBuilder.create().texOffs(62, 0).addBox(-1.0F, 0.0F, -5.0F, 2.0F, 2.0F, 18.0F).addBox(-1.001F, -3.0F, 8.0F, 1.0F, 6.0F, 7.0F), PartPose.offsetAndRotation(3.0F, -5.0F, 9.0F, 0.0F, 0.0F, 0.19634955F));
+      partdefinition.addOrReplaceChild("right_paddle", CubeListBuilder.create().texOffs(62, 20).addBox(-1.0F, 0.0F, -5.0F, 2.0F, 2.0F, 18.0F).addBox(0.001F, -3.0F, 8.0F, 1.0F, 6.0F, 7.0F), PartPose.offsetAndRotation(3.0F, -5.0F, -9.0F, 0.0F, (float)Math.PI, 0.19634955F));
+      partdefinition.addOrReplaceChild("water_patch", CubeListBuilder.create().texOffs(0, 0).addBox(-14.0F, -9.0F, -3.0F, 28.0F, 16.0F, 3.0F), PartPose.offsetAndRotation(0.0F, -3.0F, 1.0F, ((float)Math.PI / 2F), 0.0F, 0.0F));
+      return LayerDefinition.create(meshdefinition, 128, 64);
    }
 
-   protected void func_228244_a_(WLBoatEntity p_228244_1_, int p_228244_2_, float p_228244_3_) {
-      float f = p_228244_1_.getRowingTime(p_228244_2_, p_228244_3_);
-      ModelRenderer modelrenderer = this.paddles[p_228244_2_];
-      modelrenderer.rotateAngleX = (float)MathHelper.clampedLerp((double)(-(float)Math.PI / 3F), (double)-0.2617994F, (double)((MathHelper.sin(-f) + 1.0F) / 2.0F));
-      modelrenderer.rotateAngleY = (float)MathHelper.clampedLerp((double)(-(float)Math.PI / 4F), (double)((float)Math.PI / 4F), (double)((MathHelper.sin(-f + 1.0F) + 1.0F) / 2.0F));
-      if (p_228244_2_ == 1) {
-         modelrenderer.rotateAngleY = (float)Math.PI - modelrenderer.rotateAngleY;
+   public void setupAnim(Boat p_102269_, float p_102270_, float p_102271_, float p_102272_, float p_102273_, float p_102274_) {
+      animatePaddle(p_102269_, 0, this.leftPaddle, p_102270_);
+      animatePaddle(p_102269_, 1, this.rightPaddle, p_102270_);
+   }
+
+   public ImmutableList<ModelPart> parts() {
+      return this.parts;
+   }
+
+   public ModelPart waterPatch() {
+      return this.waterPatch;
+   }
+
+   private static void animatePaddle(Boat p_170465_, int p_170466_, ModelPart p_170467_, float p_170468_) {
+      float f = p_170465_.getRowingTime(p_170466_, p_170468_);
+      p_170467_.xRot = Mth.clampedLerp((-(float)Math.PI / 3F), -0.2617994F, (Mth.sin(-f) + 1.0F) / 2.0F);
+      p_170467_.yRot = Mth.clampedLerp((-(float)Math.PI / 4F), ((float)Math.PI / 4F), (Mth.sin(-f + 1.0F) + 1.0F) / 2.0F);
+      if (p_170466_ == 1) {
+         p_170467_.yRot = (float)Math.PI - p_170467_.yRot;
       }
 
    }

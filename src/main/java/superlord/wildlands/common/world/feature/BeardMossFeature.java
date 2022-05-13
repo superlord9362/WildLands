@@ -4,105 +4,112 @@ import java.util.Random;
 
 import com.mojang.serialization.Codec;
 
-import net.minecraft.block.AbstractTopPlantBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.NoFeatureConfig;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.GrowingPlantHeadBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import superlord.wildlands.init.WildLandsBlocks;
 
-public class BeardMossFeature extends Feature<NoFeatureConfig> {
-   private static final Direction[] field_236426_a_ = Direction.values();
+public class BeardMossFeature extends Feature<NoneFeatureConfiguration> {
+	private static final Direction[] DIRECTIONS = Direction.values();
 
-   public BeardMossFeature(Codec<NoFeatureConfig> p_i232004_1_) {
-      super(p_i232004_1_);
-   }
+	public BeardMossFeature(Codec<NoneFeatureConfiguration> p_i232004_1_) {
+		super(p_i232004_1_);
+	}
 
-   public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
-      if (!reader.isAirBlock(pos)) {
-         return false;
-      } else {
-         BlockState blockstate = reader.getBlockState(pos.up());
-         if (blockstate.getBlock() != WildLandsBlocks.CYPRESS_LOG ) {
-            return false;
-         } else {
-            this.func_236428_a_(reader, rand, pos);
-            this.func_236429_b_(reader, rand, pos);
-            return true;
-         }
-      }
-   }
+	public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> p_160661_) {
+		WorldGenLevel worldgenlevel = p_160661_.level();
+		BlockPos blockpos = p_160661_.origin();
+		Random random = p_160661_.random();
+		if (!worldgenlevel.isEmptyBlock(blockpos)) {
+			return false;
+		} else {
+			BlockState blockstate = worldgenlevel.getBlockState(blockpos.above());
+			if (!blockstate.is(WildLandsBlocks.CYPRESS_LOG.get()) && !blockstate.is(WildLandsBlocks.CYPRESS_LEAVES.get())) {
+				return false;
+			} else {
+				this.placeRoofBeardMoss(worldgenlevel, random, blockpos);
+				this.placeRoofBeardMoss(worldgenlevel, random, blockpos);
+				return true;
+			}
+		}
+	}
 
-   private void func_236428_a_(IWorld p_236428_1_, Random p_236428_2_, BlockPos p_236428_3_) {
-      p_236428_1_.setBlockState(p_236428_3_, WildLandsBlocks.CYPRESS_LOG.getDefaultState(), 2);
-      BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
-      BlockPos.Mutable blockpos$mutable1 = new BlockPos.Mutable();
+	@SuppressWarnings("unused")
+	private void placeRoofCypressLog(LevelAccessor p_67384_, Random p_67385_, BlockPos p_67386_) {
 
-      for(int i = 0; i < 200; ++i) {
-         blockpos$mutable.setAndOffset(p_236428_3_, p_236428_2_.nextInt(6) - p_236428_2_.nextInt(6), p_236428_2_.nextInt(2) - p_236428_2_.nextInt(5), p_236428_2_.nextInt(6) - p_236428_2_.nextInt(6));
-         if (p_236428_1_.isAirBlock(blockpos$mutable)) {
-            int j = 0;
+		p_67384_.setBlock(p_67386_, WildLandsBlocks.CYPRESS_LOG.get().defaultBlockState(), 2);
+		BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+		BlockPos.MutableBlockPos blockpos$mutableblockpos1 = new BlockPos.MutableBlockPos();
 
-            for(Direction direction : field_236426_a_) {
-               BlockState blockstate = p_236428_1_.getBlockState(blockpos$mutable1.setAndMove(blockpos$mutable, direction));
-               if (blockstate.getBlock() == WildLandsBlocks.CYPRESS_LOG) {
-                  ++j;
-               }
+		for(int i = 0; i < 200; ++i) {
+			blockpos$mutableblockpos.setWithOffset(p_67386_, p_67385_.nextInt(6) - p_67385_.nextInt(6), p_67385_.nextInt(2) - p_67385_.nextInt(5), p_67385_.nextInt(6) - p_67385_.nextInt(6));
+			if (p_67384_.isEmptyBlock(blockpos$mutableblockpos)) {
+				int j = 0;
 
-               if (j > 1) {
-                  break;
-               }
-            }
+				for(Direction direction : DIRECTIONS) {
+					BlockState blockstate = p_67384_.getBlockState(blockpos$mutableblockpos1.setWithOffset(blockpos$mutableblockpos, direction));
+					if (blockstate.is(WildLandsBlocks.CYPRESS_LOG.get()) || blockstate.is(WildLandsBlocks.CYPRESS_LEAVES.get())) {
+						++j;
+					}
 
-            if (j == 1) {
-               p_236428_1_.setBlockState(blockpos$mutable, WildLandsBlocks.CYPRESS_LOG.getDefaultState(), 2);
-            }
-         }
-      }
+					if (j > 1) {
+						break;
+					}
+				}
 
-   }
+				if (j == 1) {
+					p_67384_.setBlock(blockpos$mutableblockpos, Blocks.NETHER_WART_BLOCK.defaultBlockState(), 2);
+				}
+			}
+		}
 
-   private void func_236429_b_(IWorld p_236429_1_, Random p_236429_2_, BlockPos p_236429_3_) {
-      BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
+	}
 
-      for(int i = 0; i < 100; ++i) {
-         blockpos$mutable.setAndOffset(p_236429_3_, p_236429_2_.nextInt(8) - p_236429_2_.nextInt(8), p_236429_2_.nextInt(2) - p_236429_2_.nextInt(7), p_236429_2_.nextInt(8) - p_236429_2_.nextInt(8));
-         if (p_236429_1_.isAirBlock(blockpos$mutable)) {
-            BlockState blockstate = p_236429_1_.getBlockState(blockpos$mutable.up());
-            if (blockstate.getBlock() == WildLandsBlocks.CYPRESS_LOG) {
-               int j = MathHelper.nextInt(p_236429_2_, 1, 8);
-               if (p_236429_2_.nextInt(6) == 0) {
-                  j *= 2;
-               }
+	private void placeRoofBeardMoss(LevelAccessor p_67400_, Random p_67401_, BlockPos p_67402_) {
+		BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
-               if (p_236429_2_.nextInt(5) == 0) {
-                  j = 1;
-               }
-               func_236427_a_(p_236429_1_, p_236429_2_, blockpos$mutable, j, 17, 25);
-            }
-         }
-      }
+		for(int i = 0; i < 100; ++i) {
+			blockpos$mutableblockpos.setWithOffset(p_67402_, p_67401_.nextInt(8) - p_67401_.nextInt(8), p_67401_.nextInt(2) - p_67401_.nextInt(7), p_67401_.nextInt(8) - p_67401_.nextInt(8));
+			if (p_67400_.isEmptyBlock(blockpos$mutableblockpos)) {
+				BlockState blockstate = p_67400_.getBlockState(blockpos$mutableblockpos.above());
+				if (blockstate.is(WildLandsBlocks.CYPRESS_LEAVES.get()) || blockstate.is(WildLandsBlocks.CYPRESS_LOG.get())) {
+					int j = Mth.nextInt(p_67401_, 1, 8);
+					if (p_67401_.nextInt(6) == 0) {
+						j *= 2;
+					}
 
-   }
+					if (p_67401_.nextInt(5) == 0) {
+						j = 1;
+					}
 
-   public static void func_236427_a_(IWorld p_236427_0_, Random p_236427_1_, BlockPos.Mutable p_236427_2_, int p_236427_3_, int p_236427_4_, int p_236427_5_) {
-      for(int i = 0; i <= p_236427_3_; ++i) {
-         if (p_236427_0_.isAirBlock(p_236427_2_)) {
-            if (i == p_236427_3_ || !p_236427_0_.isAirBlock(p_236427_2_.down())) {
-               p_236427_0_.setBlockState(p_236427_2_, WildLandsBlocks.BEARD_MOSS_TOP.get().getDefaultState().with(AbstractTopPlantBlock.AGE, Integer.valueOf(MathHelper.nextInt(p_236427_1_, p_236427_4_, p_236427_5_))), 2);
-               break;
-            }
+					placeBeardMossColumn(p_67400_, p_67401_, blockpos$mutableblockpos, j, 17, 25);
+				}
+			}
+		}
 
-            p_236427_0_.setBlockState(p_236427_2_, WildLandsBlocks.BEARD_MOSS.get().getDefaultState(), 2);
-         }
+	}
 
-         p_236427_2_.move(Direction.DOWN);
-      }
+	public static void placeBeardMossColumn(LevelAccessor p_67377_, Random p_67378_, BlockPos.MutableBlockPos p_67379_, int p_67380_, int p_67381_, int p_67382_) {
+		for(int i = 0; i <= p_67380_; ++i) {
+			if (p_67377_.isEmptyBlock(p_67379_)) {
+				if (i == p_67380_ || !p_67377_.isEmptyBlock(p_67379_.below())) {
+					p_67377_.setBlock(p_67379_, WildLandsBlocks.BEARD_MOSS_TOP.get().defaultBlockState().setValue(GrowingPlantHeadBlock.AGE, Integer.valueOf(Mth.nextInt(p_67378_, p_67381_, p_67382_))), 2);
+					break;
+				}
 
-   }
+				p_67377_.setBlock(p_67379_, WildLandsBlocks.BEARD_MOSS.get().defaultBlockState(), 2);
+			}
+
+			p_67379_.move(Direction.DOWN);
+		}
+
+	}
 }

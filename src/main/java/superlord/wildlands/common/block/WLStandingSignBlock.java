@@ -1,9 +1,10 @@
 package superlord.wildlands.common.block;
 
-import net.minecraft.block.StandingSignBlock;
-import net.minecraft.block.WoodType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.StandingSignBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import superlord.wildlands.common.entity.tile.WLSignTileEntity;
 
 public class WLStandingSignBlock extends StandingSignBlock {
@@ -13,8 +14,8 @@ public class WLStandingSignBlock extends StandingSignBlock {
 	}
 	
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader reader) {
-		return new WLSignTileEntity();
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new WLSignTileEntity(pos, state);
 	}
 
 }

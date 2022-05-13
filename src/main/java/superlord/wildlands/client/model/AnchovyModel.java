@@ -1,69 +1,64 @@
 package superlord.wildlands.client.model;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import superlord.wildlands.common.entity.AnchovyEntity;
 
 /**
  * AnchovyModel - superlord9362
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class AnchovyModel<T extends Entity> extends EntityModel<T> {
-    public ModelRenderer Body;
-    public ModelRenderer Tail;
-    public ModelRenderer PecFin;
-    public ModelRenderer TailFin;
+public class AnchovyModel<T extends Entity> extends EntityModel<AnchovyEntity> {
+	private final ModelPart Body;
+	private final ModelPart Tail;
 
-    public AnchovyModel() {
-        this.textureWidth = 11;
-        this.textureHeight = 15;
-        this.PecFin = new ModelRenderer(this, 7, 0);
-        this.PecFin.setRotationPoint(0.0F, -1.0F, 0.0F);
-        this.PecFin.addBox(0.0F, -1.0F, 0.0F, 0.0F, 1.0F, 2.0F, 0.0F, 0.0F, 0.0F);
-        this.TailFin = new ModelRenderer(this, 0, 9);
-        this.TailFin.setRotationPoint(0.0F, 0.0F, 3.0F);
-        this.TailFin.addBox(0.0F, -2.0F, 0.0F, 0.0F, 3.0F, 3.0F, 0.0F, 0.0F, 0.0F);
-        this.Tail = new ModelRenderer(this, 0, 6);
-        this.Tail.setRotationPoint(0.5F, 1.0F, 4.0F);
-        this.Tail.addBox(-0.5F, -1.0F, 0.0F, 1.0F, 2.0F, 3.0F, 0.0F, 0.0F, 0.0F);
-        this.Body = new ModelRenderer(this, 0, 0);
-        this.Body.setRotationPoint(-0.5F, 22.0F, -5.0F);
-        this.Body.addBox(0.0F, 0.0F, 0.0F, 1.0F, 2.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.Tail.addChild(this.PecFin);
-        this.Tail.addChild(this.TailFin);
-        this.Body.addChild(this.Tail);
-    }
+	public AnchovyModel(ModelPart root) {
+		this.Body = root.getChild("Body");
+		this.Tail = Body.getChild("Tail");
+	}
 
-    @Override
-    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) { 
-        ImmutableList.of(this.Body).forEach((modelRenderer) -> { 
-            modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        });
-    }
+	@SuppressWarnings("unused")
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
 
-    @Override
-    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-    	float f = 1.0F;
-        if (!entityIn.isInWater()) {
+		PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -2.0F, -5.0F, 1.0F, 2.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+		PartDefinition Tail = Body.addOrReplaceChild("Tail", CubeListBuilder.create().texOffs(0, 6).addBox(-1.0F, -2.0F, -1.0F, 1.0F, 2.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition PecFin = Tail.addOrReplaceChild("PecFin", CubeListBuilder.create().texOffs(7, 0).addBox(0.0F, -2.0F, 0.0F, 0.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-0.5F, -1.0F, -1.0F));
+
+		PartDefinition TailFin = Tail.addOrReplaceChild("TailFin", CubeListBuilder.create().texOffs(0, 9).addBox(-0.5F, -3.0F, 2.0F, 0.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		return LayerDefinition.create(meshdefinition, 11, 15);
+	}
+
+	@Override
+	public void setupAnim(AnchovyEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		float f = 1.0F;
+        if (!entity.isInWater()) {
            f = 1.5F;
         }
-        this.Tail.rotateAngleY = -f * 0.45F * MathHelper.sin(0.6F * ageInTicks);
-    }
+        this.Tail.yRot = -f * 0.45F * Mth.sin(0.6F * ageInTicks);
+	}
 
-    /**
-     * This is a helper function from Tabula to set the rotation of model parts
-     */
-    public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
-    }
+	@Override
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		Body.render(poseStack, buffer, packedLight, packedOverlay);
+	}
+
 }

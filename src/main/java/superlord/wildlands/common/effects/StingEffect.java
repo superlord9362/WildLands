@@ -1,28 +1,20 @@
 package superlord.wildlands.common.effects;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.TurtleEntity;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
-import superlord.wildlands.common.entity.JellyfishEntity;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.LivingEntity;
 import superlord.wildlands.init.DamageSourceInit;
-import superlord.wildlands.init.WildLandsEntities;
 
-public class StingEffect extends Effect {
+public class StingEffect extends MobEffect {
 
-	public StingEffect(EffectType type, int liquidColor) {
+	public StingEffect(MobEffectCategory type, int liquidColor) {
 		super(type, liquidColor);
 	}
 
 	@Override
-	public void performEffect(LivingEntity entity, int amplifier) {
-		JellyfishEntity jellyfish = new JellyfishEntity(WildLandsEntities.JELLYFISH.get(), entity.world);
-		TurtleEntity turtle = new TurtleEntity(EntityType.TURTLE, entity.world);
-		if (entity == jellyfish || entity == turtle) {
-			return;
-		} else {
-			entity.attackEntityFrom(DamageSourceInit.STING, 1.0F);
+	public void applyEffectTick(LivingEntity entity, int amplifier) {
+		if (entity.isInWater()) {
+			entity.hurt(DamageSourceInit.STING, 1.0F);
 		}
 	}
 

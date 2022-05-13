@@ -1,13 +1,13 @@
 package superlord.wildlands.client.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import superlord.wildlands.WildLands;
+import superlord.wildlands.client.ClientEvents;
 import superlord.wildlands.client.model.FrogModel;
 import superlord.wildlands.client.model.TadpoleModel;
 import superlord.wildlands.common.entity.FrogEntity;
@@ -16,24 +16,26 @@ public class FrogRenderer extends MobRenderer<FrogEntity, EntityModel<FrogEntity
 
 	private static final ResourceLocation FROG_TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/frog/frog.png");
 	private static final ResourceLocation TADPOLE_TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/frog/tadpole.png");
-	private static final FrogModel FROG = new FrogModel();
-	private static final TadpoleModel<FrogEntity> TADPOLE = new TadpoleModel<>();
+	private static FrogModel FROG;
+	private static TadpoleModel<?> TADPOLE;
 
-	public FrogRenderer() {
-		super(Minecraft.getInstance().getRenderManager(), FROG, 0.75F);
+	@SuppressWarnings("rawtypes")
+	public FrogRenderer(EntityRendererProvider.Context renderManager) {
+		super(renderManager, new FrogModel(renderManager.bakeLayer(ClientEvents.FROG)), 0.75F);
+		FROG = new FrogModel(renderManager.bakeLayer(ClientEvents.FROG));
+		TADPOLE = new TadpoleModel(renderManager.bakeLayer(ClientEvents.TADPOLE));
 	}
 
-	public void render(FrogEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-		if(entityIn.isChild()) {
-			entityModel = TADPOLE;
+	public void scale(FrogEntity entityIn, PoseStack matrixStackIn, float partialTickTime) {
+		if(entityIn.isBaby()) {
+			model = TADPOLE;
 		}  else {
-			entityModel = FROG;
+			model = FROG;
 		}
-		super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 	}
 
-	public ResourceLocation getEntityTexture(FrogEntity entity) {
-		if (entity.isChild()) {
+	public ResourceLocation getTextureLocation(FrogEntity entity) {
+		if (entity.isBaby()) {
 			return TADPOLE_TEXTURE;
 		} else {
 			return FROG_TEXTURE;

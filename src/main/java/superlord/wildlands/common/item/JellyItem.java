@@ -1,15 +1,17 @@
 package superlord.wildlands.common.item;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import java.util.Random;
+
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import superlord.wildlands.common.entity.JellyBallEntity;
 
 public class JellyItem extends Item {
@@ -18,23 +20,24 @@ public class JellyItem extends Item {
 		super(properties);
 	}
 
-	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-		ItemStack stack = player.getHeldItem(hand);
-		world.playSound((PlayerEntity)null, player.getPosX(), player.getPosY(), player.getPosZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
-		if (!world.isRemote) {
+	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+		ItemStack stack = player.getItemInHand(hand);
+		Random random = new Random();
+		world.playSound((Player)null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
+		if (!world.isClientSide) {
 			JellyBallEntity jellyball = new JellyBallEntity(world, player);
 			jellyball.getItem();
-			jellyball.func_234612_a_(player, player.rotationPitch, player.rotationYaw, 0.0F, 1.5F, 1.0F);
-			world.addEntity(jellyball);
+			jellyball.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
+			world.addFreshEntity(jellyball);
 		}
-		player.addStat(Stats.ITEM_USED.get(this));
-		if (!player.abilities.isCreativeMode) {
+		player.awardStat(Stats.ITEM_USED.get(this));
+		if (!player.getAbilities().instabuild) {
 			stack.shrink(1);
 		}
-		return ActionResult.func_233538_a_(stack, world.isRemote());
+		return InteractionResultHolder.sidedSuccess(stack, world.isClientSide());
 	}
-	
-	public JellyBallEntity createJellyBall(World world, ItemStack stack, LivingEntity shooter) {
+
+	public JellyBallEntity createJellyBall(Level world, ItemStack stack, LivingEntity shooter) {
 		JellyBallEntity jellyball = new JellyBallEntity(world, shooter);
 		return jellyball;
 	}

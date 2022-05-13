@@ -1,82 +1,75 @@
 package superlord.wildlands.client.model;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import superlord.wildlands.common.entity.JellyfishEntity;
 
 /**
  * JellyfishModel - superlord9362
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class JellyfishModel<T extends Entity> extends EntityModel<T> {
-    public ModelRenderer JellyFish;
-    public ModelRenderer Cape;
-    public ModelRenderer TentaclesFront;
-    public ModelRenderer TentaclesBack;
-    public ModelRenderer TentaclesLeft;
-    public ModelRenderer TentaclesRight;
+public class JellyfishModel<T extends Entity> extends EntityModel<JellyfishEntity> {
+	private final ModelPart JellyFish;
+	private final ModelPart TentaclesFront;
+	private final ModelPart TentaclesBack;
+	private final ModelPart TentaclesRight;
+	private final ModelPart TentaclesLeft;
 
-    public JellyfishModel() {
-		super(RenderType::getEntityTranslucent);
-        this.textureWidth = 64;
-        this.textureHeight = 48;
-        this.JellyFish = new ModelRenderer(this, 24, 31);
-        this.JellyFish.setRotationPoint(-5.0F, 8.0F, -5.0F);
-        this.JellyFish.addBox(0.0F, 0.0F, 0.0F, 10.0F, 7.0F, 10.0F, 0.0F, 0.0F, 0.0F);
-        this.TentaclesRight = new ModelRenderer(this, 0, 32);
-        this.TentaclesRight.setRotationPoint(-1.0F, 8.0F, 5.0F);
-        this.TentaclesRight.addBox(0.0F, 0.0F, -4.0F, 0.0F, 8.0F, 8.0F, 0.0F, 0.0F, 0.0F);
-        this.TentaclesFront = new ModelRenderer(this, 0, 40);
-        this.TentaclesFront.setRotationPoint(5.0F, 8.0F, -1.0F);
-        this.TentaclesFront.addBox(-4.0F, 0.0F, 0.0F, 8.0F, 8.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-        this.TentaclesBack = new ModelRenderer(this, 0, 40);
-        this.TentaclesBack.setRotationPoint(5.0F, 8.0F, 11.0F);
-        this.TentaclesBack.addBox(-4.0F, 0.0F, 0.0F, 8.0F, 8.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-        this.Cape = new ModelRenderer(this, 0, 0);
-        this.Cape.setRotationPoint(0.0F, 0.0F, 0.0F);
-        this.Cape.addBox(-3.0F, -2.0F, -3.0F, 16.0F, 10.0F, 16.0F, 0.0F, 0.0F, 0.0F);
-        this.TentaclesLeft = new ModelRenderer(this, 0, 32);
-        this.TentaclesLeft.setRotationPoint(11.0F, 8.0F, 5.0F);
-        this.TentaclesLeft.addBox(0.0F, 0.0F, -4.0F, 0.0F, 8.0F, 8.0F, 0.0F, 0.0F, 0.0F);
-        this.JellyFish.addChild(this.TentaclesRight);
-        this.JellyFish.addChild(this.TentaclesFront);
-        this.JellyFish.addChild(this.TentaclesBack);
-        this.JellyFish.addChild(this.Cape);
-        this.JellyFish.addChild(this.TentaclesLeft);
-    }
+	public JellyfishModel(ModelPart root) {
+		this.JellyFish = root.getChild("JellyFish");
+		this.TentaclesBack = JellyFish.getChild("TentaclesBack");
+		this.TentaclesFront = JellyFish.getChild("TentaclesFront");
+		this.TentaclesLeft = JellyFish.getChild("TentaclesLeft");
+		this.TentaclesRight = JellyFish.getChild("TentaclesRight");
+	}
 
-    @Override
-    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) { 
-        ImmutableList.of(this.JellyFish).forEach((modelRenderer) -> { 
-            modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        });
-    }
+	@SuppressWarnings("unused")
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
 
-    @Override
-    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		PartDefinition JellyFish = partdefinition.addOrReplaceChild("JellyFish", CubeListBuilder.create().texOffs(24, 31).addBox(-5.0F, -16.0F, -5.0F, 10.0F, 7.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+		PartDefinition Cape = JellyFish.addOrReplaceChild("Cape", CubeListBuilder.create().texOffs(0, 0).addBox(-8.0F, -18.0F, -8.0F, 16.0F, 10.0F, 16.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition TentaclesRight = JellyFish.addOrReplaceChild("TentaclesRight", CubeListBuilder.create().texOffs(0, 32).addBox(-6.0F, -8.0F, -4.0F, 0.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition TentaclesFront = JellyFish.addOrReplaceChild("TentaclesFront", CubeListBuilder.create().texOffs(0, 40).addBox(-4.0F, -8.0F, -6.0F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition TentaclesBack = JellyFish.addOrReplaceChild("TentaclesBack", CubeListBuilder.create().texOffs(0, 40).addBox(-4.0F, -8.0F, 6.0F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition TentaclesLeft = JellyFish.addOrReplaceChild("TentaclesLeft", CubeListBuilder.create().texOffs(0, 32).addBox(6.0F, -8.0F, -4.0F, 0.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		return LayerDefinition.create(meshdefinition, 64, 48);
+	}
+
+	@Override
+	public void setupAnim(JellyfishEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
     	float speed = 1.0f;
     	float degree = 1.0f;
-    	this.TentaclesFront.rotateAngleX = MathHelper.cos(limbSwing * speed * 0.05F) * degree * 1.0F * limbSwingAmount;
-    	this.TentaclesBack.rotateAngleX = MathHelper.cos(3.0F + limbSwing * speed * 0.05F) * degree * 1.0F * limbSwingAmount;
-    	this.TentaclesRight.rotateAngleZ = MathHelper.cos(3.0F + limbSwing * speed * 0.05F) * degree * 1.0F * limbSwingAmount;
-    	this.TentaclesLeft.rotateAngleZ = MathHelper.cos(limbSwing * speed * 0.05F) * degree * 1.0F * limbSwingAmount;
-    }
+    	this.TentaclesFront.xRot = Mth.cos(limbSwing * speed * 0.05F) * degree * 1.0F * limbSwingAmount;
+    	this.TentaclesBack.xRot = Mth.cos(3.0F + limbSwing * speed * 0.05F) * degree * 1.0F * limbSwingAmount;
+    	this.TentaclesRight.zRot = Mth.cos(3.0F + limbSwing * speed * 0.05F) * degree * 1.0F * limbSwingAmount;
+    	this.TentaclesLeft.zRot = Mth.cos(limbSwing * speed * 0.05F) * degree * 1.0F * limbSwingAmount;
+	}
 
-    /**
-     * This is a helper function from Tabula to set the rotation of model parts
-     */
-    public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
-    }
+	@Override
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		JellyFish.render(poseStack, buffer, packedLight, packedOverlay);
+	}
+
 }

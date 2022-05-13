@@ -1,38 +1,31 @@
 package superlord.wildlands.common.item;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.BlockHitResult;
 
 public class DuckweedItem extends BlockItem {
-   public DuckweedItem(Block blockIn, Item.Properties builder) {
-      super(blockIn, builder);
-   }
+	public DuckweedItem(Block blockIn, Item.Properties builder) {
+		super(blockIn, builder);
+	}
 
-   /**
-    * Called when this item is used when targetting a Block
-    */
-   public ActionResultType onItemUse(ItemUseContext context) {
-      return ActionResultType.PASS;
-   }
+	public InteractionResult useOn(UseOnContext p_43439_) {
+		return InteractionResult.PASS;
+	}
 
-   /**
-    * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
-    * {@link #onItemUse}.
-    */
-   public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-      BlockRayTraceResult blockraytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
-      BlockRayTraceResult blockraytraceresult1 = blockraytraceresult.withPosition(blockraytraceresult.getPos().up());
-      ActionResultType actionresulttype = super.onItemUse(new ItemUseContext(playerIn, handIn, blockraytraceresult1));
-      return new ActionResult<>(actionresulttype, playerIn.getHeldItem(handIn));
-   }
+	public InteractionResultHolder<ItemStack> use(Level p_43441_, Player p_43442_, InteractionHand p_43443_) {
+		BlockHitResult blockhitresult = getPlayerPOVHitResult(p_43441_, p_43442_, ClipContext.Fluid.SOURCE_ONLY);
+		BlockHitResult blockhitresult1 = blockhitresult.withPosition(blockhitresult.getBlockPos().above());
+		InteractionResult interactionresult = super.useOn(new UseOnContext(p_43442_, p_43443_, blockhitresult1));
+		return new InteractionResultHolder<>(interactionresult, p_43442_.getItemInHand(p_43443_));
+	}
 }

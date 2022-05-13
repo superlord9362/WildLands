@@ -2,9 +2,9 @@ package superlord.wildlands.common.world.feature.config;
 
 import com.mojang.serialization.Codec;
 
-import net.minecraft.world.gen.feature.IFeatureConfig;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
-public class DuckweedConfig implements IFeatureConfig {
+public class DuckweedConfig implements FeatureConfiguration {
 	public static int count;
 
 	@SuppressWarnings("static-access")

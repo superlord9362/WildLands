@@ -4,7 +4,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
-import net.minecraft.block.WoodType;
+import net.minecraft.world.level.block.state.properties.WoodType;
 
 public class WLWoodTypes extends WoodType {
 	
@@ -20,7 +20,7 @@ public class WLWoodTypes extends WoodType {
 		this.name = name;
 	}
 	
-	private static WoodType register(WoodType type) {
+	public static WoodType register(WoodType type) {
 		WLWoodTypes.VALUES.add(type);
 		return type;
 	}
@@ -30,7 +30,7 @@ public class WLWoodTypes extends WoodType {
 	}
 	
 	@Override
-	public String getName() {
+	public String name() {
 		return this.name;
 	}
 

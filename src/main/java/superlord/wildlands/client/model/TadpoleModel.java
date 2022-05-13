@@ -1,67 +1,62 @@
 package superlord.wildlands.client.model;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import superlord.wildlands.common.entity.FrogEntity;
 
 /**
  * TadpoleModel - superlord9362
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class TadpoleModel<T extends LivingEntity> extends EntityModel<T> {
-	public ModelRenderer Tad;
-	public ModelRenderer Pole;
-	public ModelRenderer Slime;
+public class TadpoleModel<T extends LivingEntity> extends EntityModel<FrogEntity> {
+	private final ModelPart Tad;
+	private final ModelPart Pole;
 
-	public TadpoleModel() {
-		super(RenderType::getEntityTranslucent);
-		this.textureWidth = 32;
-		this.textureHeight = 16;
-		this.Tad = new ModelRenderer(this, 0, 0);
-		this.Tad.setRotationPoint(0.0F, 22.0F, -3.0F);
-		this.Tad.addBox(-2.0F, -2.0F, -2.0F, 4.0F, 4.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-		this.Pole = new ModelRenderer(this, 0, 1);
-		this.Pole.setRotationPoint(0.0F, 0.0F, 2.0F);
-		this.Pole.addBox(0.0F, -2.0F, 0.0F, 0.0F, 4.0F, 8.0F, 0.0F, 0.0F, 0.0F);
-		this.setRotateAngle(Pole, 0.0F, -0.02652900429741867F, 0.038920842652368684F);
-		this.Slime = new ModelRenderer(this, 16, 0);
-		this.Slime.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.Slime.addBox(-2.0F, -2.0F, -2.0F, 4.0F, 4.0F, 4.0F, 0.5F, 0.5F, 0.5F);
-		this.Tad.addChild(this.Pole);
-		this.Tad.addChild(this.Slime);
+	public TadpoleModel(ModelPart root) {
+		this.Tad = root.getChild("Tad");
+		this.Pole = Tad.getChild("Pole");
+	}
+
+	@SuppressWarnings("unused")
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
+
+		PartDefinition Tad = partdefinition.addOrReplaceChild("Tad", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -4.0F, 0.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 24.0F, -5.0F));
+
+		PartDefinition Pole = Tad.addOrReplaceChild("Pole", CubeListBuilder.create().texOffs(0, 1).addBox(-2.0F, -4.0F, 4.0F, 0.0F, 4.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition Slime = Tad.addOrReplaceChild("Slime", CubeListBuilder.create().texOffs(16, 0).addBox(-4.0F, -4.0F, 0.0F, 4.0F, 4.0F, 4.0F, new CubeDeformation(0.5F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		return LayerDefinition.create(meshdefinition, 32, 16);
 	}
 
 	@Override
-	public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) { 
-		ImmutableList.of(this.Tad).forEach((modelRenderer) -> { 
-			modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-		});
-	}
-
-	@Override
-	public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(FrogEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		float speed = 0.8f;
 		float degree = 1.0f;
-		this.Tad.rotateAngleX = headPitch * ((float)Math.PI / 180F);
-		this.Tad.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
-		this.Pole.rotateAngleY = (-0.12F * MathHelper.sin(0.2F * ageInTicks / 5)) + (MathHelper.cos(limbSwing * speed * 0.15F) * degree * 0.2F * limbSwingAmount);
+		this.Tad.xRot = headPitch * ((float)Math.PI / 180F);
+		this.Tad.yRot = netHeadYaw * ((float)Math.PI / 180F);
+		this.Pole.yRot = (-0.12F * Mth.sin(0.2F * ageInTicks / 5)) + (Mth.cos(limbSwing * speed * 0.15F) * degree * 0.2F * limbSwingAmount);
 	}
 
-	/**
-	 * This is a helper function from Tabula to set the rotation of model parts
-	 */
-	public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-		modelRenderer.rotateAngleX = x;
-		modelRenderer.rotateAngleY = y;
-		modelRenderer.rotateAngleZ = z;
+	@Override
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		Tad.render(poseStack, buffer, packedLight, packedOverlay);
 	}
+
 }

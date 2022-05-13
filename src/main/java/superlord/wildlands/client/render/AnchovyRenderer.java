@@ -1,13 +1,14 @@
 package superlord.wildlands.client.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import superlord.wildlands.WildLands;
+import superlord.wildlands.client.ClientEvents;
 import superlord.wildlands.client.model.AnchovyModel;
 import superlord.wildlands.common.entity.AnchovyEntity;
 
@@ -15,22 +16,22 @@ public class AnchovyRenderer extends MobRenderer<AnchovyEntity, AnchovyModel<Anc
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/fish/anchovy.png");
 
-	public AnchovyRenderer(EntityRendererManager renderManagerIn) {
-		super(renderManagerIn, new AnchovyModel<>(), 0.25F);
+	public AnchovyRenderer(EntityRendererProvider.Context renderManagerIn) {
+		super(renderManagerIn, new AnchovyModel<>(renderManagerIn.bakeLayer(ClientEvents.ANCHOVY)), 0.25F);
 	}
 
 	@Override
-	public ResourceLocation getEntityTexture(AnchovyEntity entity) {
+	public ResourceLocation getTextureLocation(AnchovyEntity entity) {
 		return TEXTURE;
 	}
 
-	protected void applyRotations(AnchovyEntity entityLiving, MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
-		super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
-		float f = 4.3F * MathHelper.sin(0.6F * ageInTicks);
-		matrixStackIn.rotate(Vector3f.YP.rotationDegrees(f));
+	protected void setupRotations(AnchovyEntity entityLiving, PoseStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+		super.setupRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
+		float f = 4.3F * Mth.sin(0.6F * ageInTicks);
+		matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(f));
 		if (!entityLiving.isInWater()) {
 			matrixStackIn.translate((double)0.1F, (double)0.1F, (double)-0.1F);
-			matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(90.0F));
+			matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(90.0F));
 		}
 	}
 

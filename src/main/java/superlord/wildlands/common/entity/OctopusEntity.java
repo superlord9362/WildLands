@@ -3,57 +3,57 @@ package superlord.wildlands.common.entity;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.PanicGoal;
-import net.minecraft.entity.ai.goal.RandomWalkingGoal;
-import net.minecraft.entity.passive.WaterMobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.pathfinding.SwimmerPathNavigator;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
+import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.HitResult;
 import superlord.wildlands.init.WildLandsBlocks;
 import superlord.wildlands.init.WildLandsItems;
 import superlord.wildlands.init.WildLandsSounds;
 
-public class OctopusEntity extends WaterMobEntity {
+public class OctopusEntity extends WaterAnimal {
 
-	private static final DataParameter<Boolean> GRAVEL = EntityDataManager.createKey(OctopusEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> SAND = EntityDataManager.createKey(OctopusEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> GABBRO = EntityDataManager.createKey(OctopusEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> DOLERITE = EntityDataManager.createKey(OctopusEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> DIRT = EntityDataManager.createKey(OctopusEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> BLUE_CORAL = EntityDataManager.createKey(OctopusEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> YELLOW_CORAL = EntityDataManager.createKey(OctopusEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> RED_CORAL = EntityDataManager.createKey(OctopusEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> PURPLE_CORAL = EntityDataManager.createKey(OctopusEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> PINK_CORAL = EntityDataManager.createKey(OctopusEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> DEFAULT = EntityDataManager.createKey(OctopusEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> STONE = EntityDataManager.createKey(OctopusEntity.class, DataSerializers.BOOLEAN);
-	private static final DataParameter<Boolean> SCARED = EntityDataManager.createKey(OctopusEntity.class, DataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> GRAVEL = SynchedEntityData.defineId(OctopusEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> SAND = SynchedEntityData.defineId(OctopusEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> GABBRO = SynchedEntityData.defineId(OctopusEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> DOLERITE = SynchedEntityData.defineId(OctopusEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> DIRT = SynchedEntityData.defineId(OctopusEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> BLUE_CORAL = SynchedEntityData.defineId(OctopusEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> YELLOW_CORAL = SynchedEntityData.defineId(OctopusEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> RED_CORAL = SynchedEntityData.defineId(OctopusEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> PURPLE_CORAL = SynchedEntityData.defineId(OctopusEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> PINK_CORAL = SynchedEntityData.defineId(OctopusEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> DEFAULT = SynchedEntityData.defineId(OctopusEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> STONE = SynchedEntityData.defineId(OctopusEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> SCARED = SynchedEntityData.defineId(OctopusEntity.class, EntityDataSerializers.BOOLEAN);
 
-	public OctopusEntity(EntityType<? extends OctopusEntity> type, World p_i48565_2_) {
+	public OctopusEntity(EntityType<? extends OctopusEntity> type, Level p_i48565_2_) {
 		super(type, p_i48565_2_);
 	}
 	
@@ -70,33 +70,33 @@ public class OctopusEntity extends WaterMobEntity {
 	}
 
 	protected void registerGoals() {
-		this.goalSelector.addGoal(3, new RandomWalkingGoal(this, 1.0D));
-		this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-		this.goalSelector.addGoal(7, new LookRandomlyGoal(this));
+		this.goalSelector.addGoal(3, new RandomStrollGoal(this, 1.0D));
+		this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6.0F));
+		this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
 		this.goalSelector.addGoal(1, new OctopusEntity.CamoflaugeGoal(this));
-		this.goalSelector.addGoal(2, new AvoidEntityGoal<PlayerEntity>(this, PlayerEntity.class, 10, 1, 1.2F));
+		this.goalSelector.addGoal(2, new AvoidEntityGoal<Player>(this, Player.class, 10, 1, 1.2F));
 		this.goalSelector.addGoal(0, new OctopusEntity.SwimGoal(this));
 	}
 
-	protected void registerData() {
-		super.registerData();
-		this.dataManager.register(GRAVEL, false);
-		this.dataManager.register(SAND, false);
-		this.dataManager.register(GABBRO, false);
-		this.dataManager.register(DOLERITE, false);
-		this.dataManager.register(DIRT, false);
-		this.dataManager.register(BLUE_CORAL, false);
-		this.dataManager.register(YELLOW_CORAL, false);
-		this.dataManager.register(RED_CORAL, false);
-		this.dataManager.register(PURPLE_CORAL, false);
-		this.dataManager.register(PINK_CORAL, false);
-		this.dataManager.register(DEFAULT, false);
-		this.dataManager.register(STONE, false);
-		this.dataManager.register(SCARED, false);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		this.entityData.define(GRAVEL, false);
+		this.entityData.define(SAND, false);
+		this.entityData.define(GABBRO, false);
+		this.entityData.define(DOLERITE, false);
+		this.entityData.define(DIRT, false);
+		this.entityData.define(BLUE_CORAL, false);
+		this.entityData.define(YELLOW_CORAL, false);
+		this.entityData.define(RED_CORAL, false);
+		this.entityData.define(PURPLE_CORAL, false);
+		this.entityData.define(PINK_CORAL, false);
+		this.entityData.define(DEFAULT, false);
+		this.entityData.define(STONE, false);
+		this.entityData.define(SCARED, false);
 	}
 
-	public void readAdditional(CompoundNBT compound) {
-		super.readAdditional(compound);
+	public void readAdditionalSaveData(CompoundTag compound) {
+		super.readAdditionalSaveData(compound);
 		this.setOnGravel(compound.getBoolean("Gravel"));
 		this.setOnSand(compound.getBoolean("Sand"));
 		this.setOnGabbro(compound.getBoolean("Gabbro"));
@@ -112,12 +112,12 @@ public class OctopusEntity extends WaterMobEntity {
 		this.setScared(compound.getBoolean("Scared"));
 	}
 
-	public static boolean canSpawn(EntityType<? extends OctopusEntity> type, IWorld worldIn, SpawnReason reason, BlockPos p_223363_3_, Random randomIn) {
-		return worldIn.getBlockState(p_223363_3_).isIn(Blocks.WATER) && worldIn.getBlockState(p_223363_3_.up()).isIn(Blocks.WATER);
+	public static boolean canSpawn(EntityType<? extends OctopusEntity> type, LevelAccessor worldIn, MobSpawnType reason, BlockPos p_223363_3_, Random randomIn) {
+		return worldIn.getBlockState(p_223363_3_).is(Blocks.WATER) && worldIn.getBlockState(p_223363_3_.above()).is(Blocks.WATER);
 	}
 
-	public void writeAdditional(CompoundNBT compound) {
-		super.writeAdditional(compound);
+	public void addAdditionalSaveData(CompoundTag compound) {
+		super.addAdditionalSaveData(compound);
 		compound.putBoolean("Gravel", this.isOnGravel());
 		compound.putBoolean("Sand", this.isOnSand());
 		compound.putBoolean("Gabbro", this.isOnGabbro());
@@ -133,112 +133,112 @@ public class OctopusEntity extends WaterMobEntity {
 		compound.putBoolean("Scared", this.isScared());
 	}
 
-	public static AttributeModifierMap.MutableAttribute createAttributes() {
-		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 16.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 20.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D);
+	public static AttributeSupplier.Builder createAttributes() {
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 16.0D).add(Attributes.FOLLOW_RANGE, 20.0D).add(Attributes.MOVEMENT_SPEED, 0.25D);
 	}
 
 	public boolean isOnGravel() {
-		return this.dataManager.get(GRAVEL);
+		return this.entityData.get(GRAVEL);
 	}
 
 	private void setOnGravel(boolean inOnGravel) {
-		this.dataManager.set(GRAVEL, inOnGravel);
+		this.entityData.set(GRAVEL, inOnGravel);
 	}
 
 	public boolean isOnSand() {
-		return this.dataManager.get(SAND);
+		return this.entityData.get(SAND);
 	}
 
 	private void setOnSand(boolean inOnSand) {
-		this.dataManager.set(SAND, inOnSand);
+		this.entityData.set(SAND, inOnSand);
 	}
 
 	public boolean isOnGabbro() {
-		return this.dataManager.get(GABBRO);
+		return this.entityData.get(GABBRO);
 	}
 
 	private void setOnGabbro(boolean inOnGabbro) {
-		this.dataManager.set(GABBRO, inOnGabbro);
+		this.entityData.set(GABBRO, inOnGabbro);
 	}
 
 	public boolean isScared() {
-		return this.dataManager.get(SCARED);
+		return this.entityData.get(SCARED);
 	}
 
 	private void setScared(boolean isScared) {
-		this.dataManager.set(SCARED, isScared);
+		this.entityData.set(SCARED, isScared);
 	}
 
 	public boolean isOnDolerite() {
-		return this.dataManager.get(DOLERITE);
+		return this.entityData.get(DOLERITE);
 	}
 
 	private void setOnDolerite(boolean inOnDolerite) {
-		this.dataManager.set(DOLERITE, inOnDolerite);
+		this.entityData.set(DOLERITE, inOnDolerite);
 	}
 
 	public boolean isOnDirt() {
-		return this.dataManager.get(DIRT);
+		return this.entityData.get(DIRT);
 	}
 
 	private void setOnDirt(boolean inOnDirt) {
-		this.dataManager.set(DIRT, inOnDirt);
+		this.entityData.set(DIRT, inOnDirt);
 	}
 
 	public boolean isOnBlueCoral() {
-		return this.dataManager.get(BLUE_CORAL);
+		return this.entityData.get(BLUE_CORAL);
 	}
 
 	private void setOnBlueCoral(boolean inOnBlueCoral) {
-		this.dataManager.set(BLUE_CORAL, inOnBlueCoral);
+		this.entityData.set(BLUE_CORAL, inOnBlueCoral);
 	}
 
 	public boolean isOnYellowCoral() {
-		return this.dataManager.get(YELLOW_CORAL);
+		return this.entityData.get(YELLOW_CORAL);
 	}
 
 	private void setOnYellowCoral(boolean inOnYellowCoral) {
-		this.dataManager.set(YELLOW_CORAL, inOnYellowCoral);
+		this.entityData.set(YELLOW_CORAL, inOnYellowCoral);
 	}
 
 	public boolean isOnRedCoral() {
-		return this.dataManager.get(RED_CORAL);
+		return this.entityData.get(RED_CORAL);
 	}
 
 	private void setOnRedCoral(boolean inOnRedCoral) {
-		this.dataManager.set(RED_CORAL, inOnRedCoral);
+		this.entityData.set(RED_CORAL, inOnRedCoral);
 	}
 
 	public boolean isOnPurpleCoral() {
-		return this.dataManager.get(PURPLE_CORAL);
+		return this.entityData.get(PURPLE_CORAL);
 	}
 
 	private void setOnPurpleCoral(boolean inOnPurpleCoral) {
-		this.dataManager.set(PURPLE_CORAL, inOnPurpleCoral);
+		this.entityData.set(PURPLE_CORAL, inOnPurpleCoral);
 	}
 
 	public boolean isOnPinkCoral() {
-		return this.dataManager.get(PINK_CORAL);
+		return this.entityData.get(PINK_CORAL);
 	}
 
 	private void setOnPinkCoral(boolean inOnPinkCoral) {
-		this.dataManager.set(PINK_CORAL, inOnPinkCoral);
+		this.entityData.set(PINK_CORAL, inOnPinkCoral);
 	}
 
 	public boolean isDefault() {
-		return this.dataManager.get(DEFAULT);
+		return this.entityData.get(DEFAULT);
 	}
 
 	private void setDefault(boolean isDefault) {
-		this.dataManager.set(DEFAULT, isDefault);
+		this.entityData.set(DEFAULT, isDefault);
 	}
 
 	public boolean isOnStone() {
-		return this.dataManager.get(STONE);
+		return this.entityData.get(STONE);
 	}
 
 	private void setOnStone(boolean inOnStone) {
-		this.dataManager.set(STONE, inOnStone);
+		this.entityData.set(STONE, inOnStone);
 	}
 
 	public void resetModes() {
@@ -265,9 +265,9 @@ public class OctopusEntity extends WaterMobEntity {
 		}
 
 		@Override
-		public boolean shouldExecute() {
-			List<PlayerEntity> players = octopus.world.getEntitiesWithinAABB(PlayerEntity.class, octopus.getBoundingBox().grow(5, 5, 5));
-			for (PlayerEntity player : players) {
+		public boolean canUse() {
+			List<Player> players = octopus.level.getEntitiesOfClass(Player.class, octopus.getBoundingBox().inflate(5, 5, 5));
+			for (Player player : players) {
 				if (!player.isCreative()) {
 					if (!players.isEmpty() && !octopus.isScared()) {
 						return true;
@@ -279,15 +279,15 @@ public class OctopusEntity extends WaterMobEntity {
 			return false;
 		}
 
-		public void startExecuting() {
+		public void start() {
 
 		}
 
 		public void tick() {
 			super.tick();
 			tickCounter++;
-			BlockPos pos = octopus.getPosition();
-			BlockState state = world.getBlockState(pos.down());
+			BlockPos pos = octopus.blockPosition();
+			BlockState state = level.getBlockState(pos.below());
 			Block block = state.getBlock();
 			if (block == Blocks.STONE || state.getBlock() == Blocks.COBBLESTONE || block == WildLandsBlocks.CONGLOMERATE.get()) {
 				resetModes();
@@ -329,7 +329,7 @@ public class OctopusEntity extends WaterMobEntity {
 		}
 
 		public boolean shouldContinueExecuting() {
-			List<PlayerEntity> players = octopus.world.getEntitiesWithinAABB(PlayerEntity.class, octopus.getBoundingBox().grow(5, 5, 5));
+			List<Player> players = octopus.level.getEntitiesOfClass(Player.class, octopus.getBoundingBox().inflate(5, 5, 5));
 			if(players.isEmpty()) {
 				resetGoal();
 				return false;
@@ -342,8 +342,8 @@ public class OctopusEntity extends WaterMobEntity {
 		}
 	}
 
-	protected PathNavigator createNavigator(World worldIn) {
-		return new SwimmerPathNavigator(this, worldIn);
+	protected PathNavigation createNavigation(Level worldIn) {
+		return new WaterBoundPathNavigation(this, worldIn);
 	}
 
 	static class SwimGoal extends PanicGoal {
@@ -354,35 +354,35 @@ public class OctopusEntity extends WaterMobEntity {
 			this.octopus = octopus;
 		}
 
-		public boolean shouldExecute() {
-			return super.shouldExecute();
+		public boolean canUse() {
+			return super.canUse();
 		}
 
-		public void startExecuting() {
-			octopus.addVelocity(0, 0.2, 0);
-			this.octopus.getNavigator().tryMoveToXYZ(this.randPosX, this.randPosY, this.randPosZ, this.speed);
-			this.running = true;
+		public void start() {
+			octopus.setDeltaMovement(0, 0.2, 0);
+			this.octopus.getNavigation().moveTo(this.posX, this.posY, this.posZ, this.speedModifier);
+			this.isRunning = true;
 			octopus.setScared(true);
 		}
 
 		public void tick() {
 			super.tick();
-			octopus.world.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, octopus.getPosX(), octopus.getPosY(), octopus.getPosZ(), 1, 1, 1);
+			octopus.level.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, octopus.getX(), octopus.getY(), octopus.getZ(), 1, 1, 1);
 		}
 
 		public void resetTask() {
-			octopus.addVelocity(0, -0.2, 0);
-			this.running = false;
+			octopus.setDeltaMovement(0, -0.2, 0);
+			this.isRunning = false;
 			octopus.setScared(false);
 		}
 
 		public boolean shouldContinueExecuting() {
-			return !octopus.getNavigator().noPath();
+			return !octopus.getNavigation().isDone();
 		}
 	}
 	
 	@Override
-	public ItemStack getPickedResult(RayTraceResult target) {
+	public ItemStack getPickedResult(HitResult target) {
 		return new ItemStack(WildLandsItems.OCTOPUS_SPAWN_EGG.get());
 	}
 

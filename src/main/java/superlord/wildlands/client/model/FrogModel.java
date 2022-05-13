@@ -1,12 +1,17 @@
 package superlord.wildlands.client.model;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.wildlands.common.entity.FrogEntity;
@@ -17,98 +22,80 @@ import superlord.wildlands.common.entity.FrogEntity;
  */
 @OnlyIn(Dist.CLIENT)
 public class FrogModel extends EntityModel<FrogEntity> {
-    public ModelRenderer Body;
-    public ModelRenderer LeftLeg;
-    public ModelRenderer RightLeg;
-    public ModelRenderer poach;
-    public ModelRenderer Head;
-    public ModelRenderer RightLegfront;
-    public ModelRenderer LeftLegfront;
-    public ModelRenderer eye1;
-    public ModelRenderer eye2;
-    public ModelRenderer Leftfoot;
-    public ModelRenderer Leftfoot_1;
-    @SuppressWarnings("unused")
+	private final ModelPart Body;
+	private final ModelPart LeftLeg;
+	private final ModelPart RightLeg;
+	private final ModelPart poach;
+	private final ModelPart RightLegfront;
+	private final ModelPart LeftLegfront;
+	private final ModelPart Leftfoot;
+	private final ModelPart Leftfoot_1;
+	@SuppressWarnings("unused")
 	private float jumpRotation;
 
-    public FrogModel() {
-        this.textureWidth = 48;
-        this.textureHeight = 32;
-        this.LeftLeg = new ModelRenderer(this, 32, 8);
-        this.LeftLeg.setRotationPoint(4.0F, 22.0F, 2.0F);
-        this.LeftLeg.addBox(0.0F, -2.0F, -4.0F, 3.0F, 4.0F, 5.0F, 0.0F, 0.0F, 0.0F);
-        this.Leftfoot = new ModelRenderer(this, -5, 9);
-        this.Leftfoot.setRotationPoint(1.5F, 2.0F, -2.0F);
-        this.Leftfoot.addBox(-1.5F, 0.0F, -5.0F, 3.0F, 0.0F, 5.0F, 0.0F, 0.0F, 0.0F);
-        this.eye2 = new ModelRenderer(this, 0, 0);
-        this.eye2.mirror = true;
-        this.eye2.setRotationPoint(-1.0F, -1.0F, -6.0F);
-        this.eye2.addBox(-2.0F, -1.0F, -1.0F, 2.0F, 1.0F, 2.0F, 0.0F, 0.0F, 0.0F);
-        this.poach = new ModelRenderer(this, 0, 22);
-        this.poach.setRotationPoint(0.0F, 19.0F, 0.0F);
-        this.poach.addBox(-6.0F, 0.0F, -5.0F, 12.0F, 4.0F, 6.0F, -1.5F, 0.0F, -1.5F);
-        this.RightLegfront = new ModelRenderer(this, 24, 0);
-        this.RightLegfront.setRotationPoint(-2.5F, 3.0F, -4.0F);
-        this.RightLegfront.addBox(-1.5F, 0.0F, -4.0F, 3.0F, 0.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.setRotateAngle(RightLegfront, 0.2275909337942703F, 0.0F, 0.0F);
-        this.Body = new ModelRenderer(this, 0, 9);
-        this.Body.setRotationPoint(0.0F, 20.0F, 0.0F);
-        this.Body.addBox(-5.0F, -2.0F, -4.0F, 10.0F, 5.0F, 8.0F, 0.0F, 0.0F, 0.0F);
-        this.Leftfoot_1 = new ModelRenderer(this, -5, 9);
-        this.Leftfoot_1.setRotationPoint(-1.5F, 2.0F, -2.0F);
-        this.Leftfoot_1.addBox(-1.5F, 0.0F, -5.0F, 3.0F, 0.0F, 5.0F, 0.0F, 0.0F, 0.0F);
-        this.Head = new ModelRenderer(this, 0, 0);
-        this.Head.setRotationPoint(0.0F, -2.0F, 4.0F);
-        this.Head.addBox(-5.0F, -1.0F, -8.0F, 10.0F, 1.0F, 8.0F, 0.0F, 0.0F, 0.0F);
-        this.LeftLegfront = new ModelRenderer(this, 24, 0);
-        this.LeftLegfront.setRotationPoint(2.5F, 3.0F, -4.0F);
-        this.LeftLegfront.addBox(-1.5F, 0.0F, -4.0F, 3.0F, 0.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.setRotateAngle(LeftLegfront, 0.2275909337942703F, 0.0F, 0.0F);
-        this.eye1 = new ModelRenderer(this, 0, 0);
-        this.eye1.setRotationPoint(1.0F, -1.0F, -6.0F);
-        this.eye1.addBox(0.0F, -1.0F, -1.0F, 2.0F, 1.0F, 2.0F, 0.0F, 0.0F, 0.0F);
-        this.RightLeg = new ModelRenderer(this, 32, 8);
-        this.RightLeg.setRotationPoint(-4.0F, 22.0F, 2.0F);
-        this.RightLeg.addBox(-3.0F, -2.0F, -4.0F, 3.0F, 4.0F, 5.0F, 0.0F, 0.0F, 0.0F);
-        this.LeftLeg.addChild(this.Leftfoot);
-        this.Head.addChild(this.eye2);
-        this.Body.addChild(this.RightLegfront);
-        this.RightLeg.addChild(this.Leftfoot_1);
-        this.Body.addChild(this.Head);
-        this.Body.addChild(this.LeftLegfront);
-        this.Head.addChild(this.eye1);
-    }
+	public FrogModel(ModelPart root) {
+		this.Body = root.getChild("Body");
+		this.LeftLeg = root.getChild("LeftLeg");
+		this.RightLeg = root.getChild("RightLeg");
+		this.poach = root.getChild("poach");
+		this.LeftLegfront = Body.getChild("LeftLegfront");
+		this.RightLegfront = Body.getChild("RightLegfront");
+		this.Leftfoot = LeftLeg.getChild("Leftfoot");
+		this.Leftfoot_1 = RightLeg.getChild("Leftfoot_1");
+	}
 
-    @Override
-    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) { 
-        ImmutableList.of(this.LeftLeg, this.poach, this.Body, this.RightLeg).forEach((modelRenderer) -> { 
-            modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        });
-    }
+	@SuppressWarnings("unused")
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
 
-    @Override
-    public void setRotationAngles(FrogEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-    	float f = ageInTicks - (float)entityIn.ticksExisted;
-    	this.jumpRotation = MathHelper.sin(entityIn.getJumpCompletion(f) * (float)Math.PI);
-        this.LeftLeg.rotateAngleX = (limbSwingAmount * 50.0F) * ((float)Math.PI / 180F);
-        this.RightLeg.rotateAngleX = (limbSwingAmount * 50.0F) * ((float)Math.PI / 180F);
-        this.Leftfoot.rotateAngleX = limbSwingAmount * 50.0F * ((float)Math.PI / 180F);
-        this.Leftfoot_1.rotateAngleX = limbSwingAmount * 50.0F * ((float)Math.PI / 180F);
-        this.LeftLegfront.rotateAngleX = (limbSwingAmount * -40.0F + 15.0F) * ((float)Math.PI / 180F);
-        this.RightLegfront.rotateAngleX = (limbSwingAmount * -40.0F + 15.0F) * ((float)Math.PI / 180F);
-     }
+		PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().texOffs(0, 9).addBox(-5.0F, -6.0F, -4.0F, 10.0F, 5.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-     public void setLivingAnimations(FrogEntity entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
-        super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
-        this.jumpRotation = MathHelper.sin(entityIn.getJumpCompletion(partialTick) * (float)Math.PI);
-     }
+		PartDefinition Head = Body.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -7.0F, -4.0F, 10.0F, 1.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-    /**
-     * This is a helper function from Tabula to set the rotation of model parts
-     */
-    public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
-    }
+		PartDefinition eye1 = Head.addOrReplaceChild("eye1", CubeListBuilder.create().texOffs(0, 0).addBox(1.0F, -2.0F, -7.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -6.0F, 4.0F));
+
+		PartDefinition eye2 = Head.addOrReplaceChild("eye2", CubeListBuilder.create().texOffs(0, 0).mirror().addBox(-3.0F, -2.0F, -7.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(0.0F, -6.0F, 4.0F));
+
+		PartDefinition RightLegFront = Body.addOrReplaceChild("RightLegFront", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition RightLegFront_r1 = RightLegFront.addOrReplaceChild("RightLegFront_r1", CubeListBuilder.create().texOffs(24, 0).addBox(-1.5F, 0.0F, -4.0F, 3.0F, 0.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-2.5F, -1.0F, -4.0F, 0.2276F, 0.0F, 0.0F));
+
+		PartDefinition LeftLegFront = Body.addOrReplaceChild("LeftLegFront", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition LeftLegFront_r1 = LeftLegFront.addOrReplaceChild("LeftLegFront_r1", CubeListBuilder.create().texOffs(24, 0).addBox(-1.5F, 0.0F, -4.0F, 3.0F, 0.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(2.5F, -1.0F, -4.0F, 0.2276F, 0.0F, 0.0F));
+
+		PartDefinition LeftLeg = partdefinition.addOrReplaceChild("LeftLeg", CubeListBuilder.create().texOffs(32, 8).addBox(1.5F, -3.0F, 2.0F, 3.0F, 4.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(2.5F, 23.0F, -4.0F));
+
+		PartDefinition Leftfoot = LeftLeg.addOrReplaceChild("Leftfoot", CubeListBuilder.create().texOffs(-5, 9).addBox(1.5F, 1.0F, -1.0F, 3.0F, 0.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition RightLeg = partdefinition.addOrReplaceChild("RightLeg", CubeListBuilder.create().texOffs(32, 8).addBox(-7.0F, -4.0F, -2.0F, 3.0F, 4.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+		PartDefinition Leftfoot2 = RightLeg.addOrReplaceChild("Leftfoot2", CubeListBuilder.create().texOffs(-5, 9).addBox(-7.0F, 0.0F, -5.0F, 3.0F, 0.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition poach = partdefinition.addOrReplaceChild("poach", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -5.0F, -5.0F, 12.0F, 4.0F, 6.0F, new CubeDeformation(-1.5F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+		return LayerDefinition.create(meshdefinition, 48, 32);
+	}
+
+	@Override
+	public void setupAnim(FrogEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		float f = ageInTicks - (float)entity.tickCount;
+    	this.jumpRotation = Mth.sin(entity.getJumpCompletion(f) * (float)Math.PI);
+        this.LeftLeg.xRot = (limbSwingAmount * 50.0F) * ((float)Math.PI / 180F);
+        this.RightLeg.xRot = (limbSwingAmount * 50.0F) * ((float)Math.PI / 180F);
+        this.Leftfoot.xRot = limbSwingAmount * 50.0F * ((float)Math.PI / 180F);
+        this.Leftfoot_1.xRot = limbSwingAmount * 50.0F * ((float)Math.PI / 180F);
+        this.LeftLegfront.xRot = (limbSwingAmount * -40.0F + 15.0F) * ((float)Math.PI / 180F);
+        this.RightLegfront.xRot = (limbSwingAmount * -40.0F + 15.0F) * ((float)Math.PI / 180F);
+	}
+
+	@Override
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		Body.render(poseStack, buffer, packedLight, packedOverlay);
+		LeftLeg.render(poseStack, buffer, packedLight, packedOverlay);
+		RightLeg.render(poseStack, buffer, packedLight, packedOverlay);
+		poach.render(poseStack, buffer, packedLight, packedOverlay);
+	}
+
 }

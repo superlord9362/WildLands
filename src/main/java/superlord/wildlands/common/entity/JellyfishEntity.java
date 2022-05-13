@@ -1,44 +1,40 @@
 package superlord.wildlands.common.entity;
 
 import java.util.EnumSet;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.passive.TurtleEntity;
-import net.minecraft.entity.passive.WaterMobEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.animal.Turtle;
+import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.wildlands.init.DamageSourceInit;
@@ -46,7 +42,7 @@ import superlord.wildlands.init.WildLandsEffects;
 import superlord.wildlands.init.WildLandsItems;
 import superlord.wildlands.init.WildLandsSounds;
 
-public class JellyfishEntity extends WaterMobEntity {
+public class JellyfishEntity extends WaterAnimal {
 	public float jellyfishPitch;
 	public float prevjellyfishPitch;
 	public float jellyfishYaw;
@@ -62,12 +58,12 @@ public class JellyfishEntity extends WaterMobEntity {
 	public float tentacleAngle;
 	public float lastTentacleAngle;
 
-	private static final EntityPredicate predicate = (new EntityPredicate()).setDistance(6.0D).allowFriendlyFire().allowInvulnerable();
-	private static final DataParameter<Integer> JELLYFISH_VARIANT = EntityDataManager.createKey(JellyfishEntity.class, DataSerializers.VARINT);
+	private static final EntityDataAccessor<Integer> JELLYFISH_VARIANT = SynchedEntityData.defineId(JellyfishEntity.class, EntityDataSerializers.INT);
+	static final TargetingConditions PREDICATE = TargetingConditions.forNonCombat().range(6.0D);
 
-	public JellyfishEntity(EntityType<? extends WaterMobEntity> type, World p_i48565_2_) {
+	public JellyfishEntity(EntityType<? extends WaterAnimal> type, Level p_i48565_2_) {
 		super(type, p_i48565_2_);
-		this.rotationVelocity = 1.0F / (this.rand.nextFloat() + 1.0F) * 0.2F;
+		this.rotationVelocity = 1.0F / (this.random.nextFloat() + 1.0F) * 0.2F;
 	}
 
 	protected void registerGoals() {
@@ -83,56 +79,57 @@ public class JellyfishEntity extends WaterMobEntity {
 		return WildLandsSounds.JELLYFISH_HURT;
 	}
 
-	public static AttributeModifierMap.MutableAttribute createAttributes() {
-		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 10.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D).createMutableAttribute(Attributes.ATTACK_DAMAGE, 2.0D);
+	public static AttributeSupplier.Builder createAttributes() {
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.ATTACK_DAMAGE, 2.0D);
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void handleStatusUpdate(byte id) {
+	public void handleEntityEvent(byte id) {
 		if (id == 19) {
 			this.jellyfishRotation = 0.0F;
 		} else {
-			super.handleStatusUpdate(id);
+			super.handleEntityEvent(id);
 		}
 
 	}
 
-	protected void registerData() {
-		super.registerData();
-		this.dataManager.register(JELLYFISH_VARIANT, 0);
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		this.entityData.define(JELLYFISH_VARIANT, 0);
 	}
 
 	public int getJellyfishType() {
-		return MathHelper.clamp(dataManager.get(JELLYFISH_VARIANT), 0, 1);
+		return Mth.clamp(entityData.get(JELLYFISH_VARIANT), 0, 1);
 	}
 
 	public void setJellyfishVariant(int type) {
-		dataManager.set(JELLYFISH_VARIANT, type);
+		entityData.set(JELLYFISH_VARIANT, type);
 	}
 
-	public void writeAdditional(CompoundNBT compound) {
-		super.writeAdditional(compound);
+	public void addAdditionalSaveData(CompoundTag compound) {
+		super.addAdditionalSaveData(compound);
 		compound.putInt("JellyfishVariant", this.getJellyfishType());
 	}
 
-	public void readAdditional(CompoundNBT compound) {
-		super.readAdditional(compound);
+	public void readAdditionalSaveData(CompoundTag compound) {
+		super.readAdditionalSaveData(compound);
 		this.setJellyfishVariant(compound.getInt("JellyfishVariant"));
 	}
 
 	@Nullable
-	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-		Optional<RegistryKey<Biome>> biome = worldIn.func_242406_i(this.getPosition());
-		if (Objects.equals(biome, Optional.of(Biomes.FROZEN_OCEAN)) || Objects.equals(biome, Optional.of(Biomes.DEEP_FROZEN_OCEAN))) {
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
+		Biome biome = worldIn.getBiome(this.blockPosition()).value();
+		String name = biome.getRegistryName().getPath();
+		if (name.equals("frozen_ocean") || name.equals("deep_frozen_ocean")) {
 			setJellyfishVariant(0);
 		} else {
 			setJellyfishVariant(1);
 		}
-		return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+		return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 	}
 
-	public void livingTick() {
-		super.livingTick();
+	public void aiStep() {
+		super.aiStep();
 		this.prevjellyfishPitch = this.jellyfishPitch;
 		this.prevjellyfishYaw = this.jellyfishYaw;
 		this.prevjellyfishRotation = this.jellyfishRotation;
@@ -140,21 +137,21 @@ public class JellyfishEntity extends WaterMobEntity {
 		this.lastTentacleAngle = this.tentacleAngle;
 
 		if ((double)this.jellyfishRotation > (Math.PI * 2D)) {
-			if (this.world.isRemote) {
+			if (this.level.isClientSide) {
 				this.jellyfishRotation = ((float)Math.PI * 2F);
 			} else {
 				this.jellyfishRotation = (float)((double)this.jellyfishRotation - (Math.PI * 2D));
-				if (this.rand.nextInt(10) == 0) {
-					this.rotationVelocity = 1.0F / (this.rand.nextFloat() + 1.0F) * 0.2F;
+				if (this.random.nextInt(10) == 0) {
+					this.rotationVelocity = 1.0F / (this.random.nextFloat() + 1.0F) * 0.2F;
 				}
 
-				this.world.setEntityState(this, (byte)19);
+				this.level.broadcastEntityEvent(this, (byte)19);
 			}
 		}
-		if (this.isInWaterOrBubbleColumn()) {
+		if (this.isInWaterOrBubble()) {
 			if (this.jellyfishRotation < (float)Math.PI) {
 				float f = this.jellyfishRotation / (float)Math.PI;
-				this.tentacleAngle = MathHelper.sin(f * f * (float)Math.PI) * (float)Math.PI * 0.25F;
+				this.tentacleAngle = Mth.sin(f * f * (float)Math.PI) * (float)Math.PI * 0.25F;
 				if ((double)f > 0.75D) {
 					this.randomMotionSpeed = 1.0F;
 					this.rotateSpeed = 1.0F;
@@ -167,27 +164,27 @@ public class JellyfishEntity extends WaterMobEntity {
 				this.rotateSpeed *= 0.99F;
 			}
 
-			if (!this.world.isRemote) {
-				this.setMotion((double)(this.randomMotionVecX * this.randomMotionSpeed), (double)(this.randomMotionVecY * this.randomMotionSpeed), (double)(this.randomMotionVecZ * this.randomMotionSpeed));
+			if (!this.level.isClientSide) {
+				this.setDeltaMovement((double)(this.randomMotionVecX * this.randomMotionSpeed), (double)(this.randomMotionVecY * this.randomMotionSpeed), (double)(this.randomMotionVecZ * this.randomMotionSpeed));
 			}
 
-			Vector3d vector3d = this.getMotion();
-			float f1 = MathHelper.sqrt(horizontalMag(vector3d));
-			this.renderYawOffset += (-((float)MathHelper.atan2(vector3d.x, vector3d.z)) * (180F / (float)Math.PI) - this.renderYawOffset) * 0.1F;
-			this.rotationYaw = this.renderYawOffset;
+			Vec3 vector3d = this.getDeltaMovement();
+			double f1 = vector3d.horizontalDistance();
+			this.yBodyRot += (-((float)Mth.atan2(vector3d.x, vector3d.z)) * (180F / (float)Math.PI) - this.yBodyRot) * 0.1F;
+			this.setYRot(this.yBodyRot);
 			this.jellyfishYaw = (float)((double)this.jellyfishYaw + Math.PI * (double)this.rotateSpeed * 1.5D);
-			this.jellyfishPitch += (-((float)MathHelper.atan2((double)f1, vector3d.y)) * (180F / (float)Math.PI) - this.jellyfishPitch) * 0.1F;
+			this.jellyfishPitch += (-((float)Mth.atan2((double)f1, vector3d.y)) * (180F / (float)Math.PI) - this.jellyfishPitch) * 0.1F;
 		} else {
-			this.tentacleAngle = MathHelper.abs(MathHelper.sin(this.jellyfishRotation)) * (float)Math.PI * 0.25F;
-			if (!this.world.isRemote) {
-				double d0 = this.getMotion().y;
-				if (this.isPotionActive(Effects.LEVITATION)) {
-					d0 = 0.05D * (double)(this.getActivePotionEffect(Effects.LEVITATION).getAmplifier() + 1);
-				} else if (!this.hasNoGravity()) {
+			this.tentacleAngle = Mth.abs(Mth.sin(this.jellyfishRotation)) * (float)Math.PI * 0.25F;
+			if (!this.level.isClientSide) {
+				double d0 = this.getDeltaMovement().y;
+				if (this.hasEffect(MobEffects.LEVITATION)) {
+					d0 = 0.05D * (double)(this.getEffect(MobEffects.LEVITATION).getAmplifier() + 1);
+				} else if (!this.isNoGravity()) {
 					d0 -= 0.08D;
 				}
 
-				this.setMotion(0.0D, d0 * (double)0.98F, 0.0D);
+				this.setDeltaMovement(0.0D, d0 * (double)0.98F, 0.0D);
 			}
 
 			this.jellyfishPitch = (float)((double)this.jellyfishPitch + (double)(-90.0F - this.jellyfishPitch) * 0.02D);
@@ -213,30 +210,30 @@ public class JellyfishEntity extends WaterMobEntity {
 			this.jellyfish = p_i48823_2_;
 		}
 
-		public boolean shouldExecute() {
+		public boolean canUse() {
 			return true;
 		}
 
 		public void tick() {
-			int i = this.jellyfish.getIdleTime();
+			int i = this.jellyfish.getNoActionTime();
 			if (i > 100) {
 				this.jellyfish.setMovementVector(0.0F, 0.0F, 0.0F);
-			} else if (this.jellyfish.getRNG().nextInt(50) == 0 || !this.jellyfish.inWater || !this.jellyfish.hasMovementVector()) {
-				float f = this.jellyfish.getRNG().nextFloat() * ((float)Math.PI * 2F);
-				float f1 = MathHelper.cos(f) * 0.2F;
-				float f2 = -0.1F + this.jellyfish.getRNG().nextFloat() * 0.2F;
-				float f3 = MathHelper.sin(f) * 0.2F;
+			} else if (this.jellyfish.getRandom().nextInt(50) == 0 || !this.jellyfish.isInWater() || !this.jellyfish.hasMovementVector()) {
+				float f = this.jellyfish.getRandom().nextFloat() * ((float)Math.PI * 2F);
+				float f1 = Mth.cos(f) * 0.2F;
+				float f2 = -0.1F + this.jellyfish.getRandom().nextFloat() * 0.2F;
+				float f3 = Mth.sin(f) * 0.2F;
 				this.jellyfish.setMovementVector(f1, f2, f3);
 			}
 
 		}
 	}
 
-	public boolean attackEntityFrom(DamageSource source, float amount) {
+	public boolean hurt(DamageSource source, float amount) {
 		if (source == DamageSourceInit.STING) {
 			return false;
 		} else {
-			return true;
+			return super.hurt(source, amount);
 		}
 	}
 
@@ -247,13 +244,13 @@ public class JellyfishEntity extends WaterMobEntity {
 
 		StingGoal(JellyfishEntity jellyfish) {
 			this.jellyfish = jellyfish;
-			this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+			this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
 		}
 
 		@Override
-		public boolean shouldExecute() {
-			this.entity = this.jellyfish.world.getClosestEntityWithinAABB(LivingEntity.class, predicate, this.jellyfish, 1, 1, 1, this.jellyfish.getBoundingBox());
-			TurtleEntity turtle = new TurtleEntity(EntityType.TURTLE, jellyfish.world);
+		public boolean canUse() {
+			this.entity = this.jellyfish.level.getNearestEntity(LivingEntity.class, PREDICATE, this.jellyfish, 1, 1, 1, this.jellyfish.getBoundingBox());
+			Turtle turtle = new Turtle(EntityType.TURTLE, jellyfish.level);
 			if (entity == turtle || entity == jellyfish) {
 				return false;
 			} else if (entity != null) {
@@ -263,8 +260,8 @@ public class JellyfishEntity extends WaterMobEntity {
 			}
 		}
 
-		public boolean shouldContinueExecuting() {
-			TurtleEntity turtle = new TurtleEntity(EntityType.TURTLE, jellyfish.world);
+		public boolean canContinueToUse() {
+			Turtle turtle = new Turtle(EntityType.TURTLE, jellyfish.level);
 			if (entity == null || entity == jellyfish || entity == turtle) {
 				return false;
 			} else {
@@ -272,27 +269,29 @@ public class JellyfishEntity extends WaterMobEntity {
 			}
 		}
 
-		public void startExecuting() {
-			TurtleEntity turtle = new TurtleEntity(EntityType.TURTLE, jellyfish.world);
+		public void start() {
+			Turtle turtle = new Turtle(EntityType.TURTLE, jellyfish.level);
 			if (entity == this.jellyfish || entity == turtle) {
 				//This shouldn't do anyhting.
 			} else {
-				this.entity.addPotionEffect(new EffectInstance(WildLandsEffects.STING.get(), 100));
+				if (entity instanceof LivingEntity) {
+					this.entity.addEffect(new MobEffectInstance(WildLandsEffects.STING.get(), 100));
+				}
 			}
 		}
 
-		public void resetTask() {
+		public void stop() {
 			this.entity = null;
 		}
 
 	}
 
-	public static boolean canSpawn(EntityType<? extends JellyfishEntity> type, IWorld worldIn, SpawnReason reason, BlockPos p_223363_3_, Random randomIn) {
-		return worldIn.getBlockState(p_223363_3_).isIn(Blocks.WATER) && worldIn.getBlockState(p_223363_3_.up()).isIn(Blocks.WATER);
+	public static boolean canSpawn(EntityType<? extends JellyfishEntity> type, LevelAccessor worldIn, MobSpawnType reason, BlockPos p_223363_3_, Random randomIn) {
+		return worldIn.getBlockState(p_223363_3_).is(Blocks.WATER) && worldIn.getBlockState(p_223363_3_.above()).is(Blocks.WATER);
 	}
 
 	@Override
-	public ItemStack getPickedResult(RayTraceResult target) {
+	public ItemStack getPickedResult(HitResult target) {
 		return new ItemStack(WildLandsItems.JELLYFISH_SPAWN_EGG.get());
 	}
 

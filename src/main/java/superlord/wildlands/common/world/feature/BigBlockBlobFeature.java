@@ -4,55 +4,52 @@ import java.util.Random;
 
 import com.mojang.serialization.Codec;
 
-import net.minecraft.block.Block;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.BlockStateFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration;
 
-public class BigBlockBlobFeature extends Feature<BlockStateFeatureConfig> {
-   public BigBlockBlobFeature(Codec<BlockStateFeatureConfig> p_i231931_1_) {
-      super(p_i231931_1_);
-   }
+public class BigBlockBlobFeature extends Feature<BlockStateConfiguration> {
+	public BigBlockBlobFeature(Codec<BlockStateConfiguration> p_i231931_1_) {
+		super(p_i231931_1_);
+	}
 
-   public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, BlockStateFeatureConfig config) {
-      while(true) {
-         label46: {
-            if (pos.getY() > 3) {
-               if (reader.isAirBlock(pos.down())) {
-                  break label46;
-               }
+	public boolean place(FeaturePlaceContext<BlockStateConfiguration> p_159471_) {
+	      BlockPos blockpos = p_159471_.origin();
+	      WorldGenLevel worldgenlevel = p_159471_.level();
+	      Random random = p_159471_.random();
 
-               Block block = reader.getBlockState(pos.down()).getBlock();
-               if (!isDirt(block) && !isStone(block)) {
-                  break label46;
-               }
-            }
+	      BlockStateConfiguration blockstateconfiguration;
+	      for(blockstateconfiguration = p_159471_.config(); blockpos.getY() > worldgenlevel.getMinBuildHeight() + 5; blockpos = blockpos.below()) {
+	         if (!worldgenlevel.isEmptyBlock(blockpos.below())) {
+	            BlockState blockstate = worldgenlevel.getBlockState(blockpos.below());
+	            if (isDirt(blockstate) || isStone(blockstate)) {
+	               break;
+	            }
+	         }
+	      }
 
-            if (pos.getY() <= 3) {
-               return false;
-            }
+	      if (blockpos.getY() <= worldgenlevel.getMinBuildHeight() + 3) {
+	         return false;
+	      } else {
+	         for(int l = 0; l < 5; ++l) {
+	            int i = random.nextInt(4);
+	            int j = random.nextInt(4);
+	            int k = random.nextInt(4);
+	            float f = (float)(i + j + k) * 0.333F + 0.5F;
 
-            for(int l = 0; l < 5; ++l) {
-               int i = rand.nextInt(4);
-               int j = rand.nextInt(4);
-               int k = rand.nextInt(4);
-               float f = (float)(i + j + k) * 0.333F + 0.5F;
+	            for(BlockPos blockpos1 : BlockPos.betweenClosed(blockpos.offset(-i, -j, -k), blockpos.offset(i, j, k))) {
+	               if (blockpos1.distSqr(blockpos) <= (double)(f * f)) {
+	                  worldgenlevel.setBlock(blockpos1, blockstateconfiguration.state, 4);
+	               }
+	            }
 
-               for(BlockPos blockpos : BlockPos.getAllInBoxMutable(pos.add(-i, -j, -k), pos.add(i, j, k))) {
-                  if (blockpos.distanceSq(pos) <= (double)(f * f)) {
-                     reader.setBlockState(blockpos, config.state, 4);
-                  }
-               }
+	            blockpos = blockpos.offset(-1 + random.nextInt(4), -random.nextInt(4), -1 + random.nextInt(2));
+	         }
 
-               pos = pos.add(-1 + rand.nextInt(4), -rand.nextInt(4), -1 + rand.nextInt(4));
-            }
-
-            return true;
-         }
-
-         pos = pos.down();
-      }
-   }
+	         return true;
+	      }
+	   }
 }

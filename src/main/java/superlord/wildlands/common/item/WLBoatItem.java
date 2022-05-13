@@ -3,25 +3,25 @@ package superlord.wildlands.common.item;
 import java.util.List;
 import java.util.function.Predicate;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.common.entity.WLBoatEntity;
 
 public class WLBoatItem extends Item {
 	
-	private static final Predicate<Entity> RIDERS = EntityPredicates.NOT_SPECTATING.and(Entity::canBeCollidedWith);
+	private static final Predicate<Entity> RIDERS = EntitySelector.NO_SPECTATORS.and(Entity::canBeCollidedWith);
 	private final WLBoatEntity.WLType type;
 	
 	public WLBoatItem(WLBoatEntity.WLType type, Item.Properties properties) {
@@ -30,42 +30,42 @@ public class WLBoatItem extends Item {
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-		ItemStack itemstack = player.getHeldItem(hand);
-		RayTraceResult raytraceresult = rayTrace(world, player, RayTraceContext.FluidMode.ANY);
-		if (raytraceresult.getType() == RayTraceResult.Type.MISS) {
-			return ActionResult.resultPass(itemstack);
+	   public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+		ItemStack itemstack = player.getItemInHand(hand);
+		HitResult raytraceresult = getPlayerPOVHitResult(world, player, ClipContext.Fluid.ANY);
+		if (raytraceresult.getType() == HitResult.Type.MISS) {
+			return InteractionResultHolder.pass(itemstack);
 		} else {
-			Vector3d vec3d = player.getLook(1.0F);
-			List<Entity> list = world.getEntitiesInAABBexcluding(player, player.getBoundingBox().expand(vec3d.scale(5.0D)).grow(1.0D), RIDERS);
+			Vec3 vec3d = player.getViewVector(1.0F);
+			List<Entity> list = world.getEntities(player, player.getBoundingBox().expandTowards(vec3d.scale(5.0D)).inflate(1.0D), RIDERS);
 			if (!list.isEmpty()) {
-				Vector3d vec3d1 = player.getEyePosition(1.0F);
+				Vec3 vec3d1 = player.getEyePosition(1.0F);
 				for (Entity entity : list) {
-					AxisAlignedBB axisalignedbb = entity.getBoundingBox().grow(entity.getCollisionBorderSize());
+					AABB axisalignedbb = entity.getBoundingBox().inflate(entity.getPickRadius());
 					if (axisalignedbb.contains(vec3d1)) {
-                        return ActionResult.resultPass(itemstack);
+                        return InteractionResultHolder.pass(itemstack);
 					}
 				}
 			}
-			if (raytraceresult.getType() == RayTraceResult.Type.BLOCK) {
-				WLBoatEntity wlBoatEntity = new WLBoatEntity(world, raytraceresult.getHitVec().x, raytraceresult.getHitVec().y, raytraceresult.getHitVec().z);
-				WildLands.LOGGER.info("BOAT ENTITY: " + wlBoatEntity.getEntityString());
+			if (raytraceresult.getType() == HitResult.Type.BLOCK) {
+				WLBoatEntity wlBoatEntity = new WLBoatEntity(world, raytraceresult.getLocation().x, raytraceresult.getLocation().y, raytraceresult.getLocation().z);
+				WildLands.LOGGER.info("BOAT ENTITY: " + wlBoatEntity.getEntityData());
 				wlBoatEntity.setWLBoatType(this.type);
-				wlBoatEntity.rotationYaw = player.rotationYaw;
-				if (!world.hasNoCollisions(wlBoatEntity, wlBoatEntity.getBoundingBox().grow(-0.1D))) {
-					return ActionResult.resultFail(itemstack);
+				wlBoatEntity.yRotO = player.yRotO;
+				if (!world.noCollision(wlBoatEntity, wlBoatEntity.getBoundingBox().inflate(-0.1D))) {
+					return InteractionResultHolder.fail(itemstack);
 				} else {
-					if (!world.isRemote) {
-						world.addEntity(wlBoatEntity);
+					if (!world.isClientSide) {
+						world.addFreshEntity(wlBoatEntity);
 						if (!player.isCreative()) {
 							itemstack.shrink(1);
 						}
 					}
-					player.addStat(Stats.ITEM_USED.get(this));
-					return ActionResult.resultSuccess(itemstack);
+					player.awardStat(Stats.ITEM_USED.get(this));
+					return InteractionResultHolder.sidedSuccess(itemstack, world.isClientSide());
 				}
  			} else {
- 				return ActionResult.resultPass(itemstack);
+ 				return InteractionResultHolder.pass(itemstack);
  			}
 		}
 	}

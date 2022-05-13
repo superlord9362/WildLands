@@ -2,7 +2,7 @@ package superlord.wildlands.common.world.feature.util;
 
 import java.util.Set;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 public class SaplingData {
 	private final Set<BlockPos> trunkOffsetCoordinates;

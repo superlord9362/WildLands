@@ -1,113 +1,79 @@
 package superlord.wildlands.client.model;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import superlord.wildlands.common.entity.HammerheadEntity;
 
 /**
  * HammerheadSharkModel - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class HammerheadSharkModel<T extends Entity> extends EntityModel<T> {
-    public ModelRenderer Body;
-    public ModelRenderer Tail;
-    public ModelRenderer Dorsal;
-    public ModelRenderer Neck;
-    public ModelRenderer LeftFin;
-    public ModelRenderer RightFin;
-    public ModelRenderer Caudalfin;
-    public ModelRenderer Dorsal2;
-    public ModelRenderer pelvicleft;
-    public ModelRenderer pelvicright;
-    public ModelRenderer Head;
+public class HammerheadSharkModel<T extends Entity> extends EntityModel<HammerheadEntity> {
+	private final ModelPart Body;
+	private final ModelPart Tail;
 
-    public HammerheadSharkModel() {
-        this.textureWidth = 128;
-        this.textureHeight = 80;
-        this.Dorsal = new ModelRenderer(this, 88, 17);
-        this.Dorsal.setRotationPoint(0.0F, -5.0F, 2.0F);
-        this.Dorsal.addBox(-0.5F, -11.0F, 0.0F, 1.0F, 11.0F, 7.0F, 0.0F, 0.0F, 0.0F);
-        this.setRotateAngle(Dorsal, -0.3186971254089062F, 0.0F, 0.0F);
-        this.pelvicright = new ModelRenderer(this, 28, 31);
-        this.pelvicright.setRotationPoint(-2.0F, 3.0F, 0.0F);
-        this.pelvicright.addBox(-1.0F, 0.0F, 0.0F, 1.0F, 4.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.setRotateAngle(pelvicright, 0.27314402127920984F, 0.0F, 0.3186971254089062F);
-        this.RightFin = new ModelRenderer(this, 38, 54);
-        this.RightFin.mirror = true;
-        this.RightFin.setRotationPoint(-6.0F, 4.0F, -5.0F);
-        this.RightFin.addBox(-9.0F, 0.0F, 0.0F, 9.0F, 1.0F, 6.0F, 0.0F, 0.0F, 0.0F);
-        this.setRotateAngle(RightFin, 0.0F, 0.18203784630933073F, -0.591841146688116F);
-        this.Dorsal2 = new ModelRenderer(this, 45, 11);
-        this.Dorsal2.setRotationPoint(0.0F, -3.0F, 3.0F);
-        this.Dorsal2.addBox(-0.5F, -4.0F, 0.0F, 1.0F, 4.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.setRotateAngle(Dorsal2, -0.3186971254089062F, 0.0F, 0.0F);
-        this.Tail = new ModelRenderer(this, 0, 48);
-        this.Tail.setRotationPoint(0.0F, 1.0F, 12.0F);
-        this.Tail.addBox(-3.0F, -3.0F, 0.0F, 6.0F, 6.0F, 16.0F, 0.0F, 0.0F, 0.0F);
-        this.Head = new ModelRenderer(this, 44, 0);
-        this.Head.setRotationPoint(0.0F, 2.0F, -7.0F);
-        this.Head.addBox(-12.0F, -2.0F, -7.0F, 24.0F, 4.0F, 7.0F, 0.0F, 0.0F, 0.0F);
-        this.pelvicleft = new ModelRenderer(this, 28, 31);
-        this.pelvicleft.setRotationPoint(2.0F, 3.0F, 0.0F);
-        this.pelvicleft.addBox(0.0F, 0.0F, 0.0F, 1.0F, 4.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-        this.setRotateAngle(pelvicleft, 0.27314402127920984F, 0.0F, -0.3186971254089062F);
-        this.Neck = new ModelRenderer(this, 0, 30);
-        this.Neck.setRotationPoint(0.0F, 1.0F, -8.0F);
-        this.Neck.addBox(-4.0F, -3.0F, -11.0F, 8.0F, 7.0F, 11.0F, 0.0F, 0.0F, 0.0F);
-        this.Body = new ModelRenderer(this, 0, 0);
-        this.Body.setRotationPoint(0.0F, 19.0F, -2.0F);
-        this.Body.addBox(-6.0F, -5.0F, -8.0F, 12.0F, 10.0F, 20.0F, 0.0F, 0.0F, 0.0F);
-        this.LeftFin = new ModelRenderer(this, 38, 54);
-        this.LeftFin.setRotationPoint(6.0F, 4.0F, -5.0F);
-        this.LeftFin.addBox(0.0F, 0.0F, 0.0F, 9.0F, 1.0F, 6.0F, 0.0F, 0.0F, 0.0F);
-        this.setRotateAngle(LeftFin, 0.0F, -0.18203784630933073F, 0.591841146688116F);
-        this.Caudalfin = new ModelRenderer(this, 72, 28);
-        this.Caudalfin.setRotationPoint(0.0F, 0.0F, 15.0F);
-        this.Caudalfin.addBox(-0.5F, -11.0F, 0.0F, 1.0F, 17.0F, 5.0F, 0.0F, 0.0F, 0.0F);
-        this.Body.addChild(this.Dorsal);
-        this.Tail.addChild(this.pelvicright);
-        this.Body.addChild(this.RightFin);
-        this.Tail.addChild(this.Dorsal2);
-        this.Body.addChild(this.Tail);
-        this.Neck.addChild(this.Head);
-        this.Tail.addChild(this.pelvicleft);
-        this.Body.addChild(this.Neck);
-        this.Body.addChild(this.LeftFin);
-        this.Tail.addChild(this.Caudalfin);
-    }
+	public HammerheadSharkModel(ModelPart root) {
+		this.Body = root.getChild("Body");
+		this.Tail = Body.getChild("Tail");
+	}
 
-    @Override
-    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) { 
-        ImmutableList.of(this.Body).forEach((modelRenderer) -> { 
-            modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-        });
-    }
+	@SuppressWarnings("unused")
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
 
-    @Override
-    public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-    	float f = 1.0F;
-        if (!entityIn.isInWater()) {
+		PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -10.0F, -10.0F, 12.0F, 10.0F, 20.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+		PartDefinition Tail = Body.addOrReplaceChild("Tail", CubeListBuilder.create().texOffs(0, 0).addBox(-3.0F, -8.0F, 9.0F, 6.0F, 6.0F, 16.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition Caudalfin = Tail.addOrReplaceChild("Caudalfin", CubeListBuilder.create().texOffs(0, 0).addBox(-0.5F, -16.0F, 25.0F, 1.0F, 17.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition Dorsal2 = Caudalfin.addOrReplaceChild("Dorsal2", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -4.0F, 0.0F, 1.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.5F, -8.0F, 13.0F, -0.3187F, 0.0F, 0.0F));
+
+		PartDefinition pelvicleft = Tail.addOrReplaceChild("pelvicleft", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -4.0F, 0.0F, 1.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(4.0F, 1.0F, 11.0F, 0.2731F, 0.0F, -0.3187F));
+
+		PartDefinition pelvicright = Tail.addOrReplaceChild("pelvicright", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -4.0F, 0.0F, 1.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-3.0F, 1.0F, 11.0F, 0.2731F, 0.0F, 0.3187F));
+
+		PartDefinition Dorsal = Body.addOrReplaceChild("Dorsal", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -11.0F, 0.0F, 1.0F, 11.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.5F, -10.0F, 0.0F, -0.3187F, 0.0F, 0.0F));
+
+		PartDefinition Neck = Body.addOrReplaceChild("Neck", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -3.0F, -11.0F, 8.0F, 7.0F, 11.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -4.0F, -10.0F));
+
+		PartDefinition Head = Neck.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(0, 0).addBox(-12.0F, -2.0F, -7.0F, 24.0F, 4.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 2.0F, -7.0F));
+
+		PartDefinition LeftFin = Body.addOrReplaceChild("LeftFin", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -1.0F, 0.0F, 9.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(6.0F, -1.0F, -7.0F, 0.0F, -0.182F, 0.5918F));
+
+		PartDefinition RightFin = Body.addOrReplaceChild("RightFin", CubeListBuilder.create().texOffs(0, 0).addBox(-9.0F, -1.0F, 0.0F, 9.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, -1.0F, -7.0F, 0.0F, 0.182F, -0.5918F));
+
+		return LayerDefinition.create(meshdefinition, 128, 80);
+	}
+
+	@Override
+	public void setupAnim(HammerheadEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		float f = 1.0F;
+        if (!entity.isInWater()) {
            f = 1.5F;
         }
-        this.Body.rotateAngleX = headPitch * ((float)Math.PI / 180F);
-        this.Body.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
-        this.Tail.rotateAngleY = -f * 0.45F * MathHelper.sin(0.6F * ageInTicks);
-    }
+        this.Body.xRot = headPitch * ((float)Math.PI / 180F);
+        this.Body.yRot = netHeadYaw * ((float)Math.PI / 180F);
+        this.Tail.yRot = -f * 0.45F * Mth.sin(0.6F * ageInTicks);
+	}
 
-    /**
-     * This is a helper function from Tabula to set the rotation of model parts
-     */
-    public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-        modelRenderer.rotateAngleX = x;
-        modelRenderer.rotateAngleY = y;
-        modelRenderer.rotateAngleZ = z;
-    }
+	@Override
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		Body.render(poseStack, buffer, packedLight, packedOverlay);
+	}
 }

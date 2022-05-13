@@ -1,13 +1,14 @@
 package superlord.wildlands.client.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import superlord.wildlands.WildLands;
+import superlord.wildlands.client.ClientEvents;
 import superlord.wildlands.client.model.JellyfishModel;
 import superlord.wildlands.common.entity.JellyfishEntity;
 
@@ -17,11 +18,11 @@ public class JellyfishRenderer extends MobRenderer<JellyfishEntity, JellyfishMod
 	private static final ResourceLocation BLUE_JELLYFISH_TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/jellyfish/blue_jellyfish.png");
 
 
-	public JellyfishRenderer() {
-		super(Minecraft.getInstance().getRenderManager(), new JellyfishModel<>(), 0.75F);
+	public JellyfishRenderer(EntityRendererProvider.Context renderManager) {
+		super(renderManager, new JellyfishModel<>(renderManager.bakeLayer(ClientEvents.JELLYFISH)), 0.75F);
 	}
 
-	public ResourceLocation getEntityTexture(JellyfishEntity entity) {
+	public ResourceLocation getTextureLocation(JellyfishEntity entity) {
 		switch(entity.getJellyfishType()) {
 		case 0:
 			return BLUE_JELLYFISH_TEXTURE;
@@ -32,21 +33,21 @@ public class JellyfishRenderer extends MobRenderer<JellyfishEntity, JellyfishMod
 		}
 	}
 
-	protected void applyRotations(JellyfishEntity entityLiving, MatrixStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
-		float f = MathHelper.lerp(partialTicks, entityLiving.prevjellyfishPitch, entityLiving.jellyfishPitch);
-		float f1 = MathHelper.lerp(partialTicks, entityLiving.prevjellyfishYaw, entityLiving.jellyfishYaw);
+	protected void setupRotations(JellyfishEntity entityLiving, PoseStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+		float f = Mth.lerp(partialTicks, entityLiving.prevjellyfishPitch, entityLiving.jellyfishPitch);
+		float f1 = Mth.lerp(partialTicks, entityLiving.prevjellyfishYaw, entityLiving.jellyfishYaw);
 		matrixStackIn.translate(0.0D, 0.5D, 0.0D);
-		matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180.0F - rotationYaw));
-		matrixStackIn.rotate(Vector3f.XP.rotationDegrees(f));
-		matrixStackIn.rotate(Vector3f.YP.rotationDegrees(f1));
+		matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180.0F - rotationYaw));
+		matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(f));
+		matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(f1));
 		matrixStackIn.translate(0.0D, (double)-1.2F, 0.0D);
 	}
 
 	/**
 	 * Defines what float the third param in setRotationAngles of ModelBase is
 	 */
-	protected float handleRotationFloat(JellyfishEntity livingBase, float partialTicks) {
-		return MathHelper.lerp(partialTicks, livingBase.lastTentacleAngle, livingBase.tentacleAngle);
+	protected float getBob(JellyfishEntity livingBase, float partialTicks) {
+		return Mth.lerp(partialTicks, livingBase.lastTentacleAngle, livingBase.tentacleAngle);
 	}
 
 }

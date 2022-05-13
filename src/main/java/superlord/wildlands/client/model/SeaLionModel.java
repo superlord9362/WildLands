@@ -1,127 +1,128 @@
 package superlord.wildlands.client.model;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.model.ArmedModel;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import superlord.wildlands.common.entity.SeaLionEntity;
 
 /**
  * Sea Lion - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class SeaLionModel<T extends Entity> extends EntityModel<T> {
-	public ModelRenderer body;
-	public ModelRenderer frontflipper1;
-	public ModelRenderer frontflipper2;
-	public ModelRenderer head;
-	public ModelRenderer hindflipper1;
-	public ModelRenderer hindflipper2;
-	public ModelRenderer snout;
-	public ModelRenderer ear1;
-	public ModelRenderer ear2;
+public class SeaLionModel<T extends Entity> extends EntityModel<SeaLionEntity> implements ArmedModel {
+	private final ModelPart body;
+	private final ModelPart frontflipper1;
+	private final ModelPart frontflipper2;
+	private final ModelPart head;
+	private final ModelPart hindflipper1;
+	private final ModelPart hindflipper2;
 
-	public SeaLionModel() {
-		this.textureWidth = 64;
-		this.textureHeight = 64;
-		this.hindflipper1 = new ModelRenderer(this, 36, 28);
-		this.hindflipper1.setRotationPoint(4.0F, 6.0F, 6.0F);
-		this.hindflipper1.addBox(0.0F, 0.0F, -1.0F, 8.0F, 1.0F, 6.0F, 0.0F, 0.0F, 0.0F);
-		this.setRotateAngle(hindflipper1, 0.0F, -0.45535640450848164F, 0.0F);
-		this.ear2 = new ModelRenderer(this, 0, 1);
-		this.ear2.setRotationPoint(5.0F, -11.0F, 0.0F);
-		this.ear2.addBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-		this.snout = new ModelRenderer(this, 29, 0);
-		this.snout.setRotationPoint(0.0F, -9.0F, -5.0F);
-		this.snout.addBox(-3.0F, 0.0F, -2.0F, 6.0F, 2.0F, 2.0F, 0.0F, 0.0F, 0.0F);
-		this.ear1 = new ModelRenderer(this, 0, 1);
-		this.ear1.setRotationPoint(-5.0F, -11.0F, 0.0F);
-		this.ear1.addBox(-1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-		this.hindflipper2 = new ModelRenderer(this, 36, 28);
-		this.hindflipper2.mirror = true;
-		this.hindflipper2.setRotationPoint(-4.0F, 6.0F, 6.0F);
-		this.hindflipper2.addBox(-8.0F, 0.0F, -1.0F, 8.0F, 1.0F, 6.0F, 0.0F, 0.0F, 0.0F);
-		this.setRotateAngle(hindflipper2, 0.0F, 0.45535640450848164F, 0.0F);
-		this.frontflipper1 = new ModelRenderer(this, 0, 28);
-		this.frontflipper1.setRotationPoint(5.0F, 23.0F, -5.0F);
-		this.frontflipper1.addBox(-1.0F, 0.0F, -2.0F, 10.0F, 1.0F, 6.0F, 0.0F, 0.0F, 0.0F);
-		this.head = new ModelRenderer(this, 0, 0);
-		this.head.setRotationPoint(0.0F, -3.0F, -9.0F);
-		this.head.addBox(-5.0F, -14.0F, -5.0F, 10.0F, 18.0F, 9.0F, 0.0F, 0.0F, 0.0F);
-		this.body = new ModelRenderer(this, 0, 35);
-		this.body.setRotationPoint(0.0F, 17.0F, 4.0F);
-		this.body.addBox(-7.0F, -5.0F, -9.0F, 14.0F, 11.0F, 18.0F, 0.0F, 0.0F, 0.0F);
-		this.frontflipper2 = new ModelRenderer(this, 0, 28);
-		this.frontflipper2.mirror = true;
-		this.frontflipper2.setRotationPoint(-5.0F, 23.0F, -5.0F);
-		this.frontflipper2.addBox(-9.0F, 0.0F, -2.0F, 10.0F, 1.0F, 6.0F, 0.0F, 0.0F, 0.0F);
-		this.body.addChild(this.hindflipper1);
-		this.head.addChild(this.ear2);
-		this.head.addChild(this.snout);
-		this.head.addChild(this.ear1);
-		this.body.addChild(this.hindflipper2);
-		this.body.addChild(this.head);
+	public SeaLionModel(ModelPart root) {
+		this.body = root.getChild("body");
+		this.frontflipper1 = root.getChild("frontflipper1");
+		this.frontflipper2 = root.getChild("frontflipper2");
+		this.head = body.getChild("head");
+		this.hindflipper1 = body.getChild("hindflipper1");
+		this.hindflipper2 = body.getChild("hindflipper2");
+	}
+
+	@SuppressWarnings("unused")
+	public static LayerDefinition createBodyLayer() {
+		MeshDefinition meshdefinition = new MeshDefinition();
+		PartDefinition partdefinition = meshdefinition.getRoot();
+
+		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 35).addBox(-7.0F, -5.0F, -5.0F, 14.0F, 11.0F, 18.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 17.0F, 0.0F));
+
+		PartDefinition head = body.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -13.0F, -5.0F, 10.0F, 18.0F, 9.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -5.0F, -5.0F));
+
+		PartDefinition snout = head.addOrReplaceChild("snout", CubeListBuilder.create().texOffs(29, 0).addBox(-3.0F, -1.0F, -2.0F, 6.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -7.0F, -5.0F));
+
+		PartDefinition ear1 = head.addOrReplaceChild("ear1", CubeListBuilder.create().texOffs(0, 1).addBox(-1.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(-5.0F, -10.0F, 0.0F));
+
+		PartDefinition ear2 = head.addOrReplaceChild("ear2", CubeListBuilder.create().texOffs(0, 1).addBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(5.0F, -10.0F, 0.0F));
+
+		PartDefinition hindflipper1 = body.addOrReplaceChild("hindflipper1", CubeListBuilder.create().texOffs(36, 28).addBox(0.0F, 0.0F, -1.0F, 8.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(5.0F, 6.0F, 10.0F, 0.0F, -0.4554F, 0.0F));
+
+		PartDefinition hindflipper2 = body.addOrReplaceChild("hindflipper2", CubeListBuilder.create().texOffs(36, 28).mirror().addBox(-8.0F, 0.0F, -1.0F, 8.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(-4.0F, 6.0F, 10.0F, 0.0F, 0.4554F, 0.0F));
+
+		PartDefinition frontflipper1 = partdefinition.addOrReplaceChild("frontflipper1", CubeListBuilder.create().texOffs(0, 28).mirror().addBox(-9.0F, 0.0F, -2.0F, 10.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-5.0F, 23.0F, -5.0F));
+
+		PartDefinition frontflipper2 = partdefinition.addOrReplaceChild("frontflipper2", CubeListBuilder.create().texOffs(0, 28).addBox(-1.0F, 0.0F, -2.0F, 10.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(5.0F, 23.0F, -5.0F));
+
+		return LayerDefinition.create(meshdefinition, 64, 64);
 	}
 
 	@Override
-	public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) { 
-		ImmutableList.of(this.frontflipper1, this.body, this.frontflipper2).forEach((modelRenderer) -> { 
-			modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
-		});
-	}
-
-	@Override
-	public void setRotationAngles(T entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		this.head.rotateAngleX = headPitch * ((float)Math.PI / 180F);
-		this.head.rotateAngleY = netHeadYaw * ((float)Math.PI / 180F);
+	public void setupAnim(SeaLionEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		this.head.xRot = headPitch * ((float)Math.PI / 180F);
+		this.head.yRot = netHeadYaw * ((float)Math.PI / 180F);
 		float speed = 1.0f;
 		float degree = 1.0f;
-		if (entityIn.isSwimming()) {
-			this.body.rotateAngleX = MathHelper.cos(limbSwing * speed * 0.1F) * degree * 0.5F * limbSwingAmount;
-			this.head.rotateAngleX = MathHelper.cos(limbSwing * speed * 0.1F) * degree * -0.5F * limbSwingAmount;
-			this.frontflipper1.rotateAngleX = MathHelper.cos(limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
-			this.frontflipper1.rotateAngleY = MathHelper.cos(limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
-			this.frontflipper1.rotateAngleZ = MathHelper.cos(limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
-			this.frontflipper2.rotateAngleX = MathHelper.cos(3.0F + limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
-			this.frontflipper2.rotateAngleY = MathHelper.cos(3.0F + limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
-			this.frontflipper2.rotateAngleZ = MathHelper.cos(3.0F + limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
-			this.hindflipper1.rotateAngleX = MathHelper.cos(3.0F + limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
-			this.hindflipper1.rotateAngleY = MathHelper.cos(3.0F + limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
-			this.hindflipper1.rotateAngleZ = MathHelper.cos(3.0F + limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
-			this.hindflipper2.rotateAngleX = MathHelper.cos(limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
-			this.hindflipper2.rotateAngleY = MathHelper.cos(limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
-			this.hindflipper2.rotateAngleZ = MathHelper.cos(limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
+		if (entity.isSwimming()) {
+			this.body.xRot = Mth.cos(limbSwing * speed * 0.1F) * degree * 0.5F * limbSwingAmount;
+			this.head.xRot = Mth.cos(limbSwing * speed * 0.1F) * degree * -0.5F * limbSwingAmount;
+			this.frontflipper1.xRot = Mth.cos(limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
+			this.frontflipper1.yRot = Mth.cos(limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
+			this.frontflipper1.zRot = Mth.cos(limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
+			this.frontflipper2.xRot = Mth.cos(3.0F + limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
+			this.frontflipper2.yRot = Mth.cos(3.0F + limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
+			this.frontflipper2.zRot = Mth.cos(3.0F + limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
+			this.hindflipper1.xRot = Mth.cos(3.0F + limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
+			this.hindflipper1.yRot = Mth.cos(3.0F + limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
+			this.hindflipper1.zRot = Mth.cos(3.0F + limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
+			this.hindflipper2.xRot = Mth.cos(limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
+			this.hindflipper2.yRot = Mth.cos(limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
+			this.hindflipper2.zRot = Mth.cos(limbSwing * speed * 0.1F) * degree * 1.0F * limbSwingAmount;
 		} else {
-			this.body.rotateAngleX = MathHelper.cos(limbSwing * speed * 0.1F) * degree * 0.25F * limbSwingAmount;
-			this.head.rotateAngleX = MathHelper.cos(limbSwing * speed * 0.1F) * degree * -0.25F * limbSwingAmount;
-			this.frontflipper1.rotateAngleX = MathHelper.cos(limbSwing * speed * 0.1F) * degree * 0.5F * limbSwingAmount;
-			this.frontflipper1.rotateAngleY = MathHelper.cos(limbSwing * speed * 0.1F) * degree * 0.5F * limbSwingAmount;
-			this.frontflipper1.rotateAngleZ = MathHelper.cos(limbSwing * speed * 0.1F) * degree * 0.5F * limbSwingAmount;
-			this.frontflipper2.rotateAngleX = MathHelper.cos(3.0F + limbSwing * speed * 0.1F) * degree * 0.5F * limbSwingAmount;
-			this.frontflipper2.rotateAngleY = MathHelper.cos(3.0F + limbSwing * speed * 0.1F) * degree * 0.5F * limbSwingAmount;
-			this.frontflipper2.rotateAngleZ = MathHelper.cos(3.0F + limbSwing * speed * 0.1F) * degree * 0.5F * limbSwingAmount;
-			this.hindflipper1.rotateAngleX = MathHelper.cos(3.0F + limbSwing * speed * 0.1F) * degree * 0.5F * limbSwingAmount;
-			this.hindflipper1.rotateAngleY = MathHelper.cos(3.0F + limbSwing * speed * 0.1F) * degree * 0.5F * limbSwingAmount;
-			this.hindflipper1.rotateAngleZ = MathHelper.cos(3.0F + limbSwing * speed * 0.1F) * degree * 0.5F * limbSwingAmount;
-			this.hindflipper2.rotateAngleX = MathHelper.cos(limbSwing * speed * 0.1F) * degree * 0.5F * limbSwingAmount;
-			this.hindflipper2.rotateAngleY = MathHelper.cos(limbSwing * speed * 0.1F) * degree * 0.5F * limbSwingAmount;
-			this.hindflipper2.rotateAngleZ = MathHelper.cos(limbSwing * speed * 0.1F) * degree * 0.5F * limbSwingAmount;
-		}
+			this.frontflipper1.xRot = Mth.cos(limbSwing * speed * 0.2F) * degree * 0.5F * limbSwingAmount;
+			this.frontflipper1.yRot = Mth.cos(limbSwing * speed * 0.2F) * degree * 0.5F * limbSwingAmount;
+			this.frontflipper1.zRot = Mth.cos(limbSwing * speed * 0.2F) * degree * 0.5F * limbSwingAmount;
+			this.frontflipper2.xRot = Mth.cos(3.0F + limbSwing * speed * 0.2F) * degree * 0.5F * limbSwingAmount;
+			this.frontflipper2.yRot = Mth.cos(3.0F + limbSwing * speed * 0.2F) * degree * 0.5F * limbSwingAmount;
+			this.frontflipper2.zRot = Mth.cos(3.0F + limbSwing * speed * 0.2F) * degree * 0.5F * limbSwingAmount;
+			this.head.xRot = Mth.cos(limbSwing * speed * 0.2F) * degree * 0.25F * limbSwingAmount;
+			this.hindflipper1.xRot = Mth.cos(limbSwing * speed * 0.2F) * degree * 0.3F * limbSwingAmount;
+			this.hindflipper1.yRot = Mth.cos(limbSwing * speed * 0.2F) * degree * 0.3F * limbSwingAmount;
+			this.hindflipper1.zRot = Mth.cos(3.0F + limbSwing * speed * 0.2F) * degree * 0.3F * limbSwingAmount;
+			this.hindflipper2.xRot = Mth.cos(limbSwing * speed * 0.2F) * degree * 0.3F * limbSwingAmount;
+			this.hindflipper2.yRot = Mth.cos(limbSwing * speed * 0.2F) * degree * 0.3F * limbSwingAmount;
+			this.hindflipper2.yRot = Mth.cos(limbSwing * speed * 0.2F) * degree * -0.3F * limbSwingAmount;
 
+		}
+	}
+	
+	@Override
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		body.render(poseStack, buffer, packedLight, packedOverlay);
+		frontflipper1.render(poseStack, buffer, packedLight, packedOverlay);
+		frontflipper2.render(poseStack, buffer, packedLight, packedOverlay);
 	}
 
-	/**
-	 * This is a helper function from Tabula to set the rotation of model parts
-	 */
-	public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
-		modelRenderer.rotateAngleX = x;
-		modelRenderer.rotateAngleY = y;
-		modelRenderer.rotateAngleZ = z;
+	public void translateToHand(HumanoidArm sideIn, PoseStack matrixStackIn) {
+		float f = sideIn == HumanoidArm.RIGHT ? 1.0F : -1.0F;
+		ModelPart modelrenderer = this.getArmForSide(sideIn);
+		modelrenderer.x += f;
+		modelrenderer.translateAndRotate(matrixStackIn);
+		modelrenderer.x -= f;
+		matrixStackIn.translate(0, 0.1, 0);
+	}
+
+	protected ModelPart getArmForSide(HumanoidArm side) {
+		return side == HumanoidArm.LEFT ? this.head : this.head;
 	}
 }
