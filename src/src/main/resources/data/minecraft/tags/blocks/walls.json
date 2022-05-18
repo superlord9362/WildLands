@@ -1,9 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "wildlands:conglomerate_brick_wall",
-	"wildlands:fine_sandstone_wall",
-	"wildlands:gabbro_wall",
-	"wildlands:dolerite_wall"
-  ]
-}

@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "wildlands:block/gabbro",
-    "top": "wildlands:block/gabbro",
-    "side": "wildlands:block/gabbro"
-  }
-}

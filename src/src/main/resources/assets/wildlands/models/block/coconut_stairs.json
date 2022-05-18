@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/stairs",
-  "textures": {
-    "bottom": "wildlands:block/coconut_planks",
-    "top": "wildlands:block/coconut_planks",
-    "side": "wildlands:block/coconut_planks"
-  }
-}

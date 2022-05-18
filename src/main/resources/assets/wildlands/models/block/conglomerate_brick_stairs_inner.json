@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/inner_stairs",
-  "textures": {
-    "bottom": "wildlands:block/conglomerate_bricks",
-    "top": "wildlands:block/conglomerate_bricks",
-    "side": "wildlands:block/conglomerate_bricks"
-  }
-}

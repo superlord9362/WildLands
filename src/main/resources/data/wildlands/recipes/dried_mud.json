@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "wildlands:mud"
-  },
-  "result": "wildlands:dried_mud",
-  "experience": 0.35,
-  "cookingtime": 200
-}

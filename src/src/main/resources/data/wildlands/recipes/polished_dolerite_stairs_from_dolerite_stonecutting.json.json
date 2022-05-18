@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "wildlands:dolerite"
-  },
-  "result": "wildlands:polished_dolerite_stairs",
-  "count": 1
-}

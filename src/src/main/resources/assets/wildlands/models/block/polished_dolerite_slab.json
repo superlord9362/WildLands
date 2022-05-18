@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "wildlands:block/polished_dolerite",
-    "top": "wildlands:block/polished_dolerite",
-    "side": "wildlands:block/polished_dolerite"
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "wildlands:gabbro"
-  },
-  "result": "wildlands:gabbro_slab",
-  "count": 2
-}
