@@ -15,14 +15,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.common.entity.AnchovyEntity;
+import superlord.wildlands.common.entity.Anchovy;
 
 /**
  * AnchovyModel - superlord9362
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class AnchovyModel<T extends Entity> extends EntityModel<AnchovyEntity> {
+public class AnchovyModel<T extends Entity> extends EntityModel<Anchovy> {
 	private final ModelPart Body;
 	private final ModelPart Tail;
 
@@ -48,7 +48,7 @@ public class AnchovyModel<T extends Entity> extends EntityModel<AnchovyEntity> {
 	}
 
 	@Override
-	public void setupAnim(AnchovyEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Anchovy entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		float f = 1.0F;
         if (!entity.isInWater()) {
            f = 1.5F;

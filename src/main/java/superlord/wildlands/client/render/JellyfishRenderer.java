@@ -10,9 +10,9 @@ import net.minecraft.util.Mth;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.client.ClientEvents;
 import superlord.wildlands.client.model.JellyfishModel;
-import superlord.wildlands.common.entity.JellyfishEntity;
+import superlord.wildlands.common.entity.Jellyfish;
 
-public class JellyfishRenderer extends MobRenderer<JellyfishEntity, JellyfishModel<JellyfishEntity>> {
+public class JellyfishRenderer extends MobRenderer<Jellyfish, JellyfishModel<Jellyfish>> {
 
 	private static final ResourceLocation JELLYFISH_TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/jellyfish/jellyfish.png");
 	private static final ResourceLocation BLUE_JELLYFISH_TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/jellyfish/blue_jellyfish.png");
@@ -22,7 +22,7 @@ public class JellyfishRenderer extends MobRenderer<JellyfishEntity, JellyfishMod
 		super(renderManager, new JellyfishModel<>(renderManager.bakeLayer(ClientEvents.JELLYFISH)), 0.75F);
 	}
 
-	public ResourceLocation getTextureLocation(JellyfishEntity entity) {
+	public ResourceLocation getTextureLocation(Jellyfish entity) {
 		switch(entity.getJellyfishType()) {
 		case 0:
 			return BLUE_JELLYFISH_TEXTURE;
@@ -33,7 +33,7 @@ public class JellyfishRenderer extends MobRenderer<JellyfishEntity, JellyfishMod
 		}
 	}
 
-	protected void setupRotations(JellyfishEntity entityLiving, PoseStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+	protected void setupRotations(Jellyfish entityLiving, PoseStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
 		float f = Mth.lerp(partialTicks, entityLiving.prevjellyfishPitch, entityLiving.jellyfishPitch);
 		float f1 = Mth.lerp(partialTicks, entityLiving.prevjellyfishYaw, entityLiving.jellyfishYaw);
 		matrixStackIn.translate(0.0D, 0.5D, 0.0D);
@@ -46,7 +46,7 @@ public class JellyfishRenderer extends MobRenderer<JellyfishEntity, JellyfishMod
 	/**
 	 * Defines what float the third param in setRotationAngles of ModelBase is
 	 */
-	protected float getBob(JellyfishEntity livingBase, float partialTicks) {
+	protected float getBob(Jellyfish livingBase, float partialTicks) {
 		return Mth.lerp(partialTicks, livingBase.lastTentacleAngle, livingBase.tentacleAngle);
 	}
 

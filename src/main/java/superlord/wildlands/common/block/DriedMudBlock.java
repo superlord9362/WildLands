@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import superlord.wildlands.init.WildLandsBlocks;
+import superlord.wildlands.init.WLBlocks;
 
 public class DriedMudBlock extends Block {
 
@@ -34,7 +34,7 @@ public class DriedMudBlock extends Block {
 
 	protected void tryAbsorb(Level LevelIn, BlockPos pos) {
 		if (this.absorb(LevelIn, pos)) {
-			LevelIn.setBlock(pos, WildLandsBlocks.MUD.get().defaultBlockState(), 2);
+			LevelIn.setBlock(pos, WLBlocks.MUD.get().defaultBlockState(), 2);
 		}
 	}
 	

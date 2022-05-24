@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cross",
-  "textures": {
-    "cross": "wildlands:block/beard_moss_mid"
-  }
-}

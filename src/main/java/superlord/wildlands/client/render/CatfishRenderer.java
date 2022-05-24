@@ -6,9 +6,9 @@ import net.minecraft.resources.ResourceLocation;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.client.ClientEvents;
 import superlord.wildlands.client.model.CatfishModel;
-import superlord.wildlands.common.entity.CatfishEntity;
+import superlord.wildlands.common.entity.Catfish;
 
-public class CatfishRenderer extends MobRenderer<CatfishEntity, CatfishModel<CatfishEntity>> {
+public class CatfishRenderer extends MobRenderer<Catfish, CatfishModel<Catfish>> {
 	
 	private static final ResourceLocation TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/catfish/catfish.png");
 
@@ -17,7 +17,7 @@ public class CatfishRenderer extends MobRenderer<CatfishEntity, CatfishModel<Cat
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(CatfishEntity entity) {
+	public ResourceLocation getTextureLocation(Catfish entity) {
 		return TEXTURE;
 	}
 	

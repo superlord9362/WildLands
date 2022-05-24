@@ -11,28 +11,28 @@ import superlord.wildlands.WildLands;
 import superlord.wildlands.client.ClientEvents;
 import superlord.wildlands.client.model.GrizzlyModel;
 import superlord.wildlands.client.model.GrizzlySittingModel;
-import superlord.wildlands.client.model.SleepingGrizzlyModel;
-import superlord.wildlands.common.entity.GrizzlyEntity;
+import superlord.wildlands.client.model.GrizzlySleepingModel;
+import superlord.wildlands.common.entity.Grizzly;
 
-public class GrizzlyRenderer extends MobRenderer<GrizzlyEntity, EntityModel<GrizzlyEntity>> {
+public class GrizzlyRenderer extends MobRenderer<Grizzly, EntityModel<Grizzly>> {
 	
 	private static final ResourceLocation TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/bear/grizzly.png");
 	private static final ResourceLocation SLEEPING_TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/bear/grizzly_sleeping.png");
 	private static final ResourceLocation HONEY = new ResourceLocation(WildLands.MOD_ID, "textures/entity/bear/grizzly_honey.png");
 	private static GrizzlyModel<?> MODEL;
-	private static SleepingGrizzlyModel<?> SLEEPING ;
+	private static GrizzlySleepingModel<?> SLEEPING ;
 	private static GrizzlySittingModel SITTING;
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public GrizzlyRenderer(EntityRendererProvider.Context renderManager) {
 		super(renderManager, new GrizzlyModel(renderManager.bakeLayer(ClientEvents.GRIZZLY)), 0.9375F);
 		MODEL = new GrizzlyModel(renderManager.bakeLayer(ClientEvents.GRIZZLY));
-		SLEEPING = new SleepingGrizzlyModel(renderManager.bakeLayer(ClientEvents.GRIZZLY_SLEEPING));
+		SLEEPING = new GrizzlySleepingModel(renderManager.bakeLayer(ClientEvents.GRIZZLY_SLEEPING));
 		SITTING = new GrizzlySittingModel(renderManager.bakeLayer(ClientEvents.GRIZZLY_SITTING));
 		this.addLayer(new ItemInHandLayer(this));
 	}
 	
-	public void scale(GrizzlyEntity entityIn, PoseStack matrixStackIn, float partialTickTime) {
+	public void scale(Grizzly entityIn, PoseStack matrixStackIn, float partialTickTime) {
 		if(entityIn.isSleeping()) {
 			model = SLEEPING;
 		} else if (entityIn.isSitting()) {
@@ -45,7 +45,7 @@ public class GrizzlyRenderer extends MobRenderer<GrizzlyEntity, EntityModel<Griz
 		}
 	}
 	
-	public ResourceLocation getTextureLocation(GrizzlyEntity entity) {
+	public ResourceLocation getTextureLocation(Grizzly entity) {
 		if (entity.hasHoney()) {
 			return HONEY;
 		} else if (entity.isSleeping()) {

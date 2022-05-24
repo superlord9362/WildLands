@@ -13,8 +13,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import superlord.wildlands.init.WildLandsBlocks;
-import superlord.wildlands.init.WildLandsEffects;
+import superlord.wildlands.init.WLBlocks;
+import superlord.wildlands.init.WLEffects;
 
 public class JellyBlock extends Block {
 
@@ -64,21 +64,21 @@ public class JellyBlock extends Block {
 	@Override
 	public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
 		if (entityIn instanceof LivingEntity) {
-			((LivingEntity) entityIn).addEffect(new MobEffectInstance(WildLandsEffects.STING.get(), 100));
+			((LivingEntity) entityIn).addEffect(new MobEffectInstance(WLEffects.STING.get(), 100));
 		}
 	}
 	
 	@Override
 	public boolean isStickyBlock(BlockState state)
     {
-        return state.getBlock() == Blocks.SLIME_BLOCK || state.getBlock() == Blocks.HONEY_BLOCK || state.getBlock() == WildLandsBlocks.JELLY_BLOCK.get();
+        return state.getBlock() == Blocks.SLIME_BLOCK || state.getBlock() == Blocks.HONEY_BLOCK || state.getBlock() == WLBlocks.JELLY_BLOCK.get();
     }
 
 	@Override
     public boolean canStickTo(BlockState state, BlockState other)
     {
-        if (state.getBlock() == Blocks.HONEY_BLOCK && other.getBlock() == Blocks.SLIME_BLOCK || state.getBlock() == Blocks.HONEY_BLOCK && other.getBlock() == WildLandsBlocks.JELLY_BLOCK.get()) return false;
-        if (state.getBlock() == Blocks.SLIME_BLOCK && other.getBlock() == Blocks.HONEY_BLOCK || state.getBlock() == Blocks.SLIME_BLOCK && other.getBlock() == WildLandsBlocks.JELLY_BLOCK.get()) return false;
+        if (state.getBlock() == Blocks.HONEY_BLOCK && other.getBlock() == Blocks.SLIME_BLOCK || state.getBlock() == Blocks.HONEY_BLOCK && other.getBlock() == WLBlocks.JELLY_BLOCK.get()) return false;
+        if (state.getBlock() == Blocks.SLIME_BLOCK && other.getBlock() == Blocks.HONEY_BLOCK || state.getBlock() == Blocks.SLIME_BLOCK && other.getBlock() == WLBlocks.JELLY_BLOCK.get()) return false;
         return state.isStickyBlock() || other.isStickyBlock();
     }
 

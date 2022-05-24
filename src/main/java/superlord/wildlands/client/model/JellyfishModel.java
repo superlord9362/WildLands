@@ -15,14 +15,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.common.entity.JellyfishEntity;
+import superlord.wildlands.common.entity.Jellyfish;
 
 /**
  * JellyfishModel - superlord9362
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class JellyfishModel<T extends Entity> extends EntityModel<JellyfishEntity> {
+public class JellyfishModel<T extends Entity> extends EntityModel<Jellyfish> {
 	private final ModelPart JellyFish;
 	private final ModelPart TentaclesFront;
 	private final ModelPart TentaclesBack;
@@ -58,7 +58,7 @@ public class JellyfishModel<T extends Entity> extends EntityModel<JellyfishEntit
 	}
 
 	@Override
-	public void setupAnim(JellyfishEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Jellyfish entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
     	float speed = 1.0f;
     	float degree = 1.0f;
     	this.TentaclesFront.xRot = Mth.cos(limbSwing * speed * 0.05F) * degree * 1.0F * limbSwingAmount;

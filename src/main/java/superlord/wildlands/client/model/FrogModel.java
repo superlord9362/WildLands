@@ -14,14 +14,14 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.common.entity.FrogEntity;
+import superlord.wildlands.common.entity.Frog;
 
 /**
  * Frog - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class FrogModel extends EntityModel<FrogEntity> {
+public class FrogModel extends EntityModel<Frog> {
 	private final ModelPart Body;
 	private final ModelPart LeftLeg;
 	private final ModelPart RightLeg;
@@ -79,7 +79,7 @@ public class FrogModel extends EntityModel<FrogEntity> {
 	}
 
 	@Override
-	public void setupAnim(FrogEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Frog entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		float f = ageInTicks - (float)entity.tickCount;
     	this.jumpRotation = Mth.sin(entity.getJumpCompletion(f) * (float)Math.PI);
         this.LeftLeg.xRot = (limbSwingAmount * 50.0F) * ((float)Math.PI / 180F);

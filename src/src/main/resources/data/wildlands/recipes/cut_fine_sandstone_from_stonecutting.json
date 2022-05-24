@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:stonecutting",
-  "ingredient": {
-    "item": "wildlands:fine_sandstone"
-  },
-  "result": "wildlands:cut_fine_sandstone",
-  "count": 1
-}

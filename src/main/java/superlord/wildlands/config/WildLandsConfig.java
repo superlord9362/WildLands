@@ -15,8 +15,6 @@ public class WildLandsConfig {
 	public static int hammerheadSharkSpawnWeight = 5;
 	public static int octopusSpawnWeight = 3;
 	public static int jellyfishSpawnWeight = 6;
-	public static double bayouScale = 0.1D;
-	public static double burntForestScale = 0.1D;
 	public static int grizzlyBearSpawnWeight = 10;
 	public static boolean superSecretSettings = false;
 	
@@ -35,8 +33,6 @@ public class WildLandsConfig {
 			hammerheadSharkSpawnWeight = WLConfigHolder.SERVER.hammerheadSharkSpawnWeight.get();
 			octopusSpawnWeight = WLConfigHolder.SERVER.octopusSpawnWeight.get();
 			jellyfishSpawnWeight = WLConfigHolder.SERVER.jellyfishSpawnWeight.get();
-			bayouScale = WLConfigHolder.SERVER.bayouScale.get();
-			burntForestScale = WLConfigHolder.SERVER.burntForestScale.get();
 			grizzlyBearSpawnWeight = WLConfigHolder.SERVER.grizzlyBearSpawnWeight.get();
 			superSecretSettings = WLConfigHolder.SERVER.superSecretSettings.get();
 			//clamSpawnWeight = WLConfigHolder.SERVER.clamSpawnWeight.get();

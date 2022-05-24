@@ -18,8 +18,8 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import superlord.wildlands.common.entity.AlligatorEntity;
-import superlord.wildlands.common.entity.FrogEntity;
+import superlord.wildlands.common.entity.Alligator;
+import superlord.wildlands.common.entity.Frog;
 
 public class MudBlock extends Block {
 	protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 14.0D, 16.0D);
@@ -37,7 +37,7 @@ public class MudBlock extends Block {
 			if (itemstack.getItem() != Items.LEATHER_BOOTS) {
 				((Player) entityIn).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 1, 3, false, false));
 			}
-		} else if (!(entityIn instanceof Pig || entityIn instanceof AlligatorEntity || entityIn instanceof FrogEntity) && entityIn instanceof LivingEntity) {
+		} else if (!(entityIn instanceof Pig || entityIn instanceof Alligator || entityIn instanceof Frog) && entityIn instanceof LivingEntity) {
             ((LivingEntity)entityIn).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 1, 3, false, false));
 		} 
 	}

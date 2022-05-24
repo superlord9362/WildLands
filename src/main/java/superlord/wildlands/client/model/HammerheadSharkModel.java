@@ -15,14 +15,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.common.entity.HammerheadEntity;
+import superlord.wildlands.common.entity.Hammerhead;
 
 /**
  * HammerheadSharkModel - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class HammerheadSharkModel<T extends Entity> extends EntityModel<HammerheadEntity> {
+public class HammerheadSharkModel<T extends Entity> extends EntityModel<Hammerhead> {
 	private final ModelPart Body;
 	private final ModelPart Tail;
 
@@ -62,7 +62,7 @@ public class HammerheadSharkModel<T extends Entity> extends EntityModel<Hammerhe
 	}
 
 	@Override
-	public void setupAnim(HammerheadEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Hammerhead entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		float f = 1.0F;
         if (!entity.isInWater()) {
            f = 1.5F;

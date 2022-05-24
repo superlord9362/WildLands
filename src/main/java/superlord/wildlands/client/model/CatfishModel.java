@@ -15,14 +15,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.common.entity.CatfishEntity;
+import superlord.wildlands.common.entity.Catfish;
 
 /**
  * catfish - weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class CatfishModel<T extends Entity> extends EntityModel<CatfishEntity> {
+public class CatfishModel<T extends Entity> extends EntityModel<Catfish> {
 	private final ModelPart Body;
 	private final ModelPart Tail;
 
@@ -60,7 +60,7 @@ public class CatfishModel<T extends Entity> extends EntityModel<CatfishEntity> {
 	}
 
 	@Override
-	public void setupAnim(CatfishEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Catfish entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		float f = 1.0F;
         if (!entity.isInWater()) {
            f = 1.5F;

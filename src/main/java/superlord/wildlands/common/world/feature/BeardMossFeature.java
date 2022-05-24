@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import superlord.wildlands.init.WildLandsBlocks;
+import superlord.wildlands.init.WLBlocks;
 
 public class BeardMossFeature extends Feature<NoneFeatureConfiguration> {
 	private static final Direction[] DIRECTIONS = Direction.values();
@@ -32,7 +32,7 @@ public class BeardMossFeature extends Feature<NoneFeatureConfiguration> {
 			return false;
 		} else {
 			BlockState blockstate = worldgenlevel.getBlockState(blockpos.above());
-			if (!blockstate.is(WildLandsBlocks.CYPRESS_LOG.get()) && !blockstate.is(WildLandsBlocks.CYPRESS_LEAVES.get())) {
+			if (!blockstate.is(WLBlocks.CYPRESS_LOG.get()) && !blockstate.is(WLBlocks.CYPRESS_LEAVES.get())) {
 				return false;
 			} else {
 				this.placeRoofBeardMoss(worldgenlevel, random, blockpos);
@@ -45,7 +45,7 @@ public class BeardMossFeature extends Feature<NoneFeatureConfiguration> {
 	@SuppressWarnings("unused")
 	private void placeRoofCypressLog(LevelAccessor p_67384_, Random p_67385_, BlockPos p_67386_) {
 
-		p_67384_.setBlock(p_67386_, WildLandsBlocks.CYPRESS_LOG.get().defaultBlockState(), 2);
+		p_67384_.setBlock(p_67386_, WLBlocks.CYPRESS_LOG.get().defaultBlockState(), 2);
 		BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 		BlockPos.MutableBlockPos blockpos$mutableblockpos1 = new BlockPos.MutableBlockPos();
 
@@ -56,7 +56,7 @@ public class BeardMossFeature extends Feature<NoneFeatureConfiguration> {
 
 				for(Direction direction : DIRECTIONS) {
 					BlockState blockstate = p_67384_.getBlockState(blockpos$mutableblockpos1.setWithOffset(blockpos$mutableblockpos, direction));
-					if (blockstate.is(WildLandsBlocks.CYPRESS_LOG.get()) || blockstate.is(WildLandsBlocks.CYPRESS_LEAVES.get())) {
+					if (blockstate.is(WLBlocks.CYPRESS_LOG.get()) || blockstate.is(WLBlocks.CYPRESS_LEAVES.get())) {
 						++j;
 					}
 
@@ -80,7 +80,7 @@ public class BeardMossFeature extends Feature<NoneFeatureConfiguration> {
 			blockpos$mutableblockpos.setWithOffset(p_67402_, p_67401_.nextInt(8) - p_67401_.nextInt(8), p_67401_.nextInt(2) - p_67401_.nextInt(7), p_67401_.nextInt(8) - p_67401_.nextInt(8));
 			if (p_67400_.isEmptyBlock(blockpos$mutableblockpos)) {
 				BlockState blockstate = p_67400_.getBlockState(blockpos$mutableblockpos.above());
-				if (blockstate.is(WildLandsBlocks.CYPRESS_LEAVES.get()) || blockstate.is(WildLandsBlocks.CYPRESS_LOG.get())) {
+				if (blockstate.is(WLBlocks.CYPRESS_LEAVES.get()) || blockstate.is(WLBlocks.CYPRESS_LOG.get())) {
 					int j = Mth.nextInt(p_67401_, 1, 8);
 					if (p_67401_.nextInt(6) == 0) {
 						j *= 2;
@@ -101,11 +101,11 @@ public class BeardMossFeature extends Feature<NoneFeatureConfiguration> {
 		for(int i = 0; i <= p_67380_; ++i) {
 			if (p_67377_.isEmptyBlock(p_67379_)) {
 				if (i == p_67380_ || !p_67377_.isEmptyBlock(p_67379_.below())) {
-					p_67377_.setBlock(p_67379_, WildLandsBlocks.BEARD_MOSS_TOP.get().defaultBlockState().setValue(GrowingPlantHeadBlock.AGE, Integer.valueOf(Mth.nextInt(p_67378_, p_67381_, p_67382_))), 2);
+					p_67377_.setBlock(p_67379_, WLBlocks.BEARD_MOSS_TOP.get().defaultBlockState().setValue(GrowingPlantHeadBlock.AGE, Integer.valueOf(Mth.nextInt(p_67378_, p_67381_, p_67382_))), 2);
 					break;
 				}
 
-				p_67377_.setBlock(p_67379_, WildLandsBlocks.BEARD_MOSS.get().defaultBlockState(), 2);
+				p_67377_.setBlock(p_67379_, WLBlocks.BEARD_MOSS.get().defaultBlockState(), 2);
 			}
 
 			p_67379_.move(Direction.DOWN);

@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import superlord.wildlands.common.entity.CoconutEntity;
+import superlord.wildlands.common.entity.item.Coconut;
 
 public class CoconutItem extends StandingAndWallBlockItem {
 
@@ -33,7 +33,7 @@ public class CoconutItem extends StandingAndWallBlockItem {
 		if (raytraceresult.getType() == BlockHitResult.Type.MISS || raytraceresult.getType() == BlockHitResult.Type.ENTITY) {
 			world.playSound((Player)null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 			if (!world.isClientSide) {
-				CoconutEntity coconut = new CoconutEntity(world, player);
+				Coconut coconut = new Coconut(world, player);
 				coconut.setItem(stack);
 				coconut.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
 				world.addFreshEntity(coconut);
@@ -61,8 +61,8 @@ public class CoconutItem extends StandingAndWallBlockItem {
 		return worldIn.clip(new ClipContext(vector3d, vector3d1, blockMode, ClipContext.Fluid.ANY, player));
 	}
 
-	public CoconutEntity createSoulBullet(Level world, ItemStack stack, LivingEntity shooter) {
-		CoconutEntity coconut = new CoconutEntity(world, shooter);
+	public Coconut createSoulBullet(Level world, ItemStack stack, LivingEntity shooter) {
+		Coconut coconut = new Coconut(world, shooter);
 		return coconut;
 	}
 

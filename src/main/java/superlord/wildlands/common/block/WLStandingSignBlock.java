@@ -5,7 +5,7 @@ import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.WoodType;
-import superlord.wildlands.common.entity.tile.WLSignTileEntity;
+import superlord.wildlands.common.entity.block.WLSignBlockEntity;
 
 public class WLStandingSignBlock extends StandingSignBlock {
 	
@@ -15,7 +15,7 @@ public class WLStandingSignBlock extends StandingSignBlock {
 	
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new WLSignTileEntity(pos, state);
+		return new WLSignBlockEntity(pos, state);
 	}
 
 }

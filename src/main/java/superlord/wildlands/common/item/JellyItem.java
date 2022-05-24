@@ -12,7 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import superlord.wildlands.common.entity.JellyBallEntity;
+import superlord.wildlands.common.entity.item.JellyBall;
 
 public class JellyItem extends Item {
 
@@ -25,7 +25,7 @@ public class JellyItem extends Item {
 		Random random = new Random();
 		world.playSound((Player)null, player.getX(), player.getY(), player.getZ(), SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (random.nextFloat() * 0.4F + 0.8F));
 		if (!world.isClientSide) {
-			JellyBallEntity jellyball = new JellyBallEntity(world, player);
+			JellyBall jellyball = new JellyBall(world, player);
 			jellyball.getItem();
 			jellyball.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
 			world.addFreshEntity(jellyball);
@@ -37,8 +37,8 @@ public class JellyItem extends Item {
 		return InteractionResultHolder.sidedSuccess(stack, world.isClientSide());
 	}
 
-	public JellyBallEntity createJellyBall(Level world, ItemStack stack, LivingEntity shooter) {
-		JellyBallEntity jellyball = new JellyBallEntity(world, shooter);
+	public JellyBall createJellyBall(Level world, ItemStack stack, LivingEntity shooter) {
+		JellyBall jellyball = new JellyBall(world, shooter);
 		return jellyball;
 	}
 

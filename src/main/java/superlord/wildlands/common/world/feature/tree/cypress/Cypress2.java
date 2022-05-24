@@ -1,4 +1,4 @@
-package superlord.wildlands.common.world.feature.tree.cypress;
+	package superlord.wildlands.common.world.feature.tree.cypress;
 
 import java.util.Random;
 import java.util.Set;
@@ -9,7 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import superlord.wildlands.common.world.feature.config.WLTreeConfig;
+import superlord.wildlands.common.world.feature.tree.WLTreeConfig;
 import superlord.wildlands.common.world.feature.util.WLAbstractTreeFeature;
 
 public class Cypress2 extends WLAbstractTreeFeature<WLTreeConfig> {

@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.GrowingPlantHeadBlock;
 import net.minecraft.world.level.block.NetherVines;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import superlord.wildlands.init.WildLandsBlocks;
+import superlord.wildlands.init.WLBlocks;
 
 public class BeardMossTopBlock extends GrowingPlantHeadBlock {
    protected static final VoxelShape SHAPE = Block.box(4.0D, 9.0D, 4.0D, 12.0D, 16.0D, 12.0D);
@@ -26,7 +26,7 @@ public class BeardMossTopBlock extends GrowingPlantHeadBlock {
    }
 
    protected Block getBodyBlock() {
-      return WildLandsBlocks.BEARD_MOSS.get();
+      return WLBlocks.BEARD_MOSS.get();
    }
 
    protected boolean canGrowInto(BlockState state) {

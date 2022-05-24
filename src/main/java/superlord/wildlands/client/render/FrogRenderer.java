@@ -10,9 +10,9 @@ import superlord.wildlands.WildLands;
 import superlord.wildlands.client.ClientEvents;
 import superlord.wildlands.client.model.FrogModel;
 import superlord.wildlands.client.model.TadpoleModel;
-import superlord.wildlands.common.entity.FrogEntity;
+import superlord.wildlands.common.entity.Frog;
 
-public class FrogRenderer extends MobRenderer<FrogEntity, EntityModel<FrogEntity>> {
+public class FrogRenderer extends MobRenderer<Frog, EntityModel<Frog>> {
 
 	private static final ResourceLocation FROG_TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/frog/frog.png");
 	private static final ResourceLocation TADPOLE_TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/frog/tadpole.png");
@@ -26,7 +26,7 @@ public class FrogRenderer extends MobRenderer<FrogEntity, EntityModel<FrogEntity
 		TADPOLE = new TadpoleModel(renderManager.bakeLayer(ClientEvents.TADPOLE));
 	}
 
-	public void scale(FrogEntity entityIn, PoseStack matrixStackIn, float partialTickTime) {
+	public void scale(Frog entityIn, PoseStack matrixStackIn, float partialTickTime) {
 		if(entityIn.isBaby()) {
 			model = TADPOLE;
 		}  else {
@@ -34,7 +34,7 @@ public class FrogRenderer extends MobRenderer<FrogEntity, EntityModel<FrogEntity
 		}
 	}
 
-	public ResourceLocation getTextureLocation(FrogEntity entity) {
+	public ResourceLocation getTextureLocation(Frog entity) {
 		if (entity.isBaby()) {
 			return TADPOLE_TEXTURE;
 		} else {

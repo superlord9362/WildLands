@@ -14,14 +14,14 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.common.entity.OctopusEntity;
+import superlord.wildlands.common.entity.Octopus;
 
 /**
  * Octopus - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class OctopusModel<T extends OctopusEntity> extends EntityModel<OctopusEntity> {
+public class OctopusModel<T extends Octopus> extends EntityModel<Octopus> {
 	private final ModelPart Body;
 	private final ModelPart Tentacle1;
 	private final ModelPart Tentacle2;
@@ -95,7 +95,7 @@ public class OctopusModel<T extends OctopusEntity> extends EntityModel<OctopusEn
 	}
 
 	@Override
-	public void setupAnim(OctopusEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Octopus entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		if (entity.isScared()) {
     		float speed = 1.0f;
     		float degree = 1.0f;

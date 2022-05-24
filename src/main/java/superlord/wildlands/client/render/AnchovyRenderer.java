@@ -10,9 +10,9 @@ import net.minecraft.util.Mth;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.client.ClientEvents;
 import superlord.wildlands.client.model.AnchovyModel;
-import superlord.wildlands.common.entity.AnchovyEntity;
+import superlord.wildlands.common.entity.Anchovy;
 
-public class AnchovyRenderer extends MobRenderer<AnchovyEntity, AnchovyModel<AnchovyEntity>> {
+public class AnchovyRenderer extends MobRenderer<Anchovy, AnchovyModel<Anchovy>> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/fish/anchovy.png");
 
@@ -21,11 +21,11 @@ public class AnchovyRenderer extends MobRenderer<AnchovyEntity, AnchovyModel<Anc
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(AnchovyEntity entity) {
+	public ResourceLocation getTextureLocation(Anchovy entity) {
 		return TEXTURE;
 	}
 
-	protected void setupRotations(AnchovyEntity entityLiving, PoseStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+	protected void setupRotations(Anchovy entityLiving, PoseStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
 		super.setupRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
 		float f = 4.3F * Mth.sin(0.6F * ageInTicks);
 		matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(f));

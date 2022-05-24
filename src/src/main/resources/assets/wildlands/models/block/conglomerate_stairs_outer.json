@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/outer_stairs",
-  "textures": {
-    "bottom": "wildlands:block/conglomerate",
-    "top": "wildlands:block/conglomerate",
-    "side": "wildlands:block/conglomerate"
-  }
-}

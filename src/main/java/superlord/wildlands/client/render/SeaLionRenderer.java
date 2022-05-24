@@ -9,9 +9,9 @@ import net.minecraft.resources.ResourceLocation;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.client.ClientEvents;
 import superlord.wildlands.client.model.SeaLionModel;
-import superlord.wildlands.common.entity.SeaLionEntity;
+import superlord.wildlands.common.entity.SeaLion;
 
-public class SeaLionRenderer extends MobRenderer<SeaLionEntity, SeaLionModel<SeaLionEntity>> {
+public class SeaLionRenderer extends MobRenderer<SeaLion, SeaLionModel<SeaLion>> {
 	
 	private static final ResourceLocation TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/sea_lion.png");
 
@@ -21,14 +21,14 @@ public class SeaLionRenderer extends MobRenderer<SeaLionEntity, SeaLionModel<Sea
 		this.addLayer(new ItemInHandLayer(this));
 	}
 	
-	public void scale(SeaLionEntity entityIn, PoseStack matrixStackIn, float partialTickTime) {
+	public void scale(SeaLion entityIn, PoseStack matrixStackIn, float partialTickTime) {
 		if (entityIn.isBaby()) {
 			matrixStackIn.scale(0.5F, 0.5F, 0.5F);
 		}
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(SeaLionEntity entity) {
+	public ResourceLocation getTextureLocation(SeaLion entity) {
 		return TEXTURE;
 	}
 	

@@ -15,14 +15,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.common.entity.FrogEntity;
+import superlord.wildlands.common.entity.Frog;
 
 /**
  * TadpoleModel - superlord9362
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class TadpoleModel<T extends LivingEntity> extends EntityModel<FrogEntity> {
+public class TadpoleModel<T extends LivingEntity> extends EntityModel<Frog> {
 	private final ModelPart Tad;
 	private final ModelPart Pole;
 
@@ -46,7 +46,7 @@ public class TadpoleModel<T extends LivingEntity> extends EntityModel<FrogEntity
 	}
 
 	@Override
-	public void setupAnim(FrogEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Frog entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		float speed = 0.8f;
 		float degree = 1.0f;
 		this.Tad.xRot = headPitch * ((float)Math.PI / 180F);

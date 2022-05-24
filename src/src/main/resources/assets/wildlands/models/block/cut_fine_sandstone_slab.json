@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/slab",
-  "textures": {
-    "bottom": "wildlands:block/smooth_fine_sandstone",
-    "top": "wildlands:block/smooth_fine_sandstone",
-    "side": "wildlands:block/cut_fine_sandstone"
-  }
-}

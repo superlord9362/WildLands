@@ -7,9 +7,9 @@ import net.minecraft.resources.ResourceLocation;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.client.ClientEvents;
 import superlord.wildlands.client.model.CrabModel;
-import superlord.wildlands.common.entity.CrabEntity;
+import superlord.wildlands.common.entity.Crab;
 
-public class CrabRenderer extends MobRenderer<CrabEntity, EntityModel<CrabEntity>> {
+public class CrabRenderer extends MobRenderer<Crab, EntityModel<Crab>> {
 	
 	private static final ResourceLocation TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/crab/crab.png");
 	private static final ResourceLocation FIGHTER = new ResourceLocation(WildLands.MOD_ID, "textures/entity/crab/crab_fighter.png");
@@ -19,7 +19,7 @@ public class CrabRenderer extends MobRenderer<CrabEntity, EntityModel<CrabEntity
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(CrabEntity entity) {
+	public ResourceLocation getTextureLocation(Crab entity) {
 		if (entity.isFighter()) {
 			return FIGHTER;
 		} else {

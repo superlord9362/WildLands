@@ -12,7 +12,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.CountConfiguration;
-import superlord.wildlands.init.WildLandsBlocks;
+import superlord.wildlands.init.WLBlocks;
 
 public class UrchinFeature extends Feature<CountConfiguration> {
 
@@ -30,7 +30,7 @@ public class UrchinFeature extends Feature<CountConfiguration> {
 		int k = worldgenlevel.getHeight(Heightmap.Types.OCEAN_FLOOR, pos.getX() + i, pos.getZ() + j);
 		BlockPos blockpos = new BlockPos(pos.getX() + i, k, pos.getZ() + j);
 		if (worldgenlevel.getBlockState(blockpos).is(Blocks.WATER)) {
-			BlockState URCHIN = WildLandsBlocks.URCHIN.get().defaultBlockState();
+			BlockState URCHIN = WLBlocks.URCHIN.get().defaultBlockState();
 			if (URCHIN.canSurvive(worldgenlevel, blockpos)) {
 				worldgenlevel.setBlock(blockpos, URCHIN, 2);
 				return true;	

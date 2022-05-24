@@ -10,13 +10,13 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import superlord.wildlands.common.entity.WLBoat;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("unused")
-public class WLBoatModel extends ListModel<Boat> {
+public class WLBoatModel extends ListModel<WLBoat> {
    private static final String LEFT_PADDLE = "left_paddle";
 private static final String RIGHT_PADDLE = "right_paddle";
    private static final String WATER_PATCH = "water_patch";
@@ -60,7 +60,7 @@ private static final String RIGHT_PADDLE = "right_paddle";
       return LayerDefinition.create(meshdefinition, 128, 64);
    }
 
-   public void setupAnim(Boat p_102269_, float p_102270_, float p_102271_, float p_102272_, float p_102273_, float p_102274_) {
+   public void setupAnim(WLBoat p_102269_, float p_102270_, float p_102271_, float p_102272_, float p_102273_, float p_102274_) {
       animatePaddle(p_102269_, 0, this.leftPaddle, p_102270_);
       animatePaddle(p_102269_, 1, this.rightPaddle, p_102270_);
    }
@@ -73,7 +73,7 @@ private static final String RIGHT_PADDLE = "right_paddle";
       return this.waterPatch;
    }
 
-   private static void animatePaddle(Boat p_170465_, int p_170466_, ModelPart p_170467_, float p_170468_) {
+   private static void animatePaddle(WLBoat p_170465_, int p_170466_, ModelPart p_170467_, float p_170468_) {
       float f = p_170465_.getRowingTime(p_170466_, p_170468_);
       p_170467_.xRot = Mth.clampedLerp((-(float)Math.PI / 3F), -0.2617994F, (Mth.sin(-f) + 1.0F) / 2.0F);
       p_170467_.yRot = Mth.clampedLerp((-(float)Math.PI / 4F), ((float)Math.PI / 4F), (Mth.sin(-f + 1.0F) + 1.0F) / 2.0F);

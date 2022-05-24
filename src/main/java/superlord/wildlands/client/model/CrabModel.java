@@ -14,14 +14,14 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.common.entity.CrabEntity;
+import superlord.wildlands.common.entity.Crab;
 
 /**
  * Crab - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class CrabModel extends EntityModel<CrabEntity> {
+public class CrabModel extends EntityModel<Crab> {
 	private final ModelPart leg3l;
 	private final ModelPart leg1l;
 	private final ModelPart leg2l;
@@ -105,7 +105,7 @@ public class CrabModel extends EntityModel<CrabEntity> {
 	}
 
 	@Override
-	public void setupAnim(CrabEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Crab entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		float speed = 1.0f;
 		float degree = 1.0f;
 		if (entity.isPartying()) {

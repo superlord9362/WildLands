@@ -6,9 +6,9 @@ import net.minecraft.resources.ResourceLocation;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.client.ClientEvents;
 import superlord.wildlands.client.model.OctopusModel;
-import superlord.wildlands.common.entity.OctopusEntity;
+import superlord.wildlands.common.entity.Octopus;
 
-public class OctopusRenderer extends MobRenderer<OctopusEntity, OctopusModel<OctopusEntity>> {
+public class OctopusRenderer extends MobRenderer<Octopus, OctopusModel<Octopus>> {
 
 	private static final ResourceLocation TEXTURE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/octopus/octopus.png");
 	private static final ResourceLocation BLUE = new ResourceLocation(WildLands.MOD_ID, "textures/entity/octopus/octopus_blue_coral.png");
@@ -29,7 +29,7 @@ public class OctopusRenderer extends MobRenderer<OctopusEntity, OctopusModel<Oct
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(OctopusEntity entity) {
+	public ResourceLocation getTextureLocation(Octopus entity) {
 		if (entity.isOnBlueCoral()) {
 			return BLUE;
 		} else if (entity.isOnDirt()) {

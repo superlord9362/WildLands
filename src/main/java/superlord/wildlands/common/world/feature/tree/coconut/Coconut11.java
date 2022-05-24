@@ -10,7 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import superlord.wildlands.common.world.feature.config.WLTreeConfig;
+import superlord.wildlands.common.world.feature.tree.WLTreeConfig;
 import superlord.wildlands.common.world.feature.util.WLAbstractTreeFeature;
 
 public class Coconut11 extends WLAbstractTreeFeature<WLTreeConfig> {

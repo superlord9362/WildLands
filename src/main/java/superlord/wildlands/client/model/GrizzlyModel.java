@@ -17,14 +17,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.common.entity.GrizzlyEntity;
+import superlord.wildlands.common.entity.Grizzly;
 
 /**
  * Grizzly - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class GrizzlyModel<T extends Entity> extends EntityModel<GrizzlyEntity> implements ArmedModel {
+public class GrizzlyModel<T extends Entity> extends EntityModel<Grizzly> implements ArmedModel {
 	private final ModelPart Body;
 	private final ModelPart FrontLeftLeg;
 	private final ModelPart FrontRightLeg;
@@ -68,7 +68,7 @@ public class GrizzlyModel<T extends Entity> extends EntityModel<GrizzlyEntity> i
 	}
 
 	@Override
-	public void setupAnim(GrizzlyEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Grizzly entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		float speed = 1.0f;
 		float degree = 1.0f;
 		this.Body.zRot = Mth.cos(limbSwing * speed * 0.15F) * degree * 0.1F * limbSwingAmount;

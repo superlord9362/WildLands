@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.init.WildLandsBlocks;
+import superlord.wildlands.init.WLBlocks;
 
 public class SmolderingLogBlock extends RotatedPillarBlock {
 	protected final ParticleOptions particleData;
@@ -69,7 +69,7 @@ public class SmolderingLogBlock extends RotatedPillarBlock {
 
 	protected void tryAbsorb(Level worldIn, BlockPos pos) {
 		if (this.absorb(worldIn, pos)) {
-			worldIn.setBlock(pos, WildLandsBlocks.CHARRED_LOG.get().defaultBlockState(), 2);
+			worldIn.setBlock(pos, WLBlocks.CHARRED_LOG.get().defaultBlockState(), 2);
 			AreaEffectCloud areaeffectcloudentity = new AreaEffectCloud(worldIn, pos.getX(), pos.getY(), pos.getZ());
 			areaeffectcloudentity.setRadius(1.5F);
 			areaeffectcloudentity.setRadiusOnUse(-0.5F);

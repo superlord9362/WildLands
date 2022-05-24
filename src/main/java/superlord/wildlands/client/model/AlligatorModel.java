@@ -15,14 +15,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.common.entity.AlligatorEntity;
+import superlord.wildlands.common.entity.Alligator;
 
 /**
  * Alligator - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class AlligatorModel<T extends Entity> extends EntityModel<AlligatorEntity> {
+public class AlligatorModel<T extends Entity> extends EntityModel<Alligator> {
 	private final ModelPart Body;
 	private final ModelPart Head;
 	private final ModelPart leftlegfront;
@@ -85,7 +85,7 @@ public class AlligatorModel<T extends Entity> extends EntityModel<AlligatorEntit
 	}
 
 	@Override
-	public void setupAnim(AlligatorEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(Alligator entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		float speed = 1.0f;
 		float degree = 1.0f;
 		if (entityIn.isInWater()) {

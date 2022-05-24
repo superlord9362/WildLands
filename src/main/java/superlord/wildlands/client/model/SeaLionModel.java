@@ -17,14 +17,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.common.entity.SeaLionEntity;
+import superlord.wildlands.common.entity.SeaLion;
 
 /**
  * Sea Lion - Weastian
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class SeaLionModel<T extends Entity> extends EntityModel<SeaLionEntity> implements ArmedModel {
+public class SeaLionModel<T extends Entity> extends EntityModel<SeaLion> implements ArmedModel {
 	private final ModelPart body;
 	private final ModelPart frontflipper1;
 	private final ModelPart frontflipper2;
@@ -68,7 +68,7 @@ public class SeaLionModel<T extends Entity> extends EntityModel<SeaLionEntity> i
 	}
 
 	@Override
-	public void setupAnim(SeaLionEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+	public void setupAnim(SeaLion entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.head.xRot = headPitch * ((float)Math.PI / 180F);
 		this.head.yRot = netHeadYaw * ((float)Math.PI / 180F);
 		float speed = 1.0f;

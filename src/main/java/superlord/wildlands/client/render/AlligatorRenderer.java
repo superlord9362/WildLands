@@ -14,9 +14,9 @@ import superlord.wildlands.WildLands;
 import superlord.wildlands.client.ClientEvents;
 import superlord.wildlands.client.model.AlligatorModel;
 import superlord.wildlands.client.model.AlligatorThreatenModel;
-import superlord.wildlands.common.entity.AlligatorEntity;
+import superlord.wildlands.common.entity.Alligator;
 
-public class AlligatorRenderer extends MobRenderer<AlligatorEntity, EntityModel<AlligatorEntity>> {
+public class AlligatorRenderer extends MobRenderer<Alligator, EntityModel<Alligator>> {
 
     public static final Map<Integer, ResourceLocation> TEXTURES = Util.make(Maps.newHashMap(), (hashMap) -> {
     	hashMap.put(0, new ResourceLocation(WildLands.MOD_ID, "textures/entity/gator/gator_green.png"));
@@ -34,7 +34,7 @@ public class AlligatorRenderer extends MobRenderer<AlligatorEntity, EntityModel<
 		WARNING = new AlligatorThreatenModel(renderManager.bakeLayer(ClientEvents.ALLIGATOR_WARNING));
 	}
 
-	public void scale(AlligatorEntity entityIn, PoseStack matrixStackIn, float partialTickTime) {
+	public void scale(Alligator entityIn, PoseStack matrixStackIn, float partialTickTime) {
 		if (entityIn.isWarning()) {
 			model = WARNING;
 		}  else {
@@ -45,7 +45,7 @@ public class AlligatorRenderer extends MobRenderer<AlligatorEntity, EntityModel<
 		}
 	}
 
-	public ResourceLocation getTextureLocation(AlligatorEntity entity) {
+	public ResourceLocation getTextureLocation(Alligator entity) {
         return TEXTURES.getOrDefault(entity.getVariant(), TEXTURES.get(0));
 	}
 

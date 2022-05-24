@@ -23,7 +23,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import superlord.wildlands.common.entity.AlligatorEntity;
+import superlord.wildlands.common.entity.Alligator;
 
 public class WLBucketItem extends BucketItem {
 
@@ -61,8 +61,8 @@ public class WLBucketItem extends BucketItem {
 	private void spawn(ServerLevel world, ItemStack stack, BlockPos pos) {
 		Entity entity = this.entityTypeSupplier.get().spawn(world, stack, (Player)null, pos, MobSpawnType.BUCKET, true, false);
 		if(entity != null) {
-			if (entity instanceof AlligatorEntity) {
-				((AlligatorEntity)entity).setAge(-24000);
+			if (entity instanceof Alligator) {
+				((Alligator)entity).setAge(-24000);
 			}
 			if (entity instanceof AbstractFish) {
 				((AbstractFish)entity).setFromBucket(true);

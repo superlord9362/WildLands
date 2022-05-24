@@ -35,9 +35,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.shapes.BitSetDiscreteVoxelShape;
 import net.minecraft.world.phys.shapes.DiscreteVoxelShape;
-import superlord.wildlands.common.util.fastnoise.FastNoise;
-import superlord.wildlands.common.world.feature.FeatureGenUtil;
-import superlord.wildlands.common.world.feature.config.WLTreeConfig;
+import superlord.wildlands.common.world.feature.tree.WLTreeConfig;	
 
 public abstract class WLAbstractTreeFeature<TFC extends WLTreeConfig> extends Feature<TFC> {
 

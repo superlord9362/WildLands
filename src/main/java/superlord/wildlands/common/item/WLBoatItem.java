@@ -17,14 +17,14 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import superlord.wildlands.WildLands;
-import superlord.wildlands.common.entity.WLBoatEntity;
+import superlord.wildlands.common.entity.WLBoat;
 
 public class WLBoatItem extends Item {
 	
 	private static final Predicate<Entity> RIDERS = EntitySelector.NO_SPECTATORS.and(Entity::canBeCollidedWith);
-	private final WLBoatEntity.WLType type;
+	private final WLBoat.WLType type;
 	
-	public WLBoatItem(WLBoatEntity.WLType type, Item.Properties properties) {
+	public WLBoatItem(WLBoat.WLType type, Item.Properties properties) {
 		super(properties);
 		this.type = type;
 	}
@@ -48,15 +48,15 @@ public class WLBoatItem extends Item {
 				}
 			}
 			if (raytraceresult.getType() == HitResult.Type.BLOCK) {
-				WLBoatEntity wlBoatEntity = new WLBoatEntity(world, raytraceresult.getLocation().x, raytraceresult.getLocation().y, raytraceresult.getLocation().z);
-				WildLands.LOGGER.info("BOAT ENTITY: " + wlBoatEntity.getEntityData());
-				wlBoatEntity.setWLBoatType(this.type);
-				wlBoatEntity.yRotO = player.yRotO;
-				if (!world.noCollision(wlBoatEntity, wlBoatEntity.getBoundingBox().inflate(-0.1D))) {
+				WLBoat WLBoat = new WLBoat(world, raytraceresult.getLocation().x, raytraceresult.getLocation().y, raytraceresult.getLocation().z);
+				WildLands.LOGGER.info("BOAT ENTITY: " + WLBoat.getEntityData());
+				WLBoat.setWLBoatType(this.type);
+				WLBoat.yRotO = player.yRotO;
+				if (!world.noCollision(WLBoat, WLBoat.getBoundingBox().inflate(-0.1D))) {
 					return InteractionResultHolder.fail(itemstack);
 				} else {
 					if (!world.isClientSide) {
-						world.addFreshEntity(wlBoatEntity);
+						world.addFreshEntity(WLBoat);
 						if (!player.isCreative()) {
 							itemstack.shrink(1);
 						}
