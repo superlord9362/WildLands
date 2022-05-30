@@ -1,8 +1,11 @@
 package superlord.wildlands.client.render;
 
+import javax.annotation.Nullable;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -48,6 +51,12 @@ public class JellyfishRenderer extends MobRenderer<Jellyfish, JellyfishModel<Jel
 	 */
 	protected float getBob(Jellyfish livingBase, float partialTicks) {
 		return Mth.lerp(partialTicks, livingBase.lastTentacleAngle, livingBase.tentacleAngle);
+	}
+	
+	@Nullable
+	protected RenderType getRenderType(Jellyfish p_113806_, boolean p_113807_, boolean p_113808_, boolean p_113809_) {
+        ResourceLocation resourcelocation = this.getTextureLocation(p_113806_);
+        return RenderType.entityTranslucent(resourcelocation, false);
 	}
 
 }

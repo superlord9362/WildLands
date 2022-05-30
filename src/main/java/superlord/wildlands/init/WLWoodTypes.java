@@ -1,37 +1,11 @@
 package superlord.wildlands.init;
 
-import java.util.Set;
-import java.util.stream.Stream;
-
-import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import superlord.wildlands.WildLands;
 
-public class WLWoodTypes extends WoodType {
-	
-	private static final Set<WoodType> VALUES = new ObjectArraySet<>();
-	public static final WoodType CYPRESS = WLWoodTypes.register(new WLWoodTypes("bald_cypress"));
-	public static final WoodType COCONUT = WLWoodTypes.register(new WLWoodTypes("coconut"));
-	public static final WoodType CHARRED = WLWoodTypes.register(new WLWoodTypes("charred"));
-	
-	private final String name;
-	
-	protected WLWoodTypes(String name) {
-		super(name);
-		this.name = name;
-	}
-	
-	public static WoodType register(WoodType type) {
-		WLWoodTypes.VALUES.add(type);
-		return type;
-	}
-	
-	public static Stream<WoodType> getValues() {
-		return WLWoodTypes.VALUES.stream();
-	}
-	
-	@Override
-	public String name() {
-		return this.name;
-	}
-
+public class WLWoodTypes {
+	public static final WoodType CYPRESS = WoodType.create(new ResourceLocation(WildLands.MOD_ID, "bald_cypress").toString());
+	public static final WoodType COCONUT = WoodType.create(new ResourceLocation(WildLands.MOD_ID, "coconut").toString());
+	public static final WoodType CHARRED = WoodType.create(new ResourceLocation(WildLands.MOD_ID, "charred").toString());
 }

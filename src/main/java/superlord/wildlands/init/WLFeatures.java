@@ -12,10 +12,9 @@ import superlord.wildlands.common.world.feature.BeardMossFeature;
 import superlord.wildlands.common.world.feature.LargeRockFeature;
 import superlord.wildlands.common.world.feature.StarFishFeature;
 import superlord.wildlands.common.world.feature.UrchinFeature;
-import superlord.wildlands.common.world.feature.tree.WLTreeConfig;
-import superlord.wildlands.common.world.feature.tree.cypress.Cypress1;
-import superlord.wildlands.common.world.feature.tree.cypress.Cypress2;
-import superlord.wildlands.common.world.feature.tree.cypress.Cypress3;
+import superlord.wildlands.common.world.feature.tree.BurntTreeFeature;
+import superlord.wildlands.common.world.feature.tree.CoconutTreeFeature;
+import superlord.wildlands.common.world.feature.tree.CypressTreeFeature;
 
 public class WLFeatures {
 	
@@ -26,9 +25,9 @@ public class WLFeatures {
     public static final RegistryObject<LargeRockFeature> LARGE_ROCK = FEATURES.register("large_rock", () -> new LargeRockFeature(BlockStateConfiguration.CODEC.stable()));
 
     public static final RegistryObject<BeardMossFeature> BEARD_MOSS = FEATURES.register("beard_moss", () -> new BeardMossFeature(NoneFeatureConfiguration.CODEC.stable()));
+    public static final RegistryObject<CypressTreeFeature> CYPRESS_TREE = FEATURES.register("cypress_tree", () -> new CypressTreeFeature(NoneFeatureConfiguration.CODEC.stable()));
+    public static final RegistryObject<CoconutTreeFeature> COCONUT_TREE = FEATURES.register("coconut_tree", () -> new CoconutTreeFeature(NoneFeatureConfiguration.CODEC.stable()));
     
-    public static final RegistryObject<Cypress1> CYPRESS_TREE_1 = FEATURES.register("cypress_tree_1", () -> new Cypress1(WLTreeConfig.CODEC.stable())); 
-    public static final RegistryObject<Cypress2> CYPRESS_TREE_2 = FEATURES.register("cypress_tree_2", () -> new Cypress2(WLTreeConfig.CODEC.stable())); 
-    public static final RegistryObject<Cypress3> CYPRESS_TREE_3 = FEATURES.register("cypress_tree_3", () -> new Cypress3(WLTreeConfig.CODEC.stable())); 
-
+    public static final RegistryObject<BurntTreeFeature> CHARRED_TREE = FEATURES.register("charred_tree", () -> new BurntTreeFeature(NoneFeatureConfiguration.CODEC.stable()));
+    
 }

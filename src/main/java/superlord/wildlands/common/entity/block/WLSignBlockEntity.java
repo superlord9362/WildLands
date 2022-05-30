@@ -13,7 +13,7 @@ public class WLSignBlockEntity extends SignBlockEntity {
 
     @Override
     public BlockEntityType<?> getType() {
-        return WLBlockEntities.WL_SIGNS.get();
+        return WLBlockEntities.SIGN.get();
     }
 
 }

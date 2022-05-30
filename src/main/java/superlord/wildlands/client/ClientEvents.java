@@ -4,16 +4,16 @@ import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.color.item.ItemColors;
 import net.minecraft.client.model.BoatModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.blockentity.SignRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.client.model.AlligatorModel;
 import superlord.wildlands.client.model.AlligatorThreatenModel;
@@ -40,13 +40,12 @@ import superlord.wildlands.client.render.JellyfishRenderer;
 import superlord.wildlands.client.render.OctopusRenderer;
 import superlord.wildlands.client.render.SeaLionRenderer;
 import superlord.wildlands.client.render.WLBoatRenderer;
-import superlord.wildlands.client.render.block.WLSignRenderer;
 import superlord.wildlands.client.render.item.CoconutRenderer;
 import superlord.wildlands.client.render.item.JellyBallRenderer;
 import superlord.wildlands.common.item.WLSpawnEggItem;
 import superlord.wildlands.init.WLBlockEntities;
-import superlord.wildlands.init.WLBlocks;
 import superlord.wildlands.init.WLEntities;
+import superlord.wildlands.init.WLWoodTypes;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = WildLands.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -66,9 +65,6 @@ public class ClientEvents {
 	public static ModelLayerLocation JELLYFISH = new ModelLayerLocation(new ResourceLocation(WildLands.MOD_ID, "jellyfish"), "jellyfish");
 	public static ModelLayerLocation OCTOPUS = new ModelLayerLocation(new ResourceLocation(WildLands.MOD_ID, "octopus"), "octopus");
 	public static ModelLayerLocation SEA_LION = new ModelLayerLocation(new ResourceLocation(WildLands.MOD_ID, "sea_lion"), "sea_lion");
-	public static ModelLayerLocation CYPRESS_SIGN = new ModelLayerLocation(new ResourceLocation(WildLands.MOD_ID, "cypress_sign"), "cypress_sign");
-	public static ModelLayerLocation CHARRED_SIGN = new ModelLayerLocation(new ResourceLocation(WildLands.MOD_ID, "charred_sign"), "charred_sign");
-	public static ModelLayerLocation COCONUT_SIGN = new ModelLayerLocation(new ResourceLocation(WildLands.MOD_ID, "coconut_sign"), "coconut_sign");
 
 	@SubscribeEvent
 	public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
@@ -89,10 +85,19 @@ public class ClientEvents {
 	}
 	
 	@SubscribeEvent
-    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(WLBlockEntities.WL_SIGNS.get(), WLSignRenderer::new);
+    public static void init(final FMLClientSetupEvent event) {
+        event.enqueueWork(() -> {
+        	Sheets.addWoodType(WLWoodTypes.CYPRESS);
+        	Sheets.addWoodType(WLWoodTypes.COCONUT);
+        	Sheets.addWoodType(WLWoodTypes.CHARRED);
+        });
 	}
-
+	
+	@SubscribeEvent
+    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(WLBlockEntities.SIGN.get(), SignRenderer::new);
+	}
+	
 	@SubscribeEvent
 	public static void registerLayerDefinition(EntityRenderersEvent.RegisterLayerDefinitions event) {
 		event.registerLayerDefinition(ALLIGATOR, AlligatorModel::createBodyLayer);
@@ -112,9 +117,6 @@ public class ClientEvents {
         event.registerLayerDefinition(WLBoatRenderer.COCONUT_LAYER_LOCATION, BoatModel::createBodyModel);
         event.registerLayerDefinition(WLBoatRenderer.CHARRED_LAYER_LOCATION, BoatModel::createBodyModel);
         event.registerLayerDefinition(WLBoatRenderer.CYPRESS_LAYER_LOCATION, BoatModel::createBodyModel);
-        event.registerLayerDefinition(CYPRESS_SIGN, WLSignRenderer::createSignLayer);
-        event.registerLayerDefinition(CHARRED_SIGN, WLSignRenderer::createSignLayer);
-        event.registerLayerDefinition(COCONUT_SIGN, WLSignRenderer::createSignLayer);
 	}
 
 	@SubscribeEvent
@@ -123,15 +125,6 @@ public class ClientEvents {
 		ItemColors handler = event.getItemColors();
 		ItemColor eggColor = (stack, tintIndex) -> ((WLSpawnEggItem) stack.getItem()).getColor(tintIndex);
 		for (WLSpawnEggItem e : WLSpawnEggItem.UNADDED_EGGS) handler.register(eggColor, e);
-	}
-
-	@SubscribeEvent
-	public static void registerModels(ModelRegistryEvent event)
-	{
-		ItemBlockRenderTypes.setRenderLayer(WLBlocks.CYPRESS_SIGN.get(), RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(WLBlocks.CYPRESS_WALL_SIGN.get(), RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(WLBlocks.COCONUT_SIGN.get(), RenderType.cutout());
-		ItemBlockRenderTypes.setRenderLayer(WLBlocks.COCONUT_WALL_SIGN.get(), RenderType.cutout());
 	}
 
 }

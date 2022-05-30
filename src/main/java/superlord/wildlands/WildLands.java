@@ -47,7 +47,9 @@ import superlord.wildlands.init.WLEntities;
 import superlord.wildlands.init.WLFeatures;
 import superlord.wildlands.init.WLItems;
 import superlord.wildlands.init.WLPlacedFeatures;
+import superlord.wildlands.init.WLSurfaceRules;
 import terrablender.api.Regions;
+import terrablender.api.SurfaceRuleManager;
 
 @Mod(WildLands.MOD_ID)
 @Mod.EventBusSubscriber(modid = WildLands.MOD_ID)
@@ -103,6 +105,7 @@ public class WildLands {
 	};
 
 	private void commonSetup(FMLCommonSetupEvent event) {
+        event.enqueueWork(this::registerTerraBlender);
 		SpawnPlacements.register(WLEntities.CATFISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules);
 		SpawnPlacements.register(WLEntities.ANCHOVY.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules);
 		SpawnPlacements.register(WLEntities.ALLIGATOR.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Alligator::canAlligatorSpawn);
@@ -169,7 +172,7 @@ public class WildLands {
 		if (name.equals("beach")) {
 			event.getSpawns().addSpawn(MobCategory.AMBIENT, new MobSpawnSettings.SpawnerData(WLEntities.CRAB.get(), WildLandsConfig.crabSpawnWeight, 1, 3));
 			event.getSpawns().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(WLEntities.SEA_LION.get(), WildLandsConfig.seaLionSpawnWeight, 3, 6));
-			//event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(WLPlacedFeatures.COCONUT_TREES);
+			event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(WLPlacedFeatures.PLACED_COCONUT_TREES.getHolder().orElseThrow());
 		}
 		if (name.equals("swamp")) {
 			event.getSpawns().addSpawn(MobCategory.AMBIENT, new MobSpawnSettings.SpawnerData(WLEntities.FROG.get(), WildLandsConfig.frogSpawnWeight, 1, 3));
@@ -179,17 +182,26 @@ public class WildLands {
 			event.getSpawns().addSpawn(MobCategory.AMBIENT, new MobSpawnSettings.SpawnerData(WLEntities.ANCHOVY.get(), WildLandsConfig.anchovySpawnWeight, 2, 3));
 		}
 	}
-	
+
+	private void registerTerraBlender() {
+		try {
+				SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, WildLands.MOD_ID,  WLSurfaceRules.OVERWORLD_SURFACE_RULES);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
 	public static ResourceLocation createLocation(String path) {
-        return new ResourceLocation(MOD_ID, path);
-    }
+		return new ResourceLocation(MOD_ID, path);
+	}
 
-    public static ResourceLocation createLocation(ResourceKey<?> path) {
-        return path.location();
-    }
+	public static ResourceLocation createLocation(ResourceKey<?> path) {
+		return path.location();
+	}
 
-    public static ResourceLocation createLocation(Holder<?> holder) {
-        return createLocation(holder.unwrapKey().orElseThrow());
-    }
+	public static ResourceLocation createLocation(Holder<?> holder) {
+		return createLocation(holder.unwrapKey().orElseThrow());
+	}
 
 }

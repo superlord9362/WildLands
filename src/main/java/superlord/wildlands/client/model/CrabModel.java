@@ -61,45 +61,35 @@ public class CrabModel extends EntityModel<Crab> {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition leg3l = partdefinition.addOrReplaceChild("leg3l", CubeListBuilder.create().texOffs(0, 0).addBox(2.5F, -3.0F, -4.0F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(0, 0).addBox(-4.5F, -3.0F, -3.5F, 9.0F, 5.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 19.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
-		PartDefinition leg1l = partdefinition.addOrReplaceChild("leg1l", CubeListBuilder.create().texOffs(0, 0).addBox(-0.5F, -3.0F, -4.0F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition eye1 = body.addOrReplaceChild("eye1", CubeListBuilder.create().texOffs(25, 0).addBox(-1.0F, -4.0F, -1.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(1.5F, -3.0F, -1.5F));
 
-		PartDefinition leg2l = partdefinition.addOrReplaceChild("leg2l", CubeListBuilder.create().texOffs(0, 0).addBox(-3.5F, -3.0F, -4.0F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition eye2 = body.addOrReplaceChild("eye2", CubeListBuilder.create().texOffs(25, 0).addBox(-1.0F, -4.0F, -1.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-1.5F, -3.0F, -1.5F));
 
-		PartDefinition body = partdefinition.addOrReplaceChild("body", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition claw1r = body.addOrReplaceChild("claw1r", CubeListBuilder.create().texOffs(0, 23).addBox(-1.0F, 0.0F, -6.0F, 2.0F, 3.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(7.0F, 0.0F, -3.0F, 0.0F, 1.0928F, 0.0F));
 
-		PartDefinition body_r1 = body.addOrReplaceChild("body_r1", CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -8.0F, -3.5F, 9.0F, 5.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
+		PartDefinition claw2r = claw1r.addOrReplaceChild("claw2r", CubeListBuilder.create().texOffs(0, 14).addBox(-1.0F, -2.0F, -6.0F, 2.0F, 3.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		PartDefinition eye1 = body.addOrReplaceChild("eye1", CubeListBuilder.create().texOffs(25, 0).addBox(-1.0F, -4.0F, -0.5F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-2.0F, -8.0F, 2.0F, 0.0F, 1.5708F, 0.0F));
+		PartDefinition claw1l = body.addOrReplaceChild("claw1l", CubeListBuilder.create().texOffs(32, 19).addBox(-1.0F, 0.0F, -6.0F, 2.0F, 3.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-7.0F, 0.0F, -3.0F, 0.0F, -1.0928F, 0.0F));
 
-		PartDefinition claw1r = body.addOrReplaceChild("claw1r", CubeListBuilder.create().texOffs(0, 23).addBox(-0.5F, 0.0F, -6.0F, 2.0F, 3.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-4.0F, -5.0F, 7.0F, 0.0F, 0.4718F, 0.0F));
+		PartDefinition claw2l = claw1l.addOrReplaceChild("claw2l", CubeListBuilder.create().texOffs(10, 17).addBox(-1.0F, -2.0F, -6.0F, 2.0F, 3.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		PartDefinition claw2r = claw1r.addOrReplaceChild("claw2r", CubeListBuilder.create(), PartPose.offset(1.0F, 0.0F, -1.0F));
+		PartDefinition bigclaw1 = body.addOrReplaceChild("bigclaw1", CubeListBuilder.create().texOffs(17, 19).addBox(-1.5F, 0.0F, -9.0F, 3.0F, 4.0F, 9.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-8.0F, -1.0F, 0.0F, 0.0911F, -0.6374F, 0.0F));
 
-		PartDefinition claw2r_r1 = claw2r.addOrReplaceChild("claw2r_r1", CubeListBuilder.create().texOffs(0, 14).addBox(-0.5F, -2.0F, -6.0F, 2.0F, 3.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.0F, 0.0F, 1.0F, -0.1F, 0.0F, 0.0F));
+		PartDefinition bigclaw2 = bigclaw1.addOrReplaceChild("bigclaw2", CubeListBuilder.create().texOffs(23, 6).addBox(-1.5F, -3.0F, -9.0F, 3.0F, 4.0F, 9.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		PartDefinition claw1l = body.addOrReplaceChild("claw1l", CubeListBuilder.create().texOffs(32, 19).addBox(-0.75F, 0.0F, 0.0F, 2.0F, 3.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-3.75F, -5.0F, -6.0F, 0.0F, -0.4718F, 0.0F));
+		PartDefinition leg1l = partdefinition.addOrReplaceChild("leg1l", CubeListBuilder.create().texOffs(0, 0).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 21.0F, -4.0F));
 
-		PartDefinition claw2l = claw1l.addOrReplaceChild("claw2l", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition leg2l = partdefinition.addOrReplaceChild("leg2l", CubeListBuilder.create().texOffs(0, 0).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(3.0F, 21.0F, -4.0F));
 
-		PartDefinition claw2l_r1 = claw2l.addOrReplaceChild("claw2l_r1", CubeListBuilder.create().texOffs(10, 17).addBox(-0.75F, -2.0F, 0.0F, 2.0F, 3.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0937F, 0.0F, 0.0F));
+		PartDefinition leg3l = partdefinition.addOrReplaceChild("leg3l", CubeListBuilder.create().texOffs(0, 0).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(-3.0F, 21.0F, -4.0F));
 
-		PartDefinition eye2 = body.addOrReplaceChild("eye2", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition leg1r = partdefinition.addOrReplaceChild("leg1r", CubeListBuilder.create().texOffs(0, 0).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 21.0F, 4.0F));
 
-		PartDefinition eye2_r1 = eye2.addOrReplaceChild("eye2_r1", CubeListBuilder.create().texOffs(25, 0).addBox(-1.0F, -4.0F, -1.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.5F, -8.0F, -1.0F, 0.0F, 1.5708F, 0.0F));
+		PartDefinition leg2r = partdefinition.addOrReplaceChild("leg2r", CubeListBuilder.create().texOffs(0, 0).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(3.0F, 21.0F, 4.0F));
 
-		PartDefinition bigclaw1 = body.addOrReplaceChild("bigclaw1", CubeListBuilder.create().texOffs(17, 19).addBox(-1.0F, 0.0F, 0.0F, 3.0F, 4.0F, 9.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-4.0F, -6.0F, -9.0F, 0.0F, -0.65F, 0.0F));
-
-		PartDefinition bigclaw2 = bigclaw1.addOrReplaceChild("bigclaw2", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
-
-		PartDefinition bigclaw2_r1 = bigclaw2.addOrReplaceChild("bigclaw2_r1", CubeListBuilder.create().texOffs(23, 6).addBox(-1.5F, -3.0F, 0.0F, 3.0F, 4.0F, 9.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.5F, 0.0F, 0.0F, 0.1F, 0.0F, 0.0F));
-
-		PartDefinition leg3r = partdefinition.addOrReplaceChild("leg3r", CubeListBuilder.create().texOffs(0, 0).addBox(2.5F, -3.0F, -4.0F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 8.0F));
-
-		PartDefinition leg1r = partdefinition.addOrReplaceChild("leg1r", CubeListBuilder.create().texOffs(0, 0).addBox(-0.5F, -3.0F, 4.0F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
-
-		PartDefinition leg2r = partdefinition.addOrReplaceChild("leg2r", CubeListBuilder.create().texOffs(0, 0).addBox(-3.5F, -3.0F, 4.0F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition leg3r = partdefinition.addOrReplaceChild("leg3r", CubeListBuilder.create().texOffs(0, 0).addBox(-0.5F, 0.0F, -0.5F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(-3.0F, 21.0F, 4.0F));
 
 		return LayerDefinition.create(meshdefinition, 48, 32);
 	}
@@ -132,11 +122,11 @@ public class CrabModel extends EntityModel<Crab> {
 			this.eye1.zRot = 0;
 			this.eye2.zRot = 0;
 			this.claw1l.xRot = 0;
-			this.claw1l.yRot = 1.1F;
+			this.claw1l.yRot = -1.1F;
 			this.bigclaw1.xRot = 0;
-			this.bigclaw1.yRot = 0.65F;
+			this.bigclaw1.yRot = -0.65F;
 			this.claw1r.xRot = 0;
-			this.claw1r.yRot = -1.1F;
+			this.claw1r.yRot = 1.1F;
 			this.claw2r.xRot = 0;
 			this.claw2l.xRot = 0;
 			this.bigclaw2.xRot = 0;

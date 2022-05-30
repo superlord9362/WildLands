@@ -108,11 +108,11 @@ public class Crab extends Animal {
 	}
 
 	public void aiStep() {
-		super.aiStep();
-		if (this.jukebox == null || !this.jukebox.closerToCenterThan(this.position(), 3.46D) || !this.level.getBlockState(this.jukebox).is(Blocks.JUKEBOX)) {
+	      if (this.jukebox == null || !this.jukebox.closerToCenterThan(this.position(), 3.46D) || !this.level.getBlockState(this.jukebox).is(Blocks.JUKEBOX)) {
 			this.crabRave = false;
 			this.jukebox = null;
 		}
+		super.aiStep();
 	}
 
 	public boolean canBreatheUnderwater() {

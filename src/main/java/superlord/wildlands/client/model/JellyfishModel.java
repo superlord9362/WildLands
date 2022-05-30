@@ -42,17 +42,17 @@ public class JellyfishModel<T extends Entity> extends EntityModel<Jellyfish> {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition JellyFish = partdefinition.addOrReplaceChild("JellyFish", CubeListBuilder.create().texOffs(24, 31).addBox(-5.0F, -16.0F, -5.0F, 10.0F, 7.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition JellyFish = partdefinition.addOrReplaceChild("JellyFish", CubeListBuilder.create().texOffs(24, 31).addBox(-10.0F, 0.0F, 0.0F, 10.0F, 7.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(5.0F, 8.0F, -5.0F));
 
-		PartDefinition Cape = JellyFish.addOrReplaceChild("Cape", CubeListBuilder.create().texOffs(0, 0).addBox(-8.0F, -18.0F, -8.0F, 16.0F, 10.0F, 16.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition TentaclesRight = JellyFish.addOrReplaceChild("TentaclesRight", CubeListBuilder.create().texOffs(0, 32).addBox(0.0F, 0.0F, -4.0F, 0.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(1.0F, 8.0F, 5.0F));
 
-		PartDefinition TentaclesRight = JellyFish.addOrReplaceChild("TentaclesRight", CubeListBuilder.create().texOffs(0, 32).addBox(-6.0F, -8.0F, -4.0F, 0.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition TentaclesFront = JellyFish.addOrReplaceChild("TentaclesFront", CubeListBuilder.create().texOffs(0, 40).addBox(-4.0F, 0.0F, 0.0F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(-5.0F, 8.0F, -1.0F));
 
-		PartDefinition TentaclesFront = JellyFish.addOrReplaceChild("TentaclesFront", CubeListBuilder.create().texOffs(0, 40).addBox(-4.0F, -8.0F, -6.0F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition TentaclesBack = JellyFish.addOrReplaceChild("TentaclesBack", CubeListBuilder.create().texOffs(0, 40).addBox(-4.0F, 0.0F, 0.0F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(-5.0F, 8.0F, 11.0F));
 
-		PartDefinition TentaclesBack = JellyFish.addOrReplaceChild("TentaclesBack", CubeListBuilder.create().texOffs(0, 40).addBox(-4.0F, -8.0F, 6.0F, 8.0F, 8.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition Cape = JellyFish.addOrReplaceChild("Cape", CubeListBuilder.create().texOffs(0, 0).addBox(-13.0F, -2.0F, -3.0F, 16.0F, 10.0F, 16.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
-		PartDefinition TentaclesLeft = JellyFish.addOrReplaceChild("TentaclesLeft", CubeListBuilder.create().texOffs(0, 32).addBox(6.0F, -8.0F, -4.0F, 0.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition TentaclesLeft = JellyFish.addOrReplaceChild("TentaclesLeft", CubeListBuilder.create().texOffs(0, 32).addBox(0.0F, 0.0F, -4.0F, 0.0F, 8.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(-11.0F, 8.0F, 5.0F));
 
 		return LayerDefinition.create(meshdefinition, 64, 48);
 	}
@@ -63,8 +63,8 @@ public class JellyfishModel<T extends Entity> extends EntityModel<Jellyfish> {
     	float degree = 1.0f;
     	this.TentaclesFront.xRot = Mth.cos(limbSwing * speed * 0.05F) * degree * 1.0F * limbSwingAmount;
     	this.TentaclesBack.xRot = Mth.cos(3.0F + limbSwing * speed * 0.05F) * degree * 1.0F * limbSwingAmount;
-    	this.TentaclesRight.zRot = Mth.cos(3.0F + limbSwing * speed * 0.05F) * degree * 1.0F * limbSwingAmount;
-    	this.TentaclesLeft.zRot = Mth.cos(limbSwing * speed * 0.05F) * degree * 1.0F * limbSwingAmount;
+    	this.TentaclesRight.zRot = -Mth.cos(3.0F + limbSwing * speed * 0.05F) * degree * 1.0F * limbSwingAmount;
+    	this.TentaclesLeft.zRot = -Mth.cos(limbSwing * speed * 0.05F) * degree * 1.0F * limbSwingAmount;
 	}
 
 	@Override

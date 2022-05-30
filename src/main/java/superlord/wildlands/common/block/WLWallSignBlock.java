@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import superlord.wildlands.common.entity.block.WLSignBlockEntity;
 
 public class WLWallSignBlock extends WallSignBlock {
-
 	public WLWallSignBlock(Properties properties, WoodType type) {
 		super(properties, type);
 	}

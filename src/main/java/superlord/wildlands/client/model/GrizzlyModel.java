@@ -46,26 +46,27 @@ public class GrizzlyModel<T extends Entity> extends EntityModel<Grizzly> impleme
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().texOffs(0, 0).addBox(-11.0F, -28.0F, -13.0F, 22.0F, 18.0F, 27.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().texOffs(0, 0).addBox(-11.0F, -9.0F, -20.0F, 22.0F, 18.0F, 27.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 5.0F, 7.0F));
 
-		PartDefinition FrontLeftLeg = partdefinition.addOrReplaceChild("FrontLeftLeg", CubeListBuilder.create().texOffs(100, 44).addBox(2.0F, -10.0F, -10.0F, 7.0F, 10.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition FrontLeftLeg = partdefinition.addOrReplaceChild("FrontLeftLeg", CubeListBuilder.create().texOffs(100, 44).addBox(-3.0F, 0.0F, -3.0F, 7.0F, 10.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(-6.0F, 14.0F, -7.0F));
 
-		PartDefinition FrontRightLeg = partdefinition.addOrReplaceChild("FrontRightLeg", CubeListBuilder.create().texOffs(100, 27).addBox(-9.0F, -10.0F, -10.0F, 7.0F, 10.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition FrontRightLeg = partdefinition.addOrReplaceChild("FrontRightLeg", CubeListBuilder.create().texOffs(100, 27).addBox(-4.0F, 0.0F, -3.0F, 7.0F, 10.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(6.0F, 14.0F, -7.0F));
 
-		PartDefinition HindLeftLeg = partdefinition.addOrReplaceChild("HindLeftLeg", CubeListBuilder.create().texOffs(50, 45).addBox(2.0F, -10.0F, 7.0F, 7.0F, 10.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition HindLeftLeg = partdefinition.addOrReplaceChild("HindLeftLeg", CubeListBuilder.create().texOffs(50, 45).addBox(-3.0F, 0.0F, -3.0F, 7.0F, 10.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(-6.0F, 14.0F, 10.0F));
 
-		PartDefinition HindRightLeg = partdefinition.addOrReplaceChild("HindRightLeg", CubeListBuilder.create().texOffs(50, 45).addBox(-9.0F, -10.0F, 7.0F, 7.0F, 10.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition HindRightLeg = partdefinition.addOrReplaceChild("HindRightLeg", CubeListBuilder.create().texOffs(50, 45).addBox(-4.0F, 0.0F, -3.0F, 7.0F, 10.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(6.0F, 14.0F, 10.0F));
 
-		PartDefinition Head = partdefinition.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(71, 3).addBox(-8.0F, -24.0F, -24.0F, 16.0F, 13.0F, 11.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition Head = partdefinition.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(71, 3).addBox(-8.0F, -6.0F, -11.0F, 16.0F, 13.0F, 11.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 6.0F, -13.0F));
 
-		PartDefinition Snout = Head.addOrReplaceChild("Snout", CubeListBuilder.create().texOffs(78, 45).addBox(-3.0F, 0.0F, -16.0F, 6.0F, 6.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -17.0F, -13.0F));
+		PartDefinition Snout = Head.addOrReplaceChild("Snout", CubeListBuilder.create().texOffs(78, 45).addBox(-3.0F, 0.0F, -5.0F, 6.0F, 6.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 1.0F, -11.0F));
 
-		PartDefinition RightEar = Head.addOrReplaceChild("RightEar", CubeListBuilder.create().texOffs(0, 0).addBox(-7.0F, -27.0F, -18.0F, 4.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition RightEar = Head.addOrReplaceChild("RightEar", CubeListBuilder.create().texOffs(0, 0).addBox(-2.0F, -3.0F, -1.0F, 4.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(5.0F, -6.0F, -4.0F));
 
-		PartDefinition LeftEar = Head.addOrReplaceChild("LeftEar", CubeListBuilder.create().texOffs(0, 0).addBox(3.0F, -27.0F, -18.0F, 4.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition LeftEar = Head.addOrReplaceChild("LeftEar", CubeListBuilder.create().texOffs(0, 0).addBox(-2.0F, -3.0F, -1.0F, 4.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(-5.0F, -6.0F, -4.0F));
 
 		return LayerDefinition.create(meshdefinition, 128, 64);
 	}
+
 
 	@Override
 	public void setupAnim(Grizzly entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {

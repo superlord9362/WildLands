@@ -9,6 +9,7 @@ import superlord.wildlands.WildLands;
 public class WLBiomes {
 
 	public static final ResourceKey<Biome> BAYOU = register("bayou");
+	public static final ResourceKey<Biome> BURNT_FOREST = register("burnt_forest");
 
 	private static ResourceKey<Biome> register(String name) {
 		return ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation(WildLands.MOD_ID, name));

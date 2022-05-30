@@ -27,7 +27,7 @@ public class DuckWeedBlock extends BushBlock {
 
 	@Override
 	public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-		if (!(entityIn instanceof Boat)) {
+		if (!(entityIn instanceof Boat) && entityIn instanceof LivingEntity) {
             ((LivingEntity)entityIn).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 1, 3, false, false));
 		}
 	}

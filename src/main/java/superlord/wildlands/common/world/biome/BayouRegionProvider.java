@@ -30,7 +30,8 @@ public class BayouRegionProvider extends Region {
 	
 	@Override
     public void addBiomes(Registry<Biome> registry, Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> mapper) {
-		this.addBiome(mapper, Climate.parameters(0.5F, 0.7F, 0.3F, 1F, 0, 0F, 0), WLBiomes.BAYOU);
+		this.addBiome(mapper, Climate.parameters(0.5F, 0.7F, 0.3F, 1F, 0.5F, 0F, 0), WLBiomes.BAYOU);
+		this.addBiome(mapper, Climate.parameters(0.9F, 0.0F, 1F, 0.8F, 0.7F, 0F, 0), WLBiomes.BURNT_FOREST);
 	}
 
 }

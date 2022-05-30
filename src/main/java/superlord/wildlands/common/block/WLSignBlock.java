@@ -1,16 +1,16 @@
 package superlord.wildlands.common.block;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.SignBlock;
+import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import superlord.wildlands.common.entity.block.WLSignBlockEntity;
 
-public class WLSignBlock extends SignBlock {
+public class WLSignBlock extends StandingSignBlock {
 
-	protected WLSignBlock(Properties p_56273_, WoodType p_56274_) {
-		super(p_56273_, p_56274_);
+	public WLSignBlock(Properties properties, WoodType type) {
+		super(properties, type);
 	}
 
 	@Override

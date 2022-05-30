@@ -44,34 +44,34 @@ public class BayouBiomeDecorator {
 				.generationSettings(biomeBuilder.build())
 				.build();
 	}
-	
-    public static Biome decorateBayou() {
-    	 MobSpawnSettings.Builder spawnSettings = new MobSpawnSettings.Builder();
-         BiomeGenerationSettings.Builder biomeFeatures = new BiomeGenerationSettings.Builder();
-         MobSpawnSettings.Builder mobspawnsettings$builder = new MobSpawnSettings.Builder();
-         BiomeDefaultFeatures.farmAnimals(mobspawnsettings$builder);
-         BiomeDefaultFeatures.commonSpawns(mobspawnsettings$builder);
-         mobspawnsettings$builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityType.SLIME, 1, 1, 1));
-         BiomeGenerationSettings.Builder biomegenerationsettings$builder = new BiomeGenerationSettings.Builder();
-         BiomeDefaultFeatures.addFossilDecoration(biomegenerationsettings$builder);
-         globalOverworldGeneration(biomegenerationsettings$builder);
-         BiomeDefaultFeatures.addDefaultOres(biomegenerationsettings$builder);
-         BiomeDefaultFeatures.addSwampClayDisk(biomegenerationsettings$builder);
-         BiomeDefaultFeatures.addSwampVegetation(biomegenerationsettings$builder);
-         BiomeDefaultFeatures.addDefaultMushrooms(biomegenerationsettings$builder);
-         BiomeDefaultFeatures.addSwampExtraVegetation(biomegenerationsettings$builder);
-         biomegenerationsettings$builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, AquaticPlacements.SEAGRASS_SWAMP);
-         return biome(Biome.Precipitation.RAIN, Biome.BiomeCategory.FOREST, 0.5F, 0.7F, 3031057, 7172665, spawnSettings, biomeFeatures);
-    }
-    
-    private static void globalOverworldGeneration(BiomeGenerationSettings.Builder p_194870_) {
-        BiomeDefaultFeatures.addDefaultCarversAndLakes(p_194870_);
-        BiomeDefaultFeatures.addDefaultCrystalFormations(p_194870_);
-        BiomeDefaultFeatures.addDefaultMonsterRoom(p_194870_);
-        BiomeDefaultFeatures.addDefaultUndergroundVariety(p_194870_);
-        BiomeDefaultFeatures.addDefaultSprings(p_194870_);
-        BiomeDefaultFeatures.addSurfaceFreezing(p_194870_);
-     }
+
+	public static Biome decorateBayou() {
+		MobSpawnSettings.Builder spawnSettings = new MobSpawnSettings.Builder();
+		BiomeGenerationSettings.Builder biomeFeatures = new BiomeGenerationSettings.Builder();
+		MobSpawnSettings.Builder mobspawnsettings$builder = new MobSpawnSettings.Builder();
+		BiomeDefaultFeatures.farmAnimals(mobspawnsettings$builder);
+		BiomeDefaultFeatures.commonSpawns(mobspawnsettings$builder);
+		mobspawnsettings$builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityType.SLIME, 1, 1, 1));
+		BiomeGenerationSettings.Builder biomegenerationsettings$builder = new BiomeGenerationSettings.Builder();
+		BiomeDefaultFeatures.addFossilDecoration(biomegenerationsettings$builder);
+		globalOverworldGeneration(biomegenerationsettings$builder);
+		BiomeDefaultFeatures.addDefaultOres(biomegenerationsettings$builder);
+		BiomeDefaultFeatures.addSwampClayDisk(biomegenerationsettings$builder);
+		BiomeDefaultFeatures.addSwampVegetation(biomegenerationsettings$builder);
+		BiomeDefaultFeatures.addDefaultMushrooms(biomegenerationsettings$builder);
+		BiomeDefaultFeatures.addSwampExtraVegetation(biomegenerationsettings$builder);
+		biomegenerationsettings$builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, AquaticPlacements.SEAGRASS_SWAMP);
+		return biome(Biome.Precipitation.RAIN, Biome.BiomeCategory.SWAMP, 0.5F, 0.7F, 3031057, 7172665, spawnSettings, biomeFeatures);
+	}
+
+	private static void globalOverworldGeneration(BiomeGenerationSettings.Builder p_194870_) {
+		BiomeDefaultFeatures.addDefaultCarversAndLakes(p_194870_);
+		BiomeDefaultFeatures.addDefaultCrystalFormations(p_194870_);
+		BiomeDefaultFeatures.addDefaultMonsterRoom(p_194870_);
+		BiomeDefaultFeatures.addDefaultUndergroundVariety(p_194870_);
+		BiomeDefaultFeatures.addDefaultSprings(p_194870_);
+		BiomeDefaultFeatures.addSurfaceFreezing(p_194870_);
+	}
 
 
 }

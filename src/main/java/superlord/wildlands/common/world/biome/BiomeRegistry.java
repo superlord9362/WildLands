@@ -14,6 +14,7 @@ public class BiomeRegistry {
 	public static void registerBiomes(RegistryEvent.Register<Biome> event) {
 		IForgeRegistry<Biome> registry = event.getRegistry();
 		registry.register(BayouBiomeDecorator.decorateBayou().setRegistryName(WLBiomes.BAYOU.location()));
+		registry.register(BurntForestBiomeDecorator.decorateBurntForest().setRegistryName(WLBiomes.BURNT_FOREST.location()));
 	}
 
 }

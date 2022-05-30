@@ -36,30 +36,31 @@ public class HammerheadSharkModel<T extends Entity> extends EntityModel<Hammerhe
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -10.0F, -10.0F, 12.0F, 10.0F, 20.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+		PartDefinition Body = partdefinition.addOrReplaceChild("Body", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -5.0F, -8.0F, 12.0F, 10.0F, 20.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 19.0F, -2.0F));
 
-		PartDefinition Tail = Body.addOrReplaceChild("Tail", CubeListBuilder.create().texOffs(0, 0).addBox(-3.0F, -8.0F, 9.0F, 6.0F, 6.0F, 16.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition Tail = Body.addOrReplaceChild("Tail", CubeListBuilder.create().texOffs(0, 48).addBox(-3.0F, -3.0F, 0.0F, 6.0F, 6.0F, 16.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 1.0F, 12.0F));
 
-		PartDefinition Caudalfin = Tail.addOrReplaceChild("Caudalfin", CubeListBuilder.create().texOffs(0, 0).addBox(-0.5F, -16.0F, 25.0F, 1.0F, 17.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition Caudalfin = Tail.addOrReplaceChild("Caudalfin", CubeListBuilder.create().texOffs(72, 28).addBox(-0.5F, -11.0F, 0.0F, 1.0F, 17.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 15.0F));
 
-		PartDefinition Dorsal2 = Caudalfin.addOrReplaceChild("Dorsal2", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -4.0F, 0.0F, 1.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.5F, -8.0F, 13.0F, -0.3187F, 0.0F, 0.0F));
+		PartDefinition Dorsal2 = Tail.addOrReplaceChild("Dorsal2", CubeListBuilder.create().texOffs(45, 11).addBox(-0.5F, -4.0F, 0.0F, 1.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -3.0F, 3.0F, -0.3187F, 0.0F, 0.0F));
 
-		PartDefinition pelvicleft = Tail.addOrReplaceChild("pelvicleft", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -4.0F, 0.0F, 1.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(4.0F, 1.0F, 11.0F, 0.2731F, 0.0F, -0.3187F));
+		PartDefinition pelvicleft = Tail.addOrReplaceChild("pelvicleft", CubeListBuilder.create().texOffs(28, 31).addBox(-1.0F, 0.0F, 0.0F, 1.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-2.0F, 3.0F, 0.0F, 0.2731F, 0.0F, 0.3187F));
 
-		PartDefinition pelvicright = Tail.addOrReplaceChild("pelvicright", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -4.0F, 0.0F, 1.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-3.0F, 1.0F, 11.0F, 0.2731F, 0.0F, 0.3187F));
+		PartDefinition pelvicright = Tail.addOrReplaceChild("pelvicright", CubeListBuilder.create().texOffs(28, 31).addBox(0.0F, 0.0F, 0.0F, 1.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(2.0F, 3.0F, 0.0F, 0.2731F, 0.0F, -0.3187F));
 
-		PartDefinition Dorsal = Body.addOrReplaceChild("Dorsal", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -11.0F, 0.0F, 1.0F, 11.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.5F, -10.0F, 0.0F, -0.3187F, 0.0F, 0.0F));
+		PartDefinition Dorsal = Body.addOrReplaceChild("Dorsal", CubeListBuilder.create().texOffs(88, 17).addBox(-0.5F, -11.0F, 0.0F, 1.0F, 11.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -5.0F, 2.0F, -0.3187F, 0.0F, 0.0F));
 
-		PartDefinition Neck = Body.addOrReplaceChild("Neck", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -3.0F, -11.0F, 8.0F, 7.0F, 11.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -4.0F, -10.0F));
+		PartDefinition Neck = Body.addOrReplaceChild("Neck", CubeListBuilder.create().texOffs(0, 30).addBox(-4.0F, -3.0F, -11.0F, 8.0F, 7.0F, 11.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 1.0F, -8.0F));
 
-		PartDefinition Head = Neck.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(0, 0).addBox(-12.0F, -2.0F, -7.0F, 24.0F, 4.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 2.0F, -7.0F));
+		PartDefinition Head = Neck.addOrReplaceChild("Head", CubeListBuilder.create().texOffs(44, 0).addBox(-12.0F, -2.0F, -7.0F, 24.0F, 4.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 2.0F, -7.0F));
 
-		PartDefinition LeftFin = Body.addOrReplaceChild("LeftFin", CubeListBuilder.create().texOffs(0, 0).addBox(-1.0F, -1.0F, 0.0F, 9.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(6.0F, -1.0F, -7.0F, 0.0F, -0.182F, 0.5918F));
+		PartDefinition LeftFin = Body.addOrReplaceChild("LeftFin", CubeListBuilder.create().texOffs(38, 54).mirror().addBox(-9.0F, 0.0F, 0.0F, 9.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(-6.0F, 4.0F, -5.0F, 0.0F, 0.182F, -0.5918F));
 
-		PartDefinition RightFin = Body.addOrReplaceChild("RightFin", CubeListBuilder.create().texOffs(0, 0).addBox(-9.0F, -1.0F, 0.0F, 9.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, -1.0F, -7.0F, 0.0F, 0.182F, -0.5918F));
+		PartDefinition RightFin = Body.addOrReplaceChild("RightFin", CubeListBuilder.create().texOffs(38, 54).addBox(0.0F, 0.0F, 0.0F, 9.0F, 1.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(6.0F, 4.0F, -5.0F, 0.0F, -0.182F, 0.5918F));
 
 		return LayerDefinition.create(meshdefinition, 128, 80);
 	}
+
 
 	@Override
 	public void setupAnim(Hammerhead entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {

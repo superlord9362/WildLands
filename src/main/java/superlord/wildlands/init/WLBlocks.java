@@ -72,7 +72,7 @@ public class WLBlocks {
 	public static final RegistryObject<Block> SMOLDERING_LOG = REGISTER.register("smoldering_log", () -> new SmolderingLogBlock(Block.Properties.of(Material.WOOD, MaterialColor.COLOR_BLACK).strength(2.0F, 3.0F).sound(SoundType.WOOD).lightLevel((state) -> {
 		return 3;
 	}), ParticleTypes.FLAME));
-	
+
 	public static final RegistryObject<Block> CYPRESS_LOG = REGISTER.register("cypress_log", () -> createLog());//Loot Table done
 	public static final RegistryObject<Block> STRIPPED_CYPRESS_LOG = REGISTER.register("stripped_cypress_log", () -> createLog());//Loot Table done
 	public static final RegistryObject<Block> CYPRESS_WOOD = REGISTER.register("cypress_wood", () -> createLog());//Loot Table done
@@ -88,7 +88,7 @@ public class WLBlocks {
 
 	public static final RegistryObject<Block> CYPRESS_PLANKS = REGISTER.register("cypress_planks", () -> new Block(Block.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(2.0F, 3.0F)));
 	public static final RegistryObject<Block> CYPRESS_DOOR = REGISTER.register("cypress_door", () -> new DoorBlock(Block.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(3.0F)));
-	public static final RegistryObject<Block> CYPRESS_LEAVES = REGISTER.register("cypress_leaves", () -> ofLeavesBlock());
+	public static final RegistryObject<Block> CYPRESS_LEAVES = REGISTER.register("cypress_leaves", () -> leaves(SoundType.GRASS));
 	@SuppressWarnings("deprecation")
 	public static final RegistryObject<Block> CYPRESS_STAIRS = REGISTER.register("cypress_stairs", () -> new StairBlock(WLBlocks.CYPRESS_PLANKS.get().defaultBlockState(), Block.Properties.copy(CYPRESS_PLANKS.get())));
 	public static final RegistryObject<Block> CYPRESS_PRESSURE_PLATE = REGISTER.register("cypress_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, Block.Properties.of(Material.WOOD, CYPRESS_PLANKS.get().defaultMaterialColor()).noCollission().strength(0.5F).sound(SoundType.WOOD)));
@@ -107,7 +107,7 @@ public class WLBlocks {
 	public static final RegistryObject<Block> BEARD_MOSS_TOP = REGISTER.register("beard_moss_top", () -> new BeardMossTopBlock(Block.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
 	public static final RegistryObject<Block> COCONUT_PLANKS = REGISTER.register("coconut_planks", () -> new Block(Block.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(2.0F, 3.0F)));
 	public static final RegistryObject<Block> COCONUT_DOOR = REGISTER.register("coconut_door", () -> new DoorBlock(Block.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(3.0F)));
-	public static final RegistryObject<Block> COCONUT_LEAVES = REGISTER.register("coconut_leaves", () -> ofLeavesBlock());
+	public static final RegistryObject<Block> COCONUT_LEAVES = REGISTER.register("coconut_leaves", () -> leaves(SoundType.GRASS));
 	@SuppressWarnings("deprecation")
 	public static final RegistryObject<Block> COCONUT_STAIRS = REGISTER.register("coconut_stairs", () -> new StairBlock(WLBlocks.COCONUT_PLANKS.get().defaultBlockState(), Block.Properties.copy(COCONUT_PLANKS.get())));
 	public static final RegistryObject<Block> COCONUT_PRESSURE_PLATE = REGISTER.register("coconut_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, Block.Properties.of(Material.WOOD, COCONUT_PLANKS.get().defaultMaterialColor()).noCollission().strength(0.5F).sound(SoundType.WOOD)));
@@ -188,12 +188,15 @@ public class WLBlocks {
 	public static final RegistryObject<StarfishBlock> RED_STARFISH = REGISTER.register("red_starfish", () -> new StarfishBlock(Block.Properties.of(Material.WATER_PLANT).instabreak().noCollission().sound(SoundType.WET_GRASS)));
 	public static final RegistryObject<UrchinBlock> URCHIN = REGISTER.register("urchin", () -> new UrchinBlock(Block.Properties.of(Material.WATER_PLANT).instabreak().noCollission().sound(SoundType.WET_GRASS)));
 
-	public static final RegistryObject<Block> CYPRESS_SIGN = REGISTER.register("cypress_sign", () -> new WLStandingSignBlock(Block.Properties.of(Material.WOOD, WLBlocks.CYPRESS_LOG.get().defaultMaterialColor()).noCollission().strength(1.0F).sound(SoundType.WOOD), WLWoodTypes.CYPRESS));
-	public static final RegistryObject<Block> CYPRESS_WALL_SIGN = REGISTER.register("cypress_wall_sign", () -> new WLWallSignBlock(Block.Properties.of(Material.WOOD, WLBlocks.CYPRESS_LOG.get().defaultMaterialColor()).noCollission().strength(1.0F).sound(SoundType.WOOD), WLWoodTypes.CYPRESS));
-	public static final RegistryObject<Block> COCONUT_SIGN = REGISTER.register("coconut_sign", () -> new WLStandingSignBlock(Block.Properties.of(Material.WOOD, WLBlocks.COCONUT_LOG.get().defaultMaterialColor()).noCollission().strength(1.0F).sound(SoundType.WOOD), WLWoodTypes.COCONUT));
-	public static final RegistryObject<Block> COCONUT_WALL_SIGN = REGISTER.register("coconut_wall_sign", () -> new WLWallSignBlock(Block.Properties.of(Material.WOOD, WLBlocks.COCONUT_LOG.get().defaultMaterialColor()).noCollission().strength(1.0F).sound(SoundType.WOOD), WLWoodTypes.COCONUT));
-	public static final RegistryObject<Block> CHARRED_SIGN = REGISTER.register("charred_sign", () -> new WLStandingSignBlock(Block.Properties.of(Material.WOOD, WLBlocks.CHARRED_LOG.get().defaultMaterialColor()).noCollission().strength(1.0F).sound(SoundType.WOOD), WLWoodTypes.CHARRED));
-	public static final RegistryObject<Block> CHARRED_WALL_SIGN = REGISTER.register("charred_wall_sign", () -> new WLWallSignBlock(Block.Properties.of(Material.WOOD, WLBlocks.CHARRED_LOG.get().defaultMaterialColor()).noCollission().strength(1.0F).sound(SoundType.WOOD), WLWoodTypes.CHARRED));
+	public static final RegistryObject<WLStandingSignBlock> CYPRESS_SIGN = REGISTER.register("cypress_sign", () -> new WLStandingSignBlock(BlockBehaviour.Properties.of(Material.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD), WLWoodTypes.CYPRESS));
+	@SuppressWarnings("deprecation")
+	public static final RegistryObject<WLWallSignBlock> CYPRESS_WALL_SIGN = REGISTER.register("cypress_wall_sign", () -> new WLWallSignBlock(BlockBehaviour.Properties.of(Material.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD).dropsLike(CYPRESS_SIGN.get()), WLWoodTypes.CYPRESS));
+	public static final RegistryObject<WLStandingSignBlock> COCONUT_SIGN = REGISTER.register("coconut_sign", () -> new WLStandingSignBlock(BlockBehaviour.Properties.of(Material.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD), WLWoodTypes.COCONUT));
+	@SuppressWarnings("deprecation")
+	public static final RegistryObject<WLWallSignBlock> COCONUT_WALL_SIGN = REGISTER.register("coconut_wall_sign", () -> new WLWallSignBlock(BlockBehaviour.Properties.of(Material.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD).dropsLike(COCONUT_SIGN.get()), WLWoodTypes.COCONUT));
+	public static final RegistryObject<WLStandingSignBlock> CHARRED_SIGN = REGISTER.register("charred_sign", () -> new WLStandingSignBlock(BlockBehaviour.Properties.of(Material.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD), WLWoodTypes.CHARRED));
+	@SuppressWarnings("deprecation")
+	public static final RegistryObject<WLWallSignBlock> CHARRED_WALL_SIGN = REGISTER.register("charred_wall_sign", () -> new WLWallSignBlock(BlockBehaviour.Properties.of(Material.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD).dropsLike(CHARRED_SIGN.get()), WLWoodTypes.CHARRED));
 
 	public static final RegistryObject<Block> CHARRED_GRASS = REGISTER.register("charred_grass", () -> new CharredGrassBlock(Block.Properties.of(Material.GRASS).strength(0.5F).sound(SoundType.GRASS)));
 	public static final RegistryObject<Block> CHARRED_TALL_GRASS = REGISTER.register("charred_tall_grass", () -> new CharredTallGrassBlock(Block.Properties.of(Material.GRASS).instabreak().noCollission().sound(SoundType.GRASS)));
@@ -211,8 +214,8 @@ public class WLBlocks {
 			RenderType cutoutRenderType = RenderType.cutout();
 			RenderType cutoutMippedRenderType = RenderType.cutoutMipped();
 			RenderType translucentRenderType = RenderType.translucent();
-			//ItemBlockRenderTypes.setRenderLayer(CYPRESS_SAPLING.get(), cutoutRenderType);
-			//ItemBlockRenderTypes.setRenderLayer(POTTED_CYPRESS_SAPLING.get(), cutoutRenderType);
+			ItemBlockRenderTypes.setRenderLayer(CYPRESS_SAPLING.get(), cutoutRenderType);
+			ItemBlockRenderTypes.setRenderLayer(POTTED_CYPRESS_SAPLING.get(), cutoutRenderType);
 			ItemBlockRenderTypes.setRenderLayer(COCONUT_DOOR.get(), cutoutRenderType);
 			ItemBlockRenderTypes.setRenderLayer(BLUE_STARFISH.get(), cutoutRenderType);
 			ItemBlockRenderTypes.setRenderLayer(MAGENTA_STARFISH.get(), cutoutRenderType);
@@ -220,8 +223,8 @@ public class WLBlocks {
 			ItemBlockRenderTypes.setRenderLayer(PINK_STARFISH.get(), cutoutRenderType);
 			ItemBlockRenderTypes.setRenderLayer(RED_STARFISH.get(), cutoutRenderType);
 			ItemBlockRenderTypes.setRenderLayer(PALMETTO.get(), cutoutMippedRenderType);
-			//ItemBlockRenderTypes.setRenderLayer(COCONUT_SAPLING.get(), cutoutRenderType);
-			//ItemBlockRenderTypes.setRenderLayer(POTTED_COCONUT_SAPLING.get(), cutoutRenderType);
+			ItemBlockRenderTypes.setRenderLayer(COCONUT_SAPLING.get(), cutoutRenderType);
+			ItemBlockRenderTypes.setRenderLayer(POTTED_COCONUT_SAPLING.get(), cutoutRenderType);
 			ItemBlockRenderTypes.setRenderLayer(CATTAIL.get(), cutoutRenderType);
 			ItemBlockRenderTypes.setRenderLayer(DUCKWEED.get(), cutoutRenderType);
 			ItemBlockRenderTypes.setRenderLayer(BEARD_MOSS.get(), cutoutRenderType);
@@ -237,15 +240,15 @@ public class WLBlocks {
 		return new RotatedPillarBlock(BlockBehaviour.Properties.of(Material.WOOD).strength(2.0F).sound(SoundType.WOOD));
 	}
 
-	private static LeavesBlock ofLeavesBlock() {
-		return new LeavesBlock(Block.Properties.of(Material.LEAVES).strength(0.2F).randomTicks().sound(SoundType.GRASS).isValidSpawn(WLBlocks::allowsSpawnOnLeaves).isSuffocating(WLBlocks::isntSolid).emissiveRendering(WLBlocks::isntSolid));
+	private static LeavesBlock leaves(SoundType p_152615_) {
+		return new LeavesBlock(BlockBehaviour.Properties.of(Material.LEAVES).strength(0.2F).randomTicks().sound(p_152615_).noOcclusion().isValidSpawn(WLBlocks::allowsSpawnOnLeaves).isSuffocating(WLBlocks::never).isViewBlocking(WLBlocks::never));
 	}
 
 	private static Boolean allowsSpawnOnLeaves(BlockState state, BlockGetter reader, BlockPos pos, EntityType<?> entity) {
 		return entity == EntityType.OCELOT || entity == EntityType.PARROT;
 	}
 
-	private static boolean isntSolid(BlockState state, BlockGetter reader, BlockPos pos) {
+	private static boolean never(BlockState p_50806_, BlockGetter p_50807_, BlockPos p_50808_) {
 		return false;
 	}
 
