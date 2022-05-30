@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "tag": "wildlands:cypress_logs"
+    }
+  ],
+  "result": {
+    "item": "wildlands:cypress_planks",
+    "count": 4
+  }
+}

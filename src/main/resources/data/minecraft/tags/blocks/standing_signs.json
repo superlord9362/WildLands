@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "wildlands:cypress_sign",
+    "wildlands:coconut_sign",
+	"wildlands:charred_sign"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "item": "wildlands:crab_claw"
+  },
+  "result": "wildlands:cooked_crab_claw",
+  "experience": 0.35,
+  "cookingtime": 200
+}

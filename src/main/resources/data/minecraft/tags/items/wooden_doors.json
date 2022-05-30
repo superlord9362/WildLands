@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "wildlands:cypress_door",
+	"wildlands:coconut_door",
+	"wildlands:charred_door"
+  ]
+}

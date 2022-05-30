@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "wildlands:conglomerate",
+	"wildlands:gabbro",
+	"wildlands:dolerite",
+	"wildlands:polished_gabbro",
+	"wildlands:polished_dolerite"
+  ]
+}

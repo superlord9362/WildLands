@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "planks",
+  "ingredients": [
+    {
+      "tag": "wildlands:charred_logs"
+    }
+  ],
+  "result": {
+    "item": "wildlands:charred_planks",
+    "count": 4
+  }
+}

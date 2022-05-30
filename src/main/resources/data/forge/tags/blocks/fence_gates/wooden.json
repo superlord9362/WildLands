@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "wildlands:cypress_fence_gate",
+	"wildlands:coconut_fence_gate",
+	"wildlands:charred_fence_gate"
+  ]
+}

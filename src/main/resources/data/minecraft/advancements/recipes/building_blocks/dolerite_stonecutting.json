@@ -1,0 +1,37 @@
+{
+	"parent": "minecraft:recipes/root",
+	"rewards": {
+		"recipes": [
+			"wildlands:dolerite_slab_from_stonecutting",
+			"wildlands:dolerite_stairs_from_stonecutting",
+			"wildlands:dolerite_wall_from_stonecutting",
+			"wildlands:polished_dolerite_from_stonecutting",
+			"wildlands:polished_dolerite_slab_from_dolerite_stonecutting",
+			"wildlands:polished_dolerite_stiars_from_dolerite_stonecutting"
+		]
+	},
+	"criteria": {
+		"has_item": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": ["wildlands:dolerite"]
+					}
+				]
+			}
+		},
+		"has_the_recipe": {
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": {
+				"recipe": "wildlands:dolerite_slab_from_stonecutting"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"has_item",
+			"has_the_recipe"
+		]
+	]
+}
