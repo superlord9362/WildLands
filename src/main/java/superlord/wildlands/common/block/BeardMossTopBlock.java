@@ -1,8 +1,7 @@
 package superlord.wildlands.common.block;
 
-import java.util.Random;
-
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.GrowingPlantHeadBlock;
 import net.minecraft.world.level.block.NetherVines;
@@ -21,7 +20,7 @@ public class BeardMossTopBlock extends GrowingPlantHeadBlock {
     * Used to determine how much to grow the plant when using bonemeal. Kelp always returns 1, where as the nether vines
     * return a random value at least 1.
     */
-   protected int getBlocksToGrowWhenBonemealed(Random rand) {
+   protected int getBlocksToGrowWhenBonemealed(RandomSource rand) {
       return NetherVines.getBlocksToGrowWhenBonemealed(rand);
    }
 

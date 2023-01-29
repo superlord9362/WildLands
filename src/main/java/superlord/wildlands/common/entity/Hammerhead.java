@@ -1,7 +1,6 @@
 package superlord.wildlands.common.entity;
 
 import java.util.EnumSet;
-import java.util.Random;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -10,7 +9,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -46,7 +48,8 @@ public class Hammerhead extends WaterAnimal {
 
 	public Hammerhead(EntityType<? extends Hammerhead> type, Level worldIn) {
 		super(type, worldIn);
-	      this.moveControl = new SmoothSwimmingMoveControl(this, 85, 10, 0.02F, 0.1F, true);
+		this.moveControl = new SmoothSwimmingMoveControl(this, 85, 10, 0.02F, 0.1F, true);
+		this.lookControl = new SmoothSwimmingLookControl(this, 10);
 	}
 
 	private static final Predicate<LivingEntity> UNDEAD_PREDICATE = (mob) -> {
@@ -55,6 +58,14 @@ public class Hammerhead extends WaterAnimal {
 
 	protected PathNavigation createNavigation(Level worldIn) {
 		return new WaterBoundPathNavigation(this, worldIn);
+	}
+
+	public boolean doHurtTarget(Entity p_28319_) {
+		boolean flag = p_28319_.hurt(DamageSource.mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+		if (flag) {
+			this.doEnchantDamageEffects(this, p_28319_);
+		}
+		return flag;
 	}
 
 	protected void registerGoals() {
@@ -68,17 +79,17 @@ public class Hammerhead extends WaterAnimal {
 		this.goalSelector.addGoal(6, new MeleeAttackGoal(this, (double)1.2F, true));
 		this.goalSelector.addGoal(5, new HurtByTargetGoal(this));
 	}
-	
+
 	protected SoundEvent getAmbientSound() {
-		return WLSounds.HAMMERHEAD_IDLE;
+		return WLSounds.HAMMERHEAD_IDLE.get();
 	}
 
 	protected SoundEvent getDeathSound() {
-		return WLSounds.HAMMERHEAD_DEATH;
+		return WLSounds.HAMMERHEAD_DEATH.get();
 	}
 
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return WLSounds.HAMMERHEAD_HURT;
+		return WLSounds.HAMMERHEAD_HURT.get();
 	}
 
 	private static class CirclePreyGoal extends Goal {
@@ -157,11 +168,11 @@ public class Hammerhead extends WaterAnimal {
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {
-		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 30.0D).add(Attributes.MOVEMENT_SPEED, (double)0.45F).add(Attributes.ATTACK_DAMAGE, 6.0D);
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 30.0D).add(Attributes.MOVEMENT_SPEED, (double)1.2F).add(Attributes.ATTACK_DAMAGE, 6.0D);
 	}
 
 	@SuppressWarnings("deprecation")
-	public static boolean func_223364_b(EntityType<Hammerhead> hammerhead, LevelAccessor level, MobSpawnType reason, BlockPos pos, Random random) {
+	public static boolean func_223364_b(EntityType<Hammerhead> hammerhead, LevelAccessor level, MobSpawnType reason, BlockPos pos, RandomSource random) {
 		if (pos.getY() > 45 && pos.getY() < level.getSeaLevel()) {
 			return level.getFluidState(pos).is(FluidTags.WATER);
 		} else {
@@ -169,17 +180,18 @@ public class Hammerhead extends WaterAnimal {
 		}
 	}
 
-	public void travel(Vec3 travelVector) {
+	public void travel(Vec3 p_28383_) {
 		if (this.isEffectiveAi() && this.isInWater()) {
-			this.moveRelative(this.getSpeed(), travelVector);
+			this.moveRelative(this.getSpeed(), p_28383_);
 			this.move(MoverType.SELF, this.getDeltaMovement());
 			this.setDeltaMovement(this.getDeltaMovement().scale(0.9D));
 			if (this.getTarget() == null) {
 				this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.005D, 0.0D));
 			}
 		} else {
-			super.travel(travelVector);
+			super.travel(p_28383_);
 		}
+
 	}
 
 	class WaterAttackGoal<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
@@ -206,5 +218,5 @@ public class Hammerhead extends WaterAnimal {
 	public ItemStack getPickedResult(HitResult target) {
 		return new ItemStack(WLItems.HAMMERHEAD_SPAWN_EGG.get());
 	}
-	
+
 }

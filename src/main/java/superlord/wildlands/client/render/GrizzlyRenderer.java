@@ -29,7 +29,7 @@ public class GrizzlyRenderer extends MobRenderer<Grizzly, EntityModel<Grizzly>> 
 		MODEL = new GrizzlyModel(renderManager.bakeLayer(ClientEvents.GRIZZLY));
 		SLEEPING = new GrizzlySleepingModel(renderManager.bakeLayer(ClientEvents.GRIZZLY_SLEEPING));
 		SITTING = new GrizzlySittingModel(renderManager.bakeLayer(ClientEvents.GRIZZLY_SITTING));
-		this.addLayer(new ItemInHandLayer(this));
+		this.addLayer(new ItemInHandLayer(this, renderManager.getItemInHandRenderer()));
 	}
 	
 	public void scale(Grizzly entityIn, PoseStack matrixStackIn, float partialTickTime) {

@@ -18,5 +18,4 @@ public class WLSignBlock extends StandingSignBlock {
 		return new WLSignBlockEntity(pos, state);
 	}
 
-
 }

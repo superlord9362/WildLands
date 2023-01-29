@@ -1,7 +1,6 @@
 package superlord.wildlands.common.entity;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Predicate;
 
 import javax.annotation.Nullable;
@@ -16,7 +15,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -27,10 +27,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.BreathAirGoal;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -39,7 +39,6 @@ import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
@@ -50,9 +49,10 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.pathfinder.AmphibiousNodeEvaluator;
-import net.minecraft.world.level.pathfinder.PathFinder;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import superlord.wildlands.common.entity.navigator.AmphibiousPathNavigator;
 import superlord.wildlands.init.WLBlocks;
 import superlord.wildlands.init.WLEntities;
 import superlord.wildlands.init.WLItems;
@@ -70,7 +70,8 @@ public class Alligator extends Animal {
 	@SuppressWarnings("deprecation")
 	public Alligator(EntityType<? extends Alligator> type, Level levelIn) {
 		super(type, levelIn);
-		this.moveControl = new Alligator.MoveHelperController(this);
+		this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+		this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 0.0F);
 		this.maxUpStep = 1.0F;
 	}
 
@@ -92,11 +93,11 @@ public class Alligator extends Animal {
 	}
 
 	protected SoundEvent getAmbientSound() {
-		return WLSounds.ALLIGATOR_IDLE;
+		return WLSounds.ALLIGATOR_IDLE.get();
 	}
 
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return WLSounds.ALLIGATOR_HURT;
+		return WLSounds.ALLIGATOR_HURT.get();
 	}
 
 	@Override
@@ -105,7 +106,7 @@ public class Alligator extends Animal {
 	}
 
 	protected SoundEvent getDeathSound() {
-		return WLSounds.ALLIGATOR_DEATH;
+		return WLSounds.ALLIGATOR_DEATH.get();
 	}
 
 	public int getVariant() {
@@ -135,7 +136,7 @@ public class Alligator extends Animal {
 		return stack.getItem() == WLItems.RAW_CATFISH.get();
 	}
 
-	public static boolean canAlligatorSpawn(EntityType<? extends Animal> animal, LevelAccessor levelIn, MobSpawnType reason, BlockPos pos, Random random) {
+	public static boolean canAlligatorSpawn(EntityType<? extends Animal> animal, LevelAccessor levelIn, MobSpawnType reason, BlockPos pos, RandomSource random) {
 		return (levelIn.getBlockState(pos.below()).is(Blocks.GRASS_BLOCK) || levelIn.getBlockState(pos.below()).is(WLBlocks.MUD.get())) && isBrightEnoughToSpawn(levelIn, pos);
 	}
 
@@ -144,7 +145,11 @@ public class Alligator extends Animal {
 	}
 
 	protected PathNavigation createNavigation(Level levelIn) {
-		return new Alligator.WalkAndSwimPathNavigator(this, levelIn);
+		return new AmphibiousPathNavigator(Alligator.this, levelIn) {
+			public boolean isStableDestination(BlockPos pos) {
+				return this.level.getBlockState(pos).getFluidState().isEmpty();
+			}
+		};
 	}
 
 	@Override
@@ -178,24 +183,6 @@ public class Alligator extends Animal {
 		}
 	}
 
-	class WalkAndSwimPathNavigator extends WaterBoundPathNavigation {
-		WalkAndSwimPathNavigator(Alligator alligator, Level levelIn) {
-			super(alligator, levelIn);
-		}
-		protected boolean canUpdatePath() {
-			return true;
-		}
-
-		protected PathFinder createPathFinder(int p_179679_1_) {
-			this.nodeEvaluator = new AmphibiousNodeEvaluator(true);
-			return new PathFinder(this.nodeEvaluator, p_179679_1_);
-		}
-
-		public boolean isStableDestination(BlockPos pos) {
-			return !this.level.getBlockState(pos.below()).isAir();
-		}
-	}
-
 	public int getMaxAir() {
 		return 4800;
 	}
@@ -211,10 +198,6 @@ public class Alligator extends Animal {
 		}
 
 		return flag;
-	}
-
-	protected float getWaterSlowDown() {
-		return 0.98F;
 	}
 
 	protected void defineSynchedData() {
@@ -251,43 +234,23 @@ public class Alligator extends Animal {
 		}
 		return spawnDataIn;
 	}
-
-	static class MoveHelperController extends MoveControl {
-		private final Alligator alligator;
-
-		MoveHelperController(Alligator alligator) {
-			super(alligator);
-			this.alligator = alligator;
-		}
-
-		public void tick() {
-
-			if (this.alligator.isInWater()) {
-				this.alligator.setDeltaMovement(this.alligator.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
-			}
-
-			if (this.operation == MoveControl.Operation.MOVE_TO && !this.alligator.getNavigation().isDone()) {
-				float f = (float)(this.speedModifier * this.alligator.getAttributeValue(Attributes.MOVEMENT_SPEED));
-				this.alligator.setSpeed(Mth.lerp(0.125F, this.alligator.getSpeed(), f));
-				double d0 = this.wantedX - this.alligator.getX();
-				double d1 = this.wantedY - this.alligator.getY();
-				double d2 = this.wantedZ - this.alligator.getZ();
-				if (d1 != 0.0D) {
-					double d3 = (double)Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
-					this.alligator.setDeltaMovement(this.alligator.getDeltaMovement().add(0.0D, (double)this.alligator.getSpeed() * (d1 / d3) * 0.1D, 0.0D));
-				}
-
-				if (d0 != 0.0D || d2 != 0.0D) {
-					float f1 = (float)(Mth.atan2(d2, d0) * (double)(180F / (float)Math.PI)) - 90.0F;
-					this.alligator.yRotO = this.rotlerp(this.alligator.getYRot(), f1, 90.0F);
-					this.alligator.yBodyRot = this.alligator.getYRot();
-				}
-
-			} else {
-				this.alligator.setSpeed(0.0F);
-			}
-		}
-	}
+	
+	public float getWalkTargetValue(BlockPos pos, LevelReader worldIn) {
+        return worldIn.getFluidState(pos.below()).isEmpty() && worldIn.getFluidState(pos).is(FluidTags.WATER) ? 10.0F : super.getWalkTargetValue(pos, worldIn);
+    }
+	
+	public void travel(Vec3 travelVector) {
+        if (this.isEffectiveAi() && this.isInWater()) {
+            this.moveRelative(this.getSpeed(), travelVector);
+            this.move(MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.5D));
+            if (this.getTarget() == null) {
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.005D, 0.0D));
+            }
+        } else {
+            super.travel(travelVector);
+        }
+    }
 
 	public void tick() {
 		super.tick();
@@ -396,7 +359,7 @@ public class Alligator extends Animal {
 		}
 
 		public boolean canContinueToUse() {
-			return !this.alligator.isInWater() && this.tryTicks <= 1200 && this.isValidTarget(this.alligator.level, this.blockPos);
+			return !this.alligator.isInWater() && this.tryTicks <= 1200 && this.isValidTarget(this.alligator.level, this.blockPos) || !this.alligator.isBaby();
 		}
 
 		public boolean canUse() {

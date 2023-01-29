@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_top_left",
+  "textures": {
+    "bottom": "wildlands:block/coconut_door_bottom",
+    "top": "wildlands:block/coconut_door_top"
+  }
+}

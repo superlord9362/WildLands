@@ -15,6 +15,7 @@ import superlord.wildlands.common.item.DuckweedItem;
 import superlord.wildlands.common.item.JellyItem;
 import superlord.wildlands.common.item.WLBoatItem;
 import superlord.wildlands.common.item.WLBucketItem;
+import superlord.wildlands.common.item.WLChestBoatItem;
 import superlord.wildlands.common.item.WLSpawnEggItem;
 
 public class WLItems {
@@ -24,10 +25,6 @@ public class WLItems {
 	public static final RegistryObject<Item> OLIVINE = REGISTER.register("olivine", () -> new Item(new Item.Properties().tab(WildLands.ITEM_GROUP)));
 	//public static final RegistryObject<Item> PEARL = REGISTER.register("pearl", () -> new Item(new Item.Properties().tab(WildLands.ITEM_GROUP)));
 	public static final RegistryObject<BlockItem> MUD = REGISTER.register("mud", () -> new BlockItem(WLBlocks.MUD.get(), new Item.Properties().tab(WildLands.BLOCK_GROUP)));
-	public static final RegistryObject<BlockItem> DRIED_MUD = REGISTER.register("dried_mud", () -> new BlockItem(WLBlocks.DRIED_MUD.get(), new Item.Properties().tab(WildLands.BLOCK_GROUP)));
-	public static final RegistryObject<BlockItem> MUD_BRICKS = REGISTER.register("dried_mud_bricks", () -> new BlockItem(WLBlocks.MUD_BRICKS.get(), new Item.Properties().tab(WildLands.BLOCK_GROUP)));
-	public static final RegistryObject<BlockItem> MUD_BRICK_STAIRS = REGISTER.register("dried_mud_brick_stairs", () -> new BlockItem(WLBlocks.MUD_BRICK_STAIRS.get(), new Item.Properties().tab(WildLands.BLOCK_GROUP)));
-	public static final RegistryObject<BlockItem> MUD_BRICK_SLAB = REGISTER.register("dried_mud_brick_slab", () -> new BlockItem(WLBlocks.MUD_BRICK_SLAB.get(), new Item.Properties().tab(WildLands.BLOCK_GROUP)));
 	public static final RegistryObject<BlockItem> CYPRESS_LOG = REGISTER.register("cypress_log", () -> new BlockItem(WLBlocks.CYPRESS_LOG.get(), new Item.Properties().tab(WildLands.BLOCK_GROUP)));
 	public static final RegistryObject<BlockItem> STRIPPED_CYPRESS_LOG = REGISTER.register("stripped_cypress_log", () -> new BlockItem(WLBlocks.STRIPPED_CYPRESS_LOG.get(), new Item.Properties().tab(WildLands.BLOCK_GROUP)));
 	public static final RegistryObject<BlockItem> COCONUT_LOG = REGISTER.register("coconut_log", () -> new BlockItem(WLBlocks.COCONUT_LOG.get(), new Item.Properties().tab(WildLands.BLOCK_GROUP)));
@@ -84,7 +81,6 @@ public class WLItems {
 	public static final RegistryObject<Item> COOKED_CRAB_CLAW = REGISTER.register("cooked_crab_claw", () -> new Item(new Item.Properties().tab(WildLands.ITEM_GROUP).food(new FoodProperties.Builder().nutrition(6).saturationMod(0.6F).meat().build())));
 	public static final RegistryObject<WLBucketItem> CATFISH_BUCKET = REGISTER.register("catfish_bucket", () -> new WLBucketItem(WLEntities.CATFISH, () -> Fluids.WATER, new Item.Properties().tab(WildLands.ITEM_GROUP).stacksTo(1)));
 	public static final RegistryObject<WLBucketItem> ALLIGATOR_BUCKET = REGISTER.register("alligator_bucket", () -> new WLBucketItem(WLEntities.ALLIGATOR, () -> Fluids.WATER, new Item.Properties().tab(WildLands.ITEM_GROUP).stacksTo(1)));
-	public static final RegistryObject<WLBucketItem> FROG_BUCKET = REGISTER.register("frog_bucket", () -> new WLBucketItem(WLEntities.FROG, () -> Fluids.WATER, new Item.Properties().tab(WildLands.ITEM_GROUP).stacksTo(1)));
 	public static final RegistryObject<WLBucketItem> ANCHOVY_BUCKET = REGISTER.register("anchovy_bucket", () -> new WLBucketItem(WLEntities.ANCHOVY, () -> Fluids.WATER, new Item.Properties().tab(WildLands.ITEM_GROUP).stacksTo(1)));
 	public static final RegistryObject<Item> CATFISH_SPAWN_EGG = REGISTER.register("catfish_spawn_egg", () -> new WLSpawnEggItem(WLEntities.CATFISH, 0xC9A764, 0x7E774F, new Item.Properties().tab(WildLands.SPAWN_EGG_GROUP)));
 	public static final RegistryObject<Item> ALLIGATOR_SPAWN_EGG = REGISTER.register("alligator_spawn_egg", () -> new WLSpawnEggItem(WLEntities.ALLIGATOR, 0x5A6C43, 0x89915A, new Item.Properties().tab(WildLands.SPAWN_EGG_GROUP)));
@@ -142,10 +138,12 @@ public class WLItems {
 	public static final RegistryObject<BlockItem> CHARRED_TALL_GRASS = REGISTER.register("charred_tall_grass", () -> new BlockItem(WLBlocks.CHARRED_TALL_GRASS.get(), new Item.Properties().tab(WildLands.BLOCK_GROUP)));
 	public static final RegistryObject<BlockItem> CHARRED_BUSH = REGISTER.register("charred_bush", () -> new BlockItem(WLBlocks.CHARRED_BUSH.get(), new Item.Properties().tab(WildLands.BLOCK_GROUP)));
 	
-	public static final RegistryObject<WLBoatItem> BALD_CYPRESS_BOAT = REGISTER.register("bald_cypress_boat", () -> new WLBoatItem(WLBoat.WLType.BALD_CYPRESS, (new Item.Properties().stacksTo(1).tab(WildLands.ITEM_GROUP))));
-	public static final RegistryObject<WLBoatItem> COCONUT_BOAT = REGISTER.register("coconut_boat", () -> new WLBoatItem(WLBoat.WLType.COCONUT, (new Item.Properties().stacksTo(1).tab(WildLands.ITEM_GROUP))));
-	public static final RegistryObject<WLBoatItem> CHARRED_BOAT = REGISTER.register("charred_boat", () -> new WLBoatItem(WLBoat.WLType.CHARRED, (new Item.Properties().stacksTo(1).tab(WildLands.ITEM_GROUP))));
-	public static final RegistryObject<Item> FROG_SPAWN_EGG = REGISTER.register("frog_spawn_egg", () -> new WLSpawnEggItem(WLEntities.FROG, 0x4C7D3C, 0xCAD257, new Item.Properties().tab(WildLands.SPAWN_EGG_GROUP)));
+	public static final RegistryObject<WLBoatItem> CYPRESS_BOAT = REGISTER.register("bald_cypress_boat", () -> new WLBoatItem(WLBoat.WLBoatTypes.CYPRESS, (new Item.Properties().stacksTo(1).tab(WildLands.ITEM_GROUP))));
+	public static final RegistryObject<WLBoatItem> COCONUT_BOAT = REGISTER.register("coconut_boat", () -> new WLBoatItem(WLBoat.WLBoatTypes.COCONUT, (new Item.Properties().stacksTo(1).tab(WildLands.ITEM_GROUP))));
+	public static final RegistryObject<WLBoatItem> CHARRED_BOAT = REGISTER.register("charred_boat", () -> new WLBoatItem(WLBoat.WLBoatTypes.CHARRED, (new Item.Properties().stacksTo(1).tab(WildLands.ITEM_GROUP))));
+	public static final RegistryObject<WLChestBoatItem> CYPRESS_CHEST_BOAT = REGISTER.register("bald_cypress_chest_boat", () -> new WLChestBoatItem(WLBoat.WLBoatTypes.CYPRESS, (new Item.Properties().stacksTo(1).tab(WildLands.ITEM_GROUP))));
+	public static final RegistryObject<WLChestBoatItem> COCONUT_CHEST_BOAT = REGISTER.register("coconut_chest_boat", () -> new WLChestBoatItem(WLBoat.WLBoatTypes.COCONUT, (new Item.Properties().stacksTo(1).tab(WildLands.ITEM_GROUP))));
+	public static final RegistryObject<WLChestBoatItem> CHARRED_CHEST_BOAT = REGISTER.register("charred_chest_boat", () -> new WLChestBoatItem(WLBoat.WLBoatTypes.CHARRED, (new Item.Properties().stacksTo(1).tab(WildLands.ITEM_GROUP))));
 
 	//public static final RegistryObject<Item> CLAM_SPAWN_EGG = REGISTER.register("clam_spawn_egg", () -> new WLSpawnEggItem(WLEntities.CLAM, 0x674F57, 0xE2C19D, new Item.Properties().tab(WildLands.SPAWN_EGG_GROUP)));
 	public static final RegistryObject<Item> HAMMERHEAD_SPAWN_EGG = REGISTER.register("hammerhead_spawn_egg", () -> new WLSpawnEggItem(WLEntities.HAMMERHEAD, 0x6F594C, 0xDBCCBC, new Item.Properties().tab(WildLands.SPAWN_EGG_GROUP)));

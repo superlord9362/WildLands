@@ -16,6 +16,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
+import net.minecraft.world.level.block.MudBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -70,8 +71,8 @@ public class DoubleWaterPlantBlock extends DoublePlantBlock {
 				}
 			}
 		} else {
-	         if (state.getBlock() != this) return super.canSurvive(state, worldIn, pos); //Forge: This function is called during world gen and placement, before this block is set, so if we are not 'here' then assume it's the pre-check.
-	         return blockstate.is(this) && blockstate.getValue(HALF) == DoubleBlockHalf.LOWER;
+			if (state.getBlock() != this) return super.canSurvive(state, worldIn, pos); //Forge: This function is called during world gen and placement, before this block is set, so if we are not 'here' then assume it's the pre-check.
+			return blockstate.is(this) && blockstate.getValue(HALF) == DoubleBlockHalf.LOWER;
 		}
 		return false;
 	}
@@ -113,34 +114,23 @@ public class DoubleWaterPlantBlock extends DoublePlantBlock {
 	 * Called before the Block is set to air in the world. Called regardless of if the player's tool can actually collect
 	 * this block
 	 */
-	public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
-		if (!worldIn.isClientSide()) {
-			if (player.isCreative()) {
-				preventCreativeDropFromBottomPart(worldIn, pos, state, player);
-			} else {
-				dropResources(state, worldIn, pos, (BlockEntity)null, player, player.getMainHandItem());
-			}
-		}
-
-		super.playerWillDestroy(worldIn, pos, state, player);
+	public void playerWillDestroy(Level p_52878_, BlockPos p_52879_, BlockState p_52880_, Player p_52881_) {
+		super.playerWillDestroy(p_52878_, p_52879_, p_52880_, p_52881_);
 	}
 
-	/**
-	 * Spawns the block's drops in the world. By the time this is called the Block has possibly been set to air via
-	 * Block.removedByPlayer
-	 */
-	public void playerDestroy(Level worldIn, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
-		super.playerDestroy(worldIn, player, pos, Blocks.AIR.defaultBlockState(), te, stack);
+	public void playerDestroy(Level p_52865_, Player p_52866_, BlockPos p_52867_, BlockState p_52868_, @Nullable BlockEntity p_52869_, ItemStack p_52870_) {
+		super.playerDestroy(p_52865_, p_52866_, p_52867_, Blocks.AIR.defaultBlockState(), p_52869_, p_52870_);
 	}
 
-	protected static void preventCreativeDropFromBottomPart(Level world, BlockPos pos, BlockState state, Player player) {
-		DoubleBlockHalf doubleblockhalf = state.getValue(HALF);
+	protected static void preventCreativeDropFromBottomPart(Level p_52904_, BlockPos p_52905_, BlockState p_52906_, Player p_52907_) {
+		DoubleBlockHalf doubleblockhalf = p_52906_.getValue(HALF);
 		if (doubleblockhalf == DoubleBlockHalf.UPPER) {
-			BlockPos blockpos = pos.below();
-			BlockState blockstate = world.getBlockState(blockpos);
-			if (blockstate.getBlock() == state.getBlock() && blockstate.getValue(HALF) == DoubleBlockHalf.LOWER) {
-				world.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
-				world.levelEvent(player, 2001, blockpos, Block.getId(blockstate));
+			BlockPos blockpos = p_52905_.below();
+			BlockState blockstate = p_52904_.getBlockState(blockpos);
+			if (blockstate.is(p_52906_.getBlock()) && blockstate.getValue(HALF) == DoubleBlockHalf.LOWER) {
+				BlockState blockstate1 = blockstate.hasProperty(BlockStateProperties.WATERLOGGED) && blockstate.getValue(BlockStateProperties.WATERLOGGED) ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
+				p_52904_.setBlock(blockpos, blockstate1, 35);
+				p_52904_.levelEvent(p_52907_, 2001, blockpos, Block.getId(blockstate));
 			}
 		}
 

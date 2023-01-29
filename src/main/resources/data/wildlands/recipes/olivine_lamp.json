@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "GOG",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+	"G": {
+		"item": "minecraft:glass"
+	},
+	"O": {
+		"item": "wildlands:olivine_block"
+	}
+  },
+  "result": {
+    "item": "wildlands:olivine_lamp",
+    "count": 1
+  }
+}

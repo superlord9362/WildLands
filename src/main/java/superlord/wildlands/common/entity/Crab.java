@@ -12,6 +12,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AgeableMob;
@@ -25,6 +26,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
@@ -34,10 +36,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.wildlands.init.WLItems;
 import superlord.wildlands.init.WLSounds;
 
@@ -47,18 +48,23 @@ public class Crab extends Animal {
 	private boolean crabRave;
 	private BlockPos jukebox;
 
+	@SuppressWarnings("deprecation")
 	public Crab(EntityType<? extends Crab> type, Level worldIn) {
 		super(type, worldIn);
+		this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+		this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 0.0F);
+		this.maxUpStep = 1.0F;
 	}
 
 	protected void registerGoals() {
 		this.goalSelector.addGoal(0, new Crab.AttackPlayerGoal());
 		this.goalSelector.addGoal(1, new Crab.CrabMeleeAttackGoal());
 		this.goalSelector.addGoal(0, new Crab.RunFromPlayerGoal());
+		this.goalSelector.addGoal(0, new Crab.CrabPanicGoal(this, 1.2D));
 		this.goalSelector.addGoal(3, new RandomStrollGoal(this, 1.0D));
 	}
 
-	public static boolean canCrabSpawn(EntityType<? extends Animal> animal, LevelAccessor levelIn, MobSpawnType reason, BlockPos pos, Random random) {
+	public static boolean canCrabSpawn(EntityType<? extends Animal> animal, LevelAccessor levelIn, MobSpawnType reason, BlockPos pos, RandomSource random) {
 		return (levelIn.getBlockState(pos.below()).is(Blocks.GRASS_BLOCK) || levelIn.getBlockState(pos.below()).is(net.minecraftforge.common.Tags.Blocks.SAND)) && isBrightEnoughToSpawn(levelIn, pos);
 	}
 
@@ -108,7 +114,7 @@ public class Crab extends Animal {
 	}
 
 	public void aiStep() {
-	      if (this.jukebox == null || !this.jukebox.closerToCenterThan(this.position(), 3.46D) || !this.level.getBlockState(this.jukebox).is(Blocks.JUKEBOX)) {
+		if (this.jukebox == null || !this.jukebox.closerToCenterThan(this.position(), 3.46D) || !this.level.getBlockState(this.jukebox).is(Blocks.JUKEBOX)) {
 			this.crabRave = false;
 			this.jukebox = null;
 		}
@@ -119,14 +125,12 @@ public class Crab extends Animal {
 		return true;
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public void setPartying(BlockPos pos, boolean isPartying) {
-		this.jukebox = pos;
-		this.crabRave = isPartying;
+	public void setRecordPlayingNearby(BlockPos p_29395_, boolean p_29396_) {
+		this.jukebox = p_29395_;
+		this.crabRave = p_29396_;
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public boolean isPartying() {
+	public boolean isCrabRave() {
 		return this.crabRave;
 	}
 
@@ -136,15 +140,15 @@ public class Crab extends Animal {
 	}
 
 	protected SoundEvent getAmbientSound() {
-		return WLSounds.CRAB_IDLE;
+		return WLSounds.CRAB_IDLE.get();
 	}
 
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return WLSounds.CRAB_HURT;
+		return WLSounds.CRAB_HURT.get();
 	}
 
 	protected SoundEvent getDeathSound() {
-		return WLSounds.CRAB_DEATH;
+		return WLSounds.CRAB_DEATH.get();
 	}
 
 	class CrabMeleeAttackGoal extends MeleeAttackGoal {
@@ -243,6 +247,24 @@ public class Crab extends Animal {
 			double d1 = vec3.dot(vec31);
 			return d1 > 1.0D - 0.025D / d0 ? player.hasLineOfSight(Crab.this) : false;
 		}
+	}
+	
+	class CrabPanicGoal extends PanicGoal {
+		Crab crab;
+		
+		public CrabPanicGoal(Crab crab, double p_25692_) {
+			super(crab, p_25692_);
+			this.crab = crab;
+		}
+		
+		public boolean canUse() {
+			return super.canUse() && !crab.isFighter();
+		}
+		
+		public boolean canContinueToUse() {
+			return super.canContinueToUse();
+		}
+		
 	}
 
 	@Override

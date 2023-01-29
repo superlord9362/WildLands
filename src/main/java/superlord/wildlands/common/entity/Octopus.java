@@ -1,7 +1,6 @@
 package superlord.wildlands.common.entity;
 
 import java.util.List;
-import java.util.Random;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -10,6 +9,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -58,15 +58,15 @@ public class Octopus extends WaterAnimal {
 	}
 	
 	protected SoundEvent getAmbientSound() {
-		return WLSounds.OCTOPUS_IDLE;
+		return WLSounds.OCTOPUS_IDLE.get();
 	}
 
 	protected SoundEvent getDeathSound() {
-		return WLSounds.OCTOPUS_DEATH;
+		return WLSounds.OCTOPUS_DEATH.get();
 	}
 
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return WLSounds.OCTOPUS_HURT;
+		return WLSounds.OCTOPUS_HURT.get();
 	}
 
 	protected void registerGoals() {
@@ -112,7 +112,7 @@ public class Octopus extends WaterAnimal {
 		this.setScared(compound.getBoolean("Scared"));
 	}
 
-	public static boolean canSpawn(EntityType<? extends Octopus> type, LevelAccessor worldIn, MobSpawnType reason, BlockPos p_223363_3_, Random randomIn) {
+	public static boolean canSpawn(EntityType<? extends Octopus> type, LevelAccessor worldIn, MobSpawnType reason, BlockPos p_223363_3_, RandomSource randomIn) {
 		return worldIn.getBlockState(p_223363_3_).is(Blocks.WATER) && worldIn.getBlockState(p_223363_3_.above()).is(Blocks.WATER);
 	}
 
@@ -359,10 +359,13 @@ public class Octopus extends WaterAnimal {
 		}
 
 		public void start() {
-			octopus.setDeltaMovement(0, 0.2, 0);
+			if (octopus.isInWater()) {
+				octopus.setDeltaMovement(0, 0.2, 0);
+			}
 			this.octopus.getNavigation().moveTo(this.posX, this.posY, this.posZ, this.speedModifier);
 			this.isRunning = true;
 			octopus.setScared(true);
+			octopus.setDefault(true);
 		}
 
 		public void tick() {
@@ -370,8 +373,8 @@ public class Octopus extends WaterAnimal {
 			octopus.level.addParticle(ParticleTypes.BUBBLE_COLUMN_UP, octopus.getX(), octopus.getY(), octopus.getZ(), 1, 1, 1);
 		}
 
-		public void resetTask() {
-			octopus.setDeltaMovement(0, -0.2, 0);
+		public void stop() {
+			octopus.setDeltaMovement(0, 0, 0);
 			this.isRunning = false;
 			octopus.setScared(false);
 		}

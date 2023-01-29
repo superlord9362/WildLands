@@ -1,204 +1,142 @@
 package superlord.wildlands.common.entity;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 import superlord.wildlands.init.WLBlocks;
 import superlord.wildlands.init.WLEntities;
 import superlord.wildlands.init.WLItems;
 
 public class WLBoat extends Boat {
 
-	private static final EntityDataAccessor<Integer> WL_BOAT_TYPE = SynchedEntityData.defineId(WLBoat.class, EntityDataSerializers.INT);
-	private Boat.Status status;
-	@SuppressWarnings("unused")
-	private double lastYd;
+	private static final EntityDataAccessor<Integer> BOAT_TYPE = SynchedEntityData.defineId(WLBoat.class, EntityDataSerializers.INT);
 
-	public WLBoat(Level world, double x, double y, double z) {
-		this(WLEntities.BOAT.get(), world);
-		this.setPos(x, y, z);
-		this.xo = x;
-		this.yo = y;
-		this.zo = z;
+	public WLBoat(EntityType<? extends Entity> entityType, Level level) {
+		super(WLEntities.BOAT.get(), level);
 	}
 
-	public WLBoat(EntityType<? extends Boat> boatEntityType, Level world) {
-		super(boatEntityType, world);
+	public WLBoat(Level level, double positionX, double positionY, double positionZ) {
+		super(WLEntities.BOAT.get(), level);
+		this.setPos(positionX, positionY, positionZ);
+		this.setDeltaMovement(Vec3.ZERO);
+		this.xo = positionX;
+		this.yo = positionY;
+		this.zo = positionZ;
+	}
+
+	public WLBoat(PlayMessages.SpawnEntity spawnEntity, Level level) {
+		this(WLEntities.BOAT.get(), level);
+	}
+
+	@Override
+	protected void addAdditionalSaveData(CompoundTag compound) {
+		super.addAdditionalSaveData(compound);
+		compound.putString("WoodType", this.getWLBoatType().getName());
+	}
+
+	@Override
+	protected void readAdditionalSaveData(CompoundTag compound) {
+		super.readAdditionalSaveData(compound);
+		if (compound.contains("WoodType", 8)) this.setWLBoatType(WLBoatTypes.byName(compound.getString("WoodType")));
+	}
+
+	protected void defineSynchedData() {
+		super.defineSynchedData();
+		this.entityData.define(BOAT_TYPE, WLBoatTypes.CHARRED.ordinal());
+	}
+
+	@Override
+	public Packet<?> getAddEntityPacket() {
+		return NetworkHooks.getEntitySpawningPacket(this);
+	}
+
+	public void setWLBoatType(WLBoatTypes type) {
+		this.entityData.set(BOAT_TYPE, type.ordinal());
+	}
+
+	public WLBoatTypes getWLBoatType() {
+		return WLBoatTypes.byId(this.entityData.get(BOAT_TYPE));
+	}
+
+	@Override
+	public Boat.Type getBoatType() {
+		return Boat.Type.OAK;
+	}
+
+	@Override
+	public void setType(Boat.Type boatType) {
 	}
 
 	@Override
 	public Item getDropItem() {
 		switch(this.getWLBoatType()) {
-		default:
-			return WLItems.BALD_CYPRESS_BOAT.get();
 		case COCONUT:
 			return WLItems.COCONUT_BOAT.get();
+		case CYPRESS:
+			return WLItems.CYPRESS_BOAT.get();
 		case CHARRED:
+		default:
 			return WLItems.CHARRED_BOAT.get();
 		}
 	}
-
-	public Block getPlanks() {
-		switch(this.getWLBoatType()) {
-		default:
-			return WLBlocks.CYPRESS_PLANKS.get();
-		case COCONUT:
-			return WLBlocks.COCONUT_PLANKS.get();
-		case CHARRED:
-			return WLBlocks.CHARRED_PLANKS.get();
-		}
-	}
-
-	public WLType getWLBoatType() {
-		return WLType.byId(this.entityData.get(WL_BOAT_TYPE));
-	}
-
-	public void setWLBoatType(WLType boatType) {
-		this.entityData.set(WL_BOAT_TYPE, boatType.ordinal());
-	}
-
-	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		this.entityData.define(WL_BOAT_TYPE, WLType.BALD_CYPRESS.ordinal());
-	}
-
-	@Override
-	protected void addAdditionalSaveData(CompoundTag compound) {
-		compound.putString("WLType", this.getWLBoatType().getName());
-	}
-
-	@Override
-	protected void readAdditionalSaveData(CompoundTag compound) {
-		if (compound.contains("WLType", 8)) {
-			this.setWLBoatType(WLType.getTypeFromString(compound.getString("WLType")));
-		}
-	}
-
-	@OnlyIn(Dist.CLIENT)
-	@Override
-	public void animateHurt() {
-		this.setHurtDir(-this.getHurtDir());
-		this.setHurtTime(10);
-		this.setDamage(this.getDamage() * 11.0F);
-	}
-
-	@Override
-	protected void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos) {
-		this.lastYd = this.getDeltaMovement().y;
-		if (!this.isPassenger()) {
-			if (onGround) {
-				if (this.fallDistance > 3.0F) {
-					if (this.status != Boat.Status.ON_LAND) {
-						this.fallDistance = 0.0f;
-						return;
-					}
-					this.causeFallDamage(this.fallDistance, 1.0F, DamageSource.FALL);
-					if (!this.level.isClientSide && !this.isRemoved()) {
-						this.kill();
-						if(this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-							for(int i = 0; i < 3; ++i) {
-								this.spawnAtLocation(this.getPlanks());
-							}
-							for (int j = 0; j < 2; ++j) {
-								this.spawnAtLocation(Items.STICK);
-							}
-							this.spawnAtLocation(Blocks.AIR);
-						}
-					}
-				}
-				this.fallDistance = 0.0F;
-			} else if (!this.level.getFluidState((new BlockPos(this.blockPosition())).below()).is(FluidTags.WATER) && y < 0.0D) {
-				this.fallDistance = (float) ((double) this.fallDistance - y);
-			}
-		}
-	}
-
-	@Override
-	public boolean hurt(DamageSource source, float amount) {
-		if (this.isInvulnerableTo(source)) {
-			return false;
-		} else if (!this.level.isClientSide && !this.isRemoved()) {
-			this.setHurtDir(-this.getHurtDir());
-			this.setHurtTime(10);
-			this.setDamage(this.getDamage() + amount * 10.0F);
-			this.markHurt();
-			this.gameEvent(GameEvent.ENTITY_DAMAGED, source.getEntity());
-			boolean flag = source.getEntity() instanceof Player && ((Player)source.getEntity()).getAbilities().instabuild;
-			if (flag || this.getDamage() > 40.0F) {
-				if (!flag && this.level.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-					this.spawnAtLocation(this.getDropItem());
-				}
-
-				this.discard();
-			}
-
-			return true;
-		} else {
-			return true;
-		}
-	}
-
-	@Override
-	public Packet<?> getAddEntityPacket() {
-		return new ClientboundAddEntityPacket(this);
-	}
-
-	public enum WLType {
-		BALD_CYPRESS("bald_cypress"),
-		COCONUT("coconut"),
-		CHARRED("charred");
-
+	
+	public enum WLBoatTypes {
+		COCONUT(WLBlocks.COCONUT_PLANKS.get(), "coconut"),
+		CYPRESS(WLBlocks.CYPRESS_PLANKS.get(), "cypress"),
+		CHARRED(WLBlocks.CHARRED_PLANKS.get(), "charred");
+		
 		private final String name;
-
-		WLType(String name) {
+		private final Block planks;
+		
+		WLBoatTypes(Block planks, String name) {
 			this.name = name;
+			this.planks = planks;
 		}
-
-		public static WLType byId(int id) {
-			WLType[] aWLBoatEntityType$WLType = values();
-			if (id < 0 || id >= aWLBoatEntityType$WLType.length) {
-				id = 0;
-			}
-			return aWLBoatEntityType$WLType[id];
-		}
-
-		public static WLType getTypeFromString(String name) {
-			WLType[] aWLBoatEntity$WLType = values();
-			for (WLType WLType : aWLBoatEntity$WLType) {
-				if (WLType.getName().equals(name)) {
-					return WLType;
-				}
-			}
-			return aWLBoatEntity$WLType[0];
-		}
-
+		
 		public String getName() {
 			return this.name;
 		}
-
+		
+		public Block getPlanks() {
+			return this.planks;
+		}
+		
 		public String toString() {
 			return this.name;
 		}
+		
+		public static WLBoatTypes byId(int id) {
+			WLBoatTypes[] boatEntityType = values();
+			if (id < 0 || id >= boatEntityType.length) {
+				id = 0;
+			}
+			return boatEntityType[id];
+		}
+		
+		public static WLBoatTypes byName(String name) {
+			WLBoatTypes[] boatEntityType = values();
+			
+			for (int i = 0; i < boatEntityType.length; ++i) {
+				if (boatEntityType[i].getName().equals(name)) {
+					return boatEntityType[i];
+				}
+			}
+			return boatEntityType[0];
+		}
+		
 	}
+
+
 
 }

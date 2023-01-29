@@ -1,0 +1,8 @@
+{
+	"replace": false,
+	"values": [
+		"wildlands:coconut_chest_boat",
+		"wildlands:charred_chest_boat",
+		"wildlands:bald_cypress_chest_boat"
+	]
+}

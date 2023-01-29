@@ -9,15 +9,14 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 public class BurntForestBiomeDecorator {
 	
 	@SuppressWarnings("unused")
-	private static Biome biome(Biome.Precipitation precipitation, Biome.BiomeCategory category, float temperature, float downfall, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder)
+	private static Biome biome(Biome.Precipitation precipitation, float temperature, float downfall, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder)
 	{
-		return biome(precipitation, category, temperature, downfall, spawnBuilder, biomeBuilder);
+		return biome(precipitation, temperature, downfall, spawnBuilder, biomeBuilder);
 	}
 	
-	private static Biome biome(Biome.Precipitation precipitation, Biome.BiomeCategory category, float temperature, float downfall, int waterColor, int waterFogColor, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder) {
+	private static Biome biome(Biome.Precipitation precipitation, float temperature, float downfall, int waterColor, int waterFogColor, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder) {
 		return (new Biome.BiomeBuilder())
 				.precipitation(precipitation)
-				.biomeCategory(category)
 				.temperature(temperature)
 				.downfall(downfall)
 				.specialEffects((new BiomeSpecialEffects.Builder())
@@ -35,7 +34,7 @@ public class BurntForestBiomeDecorator {
 	public static Biome decorateBurntForest() {
 		MobSpawnSettings.Builder spawnSettings = new MobSpawnSettings.Builder();
 		BiomeGenerationSettings.Builder biomeFeatures = new BiomeGenerationSettings.Builder();
-		return biome(Biome.Precipitation.NONE, Biome.BiomeCategory.FOREST, 0.9F, 0.0F, 0x4E4439, 0x2D2821, spawnSettings, biomeFeatures);
+		return biome(Biome.Precipitation.NONE, 0.9F, 0.0F, 0x4E4439, 0x2D2821, spawnSettings, biomeFeatures);
 	}
 
 }

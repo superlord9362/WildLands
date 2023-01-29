@@ -2,7 +2,7 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:alternatives",
@@ -13,15 +13,18 @@
                 {
                   "condition": "minecraft:match_tool",
                   "predicate": {
-                    "item": "minecraft:shears"
+                    "items": [
+                      "minecraft:shears"
+                    ]
                   }
                 }
               ],
-              "name": "wildlands:charred_grass"
+              "name": "wildlands:charred_tall_grass"
             }
           ]
         }
-      ]
+      ],
+      "rolls": 1.0
     }
   ]
 }

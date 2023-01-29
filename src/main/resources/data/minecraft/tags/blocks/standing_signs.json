@@ -1,8 +1,8 @@
 {
-  "replace": false,
-  "values": [
-    "wildlands:cypress_sign",
-    "wildlands:coconut_sign",
-	"wildlands:charred_sign"
-  ]
+	"replace": false,
+	"values": [
+		"wildlands:charred_sign",
+		"wildlands:coconut_sign",
+		"wildlands:cypress_sign"
+	]
 }

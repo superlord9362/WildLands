@@ -1,7 +1,6 @@
 package superlord.wildlands.init;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -22,7 +21,7 @@ public class WLDamageSources {
 			int index = entityLivingBaseIn.getRandom().nextInt(3);
 			String s1 = s + "." + index;
 			String s2 = s + ".attacker_" + index;
-			return livingEntity != null ? new TranslatableComponent(s2, entityLivingBaseIn.getDisplayName(), livingEntity.getDisplayName()) : new TranslatableComponent(s1, entityLivingBaseIn.getDisplayName());
+			return livingEntity != null ?  Component.translatable(s2, entityLivingBaseIn.getDisplayName(), livingEntity.getDisplayName()) :  Component.translatable(s1, entityLivingBaseIn.getDisplayName());
 		}
 		
 	}
@@ -39,7 +38,7 @@ public class WLDamageSources {
 			int index = entityLivingBaseIn.getRandom().nextInt(2);
 			String s1 = s + "." + index;
 			String s2 = s + ".attacker_" + index;
-			return livingEntity != null ? new TranslatableComponent(s2, entityLivingBaseIn.getDisplayName(), livingEntity.getDisplayName()) : new TranslatableComponent(s1, entityLivingBaseIn.getDisplayName());
+			return livingEntity != null ?  Component.translatable(s2, entityLivingBaseIn.getDisplayName(), livingEntity.getDisplayName()) :  Component.translatable(s1, entityLivingBaseIn.getDisplayName());
 		}
 		
 	}

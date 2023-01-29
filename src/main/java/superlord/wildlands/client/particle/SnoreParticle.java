@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class SnoreParticle extends BaseAshSmokeParticle {
-
+	
 	protected SnoreParticle(ClientLevel world, double x, double y, double z, double motionX, double motionY, double motionZ, float scale, SpriteSet spriteWithAge) {
 		super(world, x, y, z, 0.1F, 0.1F, 0.1F, motionX, motionY, motionZ, scale, spriteWithAge, 1F, 12, (float) 0.004D, true);
 	}
@@ -28,4 +28,5 @@ public class SnoreParticle extends BaseAshSmokeParticle {
 			return new SnoreParticle(worldIn, x, y, z, xSpeed, 0.01, zSpeed, 1.5F, this.spriteSet);
 		}
 	}
+
 }

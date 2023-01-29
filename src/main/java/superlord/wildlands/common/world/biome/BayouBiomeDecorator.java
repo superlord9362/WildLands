@@ -21,16 +21,15 @@ public class BayouBiomeDecorator {
 	}
 
 	@SuppressWarnings("unused")
-	private static Biome biome(Biome.Precipitation precipitation, Biome.BiomeCategory category, float temperature, float downfall, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder)
+	private static Biome biome(Biome.Precipitation precipitation, float temperature, float downfall, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder)
 	{
-		return biome(precipitation, category, temperature, downfall, spawnBuilder, biomeBuilder);
+		return biome(precipitation, temperature, downfall, spawnBuilder, biomeBuilder);
 	}
 
-	private static Biome biome(Biome.Precipitation precipitation, Biome.BiomeCategory category, float temperature, float downfall, int waterColor, int waterFogColor, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder)
+	private static Biome biome(Biome.Precipitation precipitation, float temperature, float downfall, int waterColor, int waterFogColor, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder)
 	{
 		return (new Biome.BiomeBuilder())
 				.precipitation(precipitation)
-				.biomeCategory(category)
 				.temperature(temperature)
 				.downfall(downfall)
 				.specialEffects((new BiomeSpecialEffects.Builder())
@@ -61,7 +60,7 @@ public class BayouBiomeDecorator {
 		BiomeDefaultFeatures.addDefaultMushrooms(biomegenerationsettings$builder);
 		BiomeDefaultFeatures.addSwampExtraVegetation(biomegenerationsettings$builder);
 		biomegenerationsettings$builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, AquaticPlacements.SEAGRASS_SWAMP);
-		return biome(Biome.Precipitation.RAIN, Biome.BiomeCategory.SWAMP, 0.5F, 0.7F, 3031057, 7172665, spawnSettings, biomeFeatures);
+		return biome(Biome.Precipitation.RAIN, 0.5F, 0.7F, 3031057, 7172665, spawnSettings, biomeFeatures);
 	}
 
 	private static void globalOverworldGeneration(BiomeGenerationSettings.Builder p_194870_) {

@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "wildlands:item/coconut_sign"
-  }
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "wildlands:item/coconut_sign"
+	}
 }

@@ -8,7 +8,9 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.Climate;
+import superlord.wildlands.config.WildLandsConfig;
 import superlord.wildlands.init.WLBiomes;
 import terrablender.api.Region;
 import terrablender.api.RegionType;
@@ -30,8 +32,8 @@ public class BayouRegionProvider extends Region {
 	
 	@Override
     public void addBiomes(Registry<Biome> registry, Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> mapper) {
-		this.addBiome(mapper, Climate.parameters(0.5F, 0.7F, 0.3F, 1F, 0.5F, 0F, 0), WLBiomes.BAYOU);
-		this.addBiome(mapper, Climate.parameters(0.9F, 0.0F, 1F, 0.8F, 0.7F, 0F, 0), WLBiomes.BURNT_FOREST);
+		if (WildLandsConfig.bayouBiome = true) this.addBiomeSimilar(mapper, Biomes.SWAMP, WLBiomes.BAYOU);
+		if (WildLandsConfig.burntForestBiome = true) this.addBiomeSimilar(mapper, Biomes.FOREST, WLBiomes.BURNT_FOREST);
 	}
 
 }

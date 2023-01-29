@@ -93,7 +93,7 @@ public class Grizzly extends Animal
 
 	protected void playWarningSound() {
 		if (this.warningSoundTicks <= 0) {
-			this.playSound(WLSounds.GRIZZLY_WARNING, 1.0F, this.getSoundVolume());
+			this.playSound(WLSounds.GRIZZLY_WARNING.get(), 1.0F, this.getSoundVolume());
 			this.warningSoundTicks = 40;
 		}
 
@@ -164,18 +164,18 @@ public class Grizzly extends Animal
 
 	protected SoundEvent getAmbientSound() {
 		if (!this.isSleeping()) {
-			return WLSounds.GRIZZLY_IDLE;
+			return WLSounds.GRIZZLY_IDLE.get();
 		} else {
 			return null;
 		}
 	}
 
 	protected SoundEvent getDeathSound() {
-		return WLSounds.GRIZZLY_DEATH;
+		return WLSounds.GRIZZLY_DEATH.get();
 	}
 
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return WLSounds.GRIZZLY_HURT;
+		return WLSounds.GRIZZLY_HURT.get();
 	}
 
 	public int getFoodCount() {
@@ -286,7 +286,7 @@ public class Grizzly extends Animal
 		if(this.isSleeping()) {
 			snoreTicks++;
 			if (snoreTicks % 10 == 0) {
-				level.addParticle(WLParticles.SNORE_PARTICLE, this.getX(), this.getY() + 0.2F, this.getZ(), 0, 0, 0);
+				level.addParticle(WLParticles.SNORE_PARTICLE.get(), this.getX(), this.getY() + 0.2F, this.getZ(), 0, 0, 0);
 			}
 		}
 
@@ -303,7 +303,7 @@ public class Grizzly extends Animal
 				}
 				this.setSitting(true);
 				if (this.eatTicks > 200) {
-					level.playSound((Player)null, this.getX(), this.getY(), this.getZ(), WLSounds.GRIZZLY_EATING, SoundSource.NEUTRAL, 1, 1);
+					level.playSound((Player)null, this.getX(), this.getY(), this.getZ(), WLSounds.GRIZZLY_EATING.get(), SoundSource.NEUTRAL, 1, 1);
 					ItemStack itemstack1 = itemstack.finishUsingItem(this.level, this);
 					if (!itemstack1.isEmpty()) {
 						this.setItemSlot(EquipmentSlot.MAINHAND, itemstack1);
@@ -314,7 +314,7 @@ public class Grizzly extends Animal
 					this.setFoodCount(foodCount + 1);
 				}
 				if (eatTicks % 20 == 0) {
-					level.playSound((Player)null, this.getX(), this.getY(), this.getZ(), WLSounds.GRIZZLY_EATING, SoundSource.NEUTRAL, 1, 1);
+					level.playSound((Player)null, this.getX(), this.getY(), this.getZ(), WLSounds.GRIZZLY_EATING.get(), SoundSource.NEUTRAL, 1, 1);
 				}
 				if (this.getTarget() != null) {
 					this.eatTicks = 0;

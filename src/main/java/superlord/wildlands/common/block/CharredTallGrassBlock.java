@@ -1,9 +1,8 @@
 package superlord.wildlands.common.block;
 
-import java.util.Random;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -30,7 +29,7 @@ public class CharredTallGrassBlock extends BushBlock implements BonemealableBloc
 	}
 	
 	@Override
-	public boolean isBonemealSuccess(Level world, Random rand, BlockPos pos, BlockState state) {
+	public boolean isBonemealSuccess(Level world, RandomSource rand, BlockPos pos, BlockState state) {
 		return false;
 	}
 	
@@ -39,7 +38,7 @@ public class CharredTallGrassBlock extends BushBlock implements BonemealableBloc
 	}
 
 	@Override
-	public void performBonemeal(ServerLevel p_50893_, Random p_50894_, BlockPos p_50895_, BlockState p_50896_) {
+	public void performBonemeal(ServerLevel p_50893_, RandomSource p_50894_, BlockPos p_50895_, BlockState p_50896_) {
 		
 	}
 

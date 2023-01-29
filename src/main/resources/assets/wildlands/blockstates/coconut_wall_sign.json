@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "": { "model": "wildlands:block/coconut_sign" }
-    }
+	"variants": {
+		"": {
+			"model": "wildlands:block/coconut_sign"
+		}
+	}
 }

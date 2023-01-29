@@ -18,13 +18,14 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.common.entity.WLBoat;
+import superlord.wildlands.common.entity.WLBoat.WLBoatTypes;
 
 public class WLBoatItem extends Item {
 	
 	private static final Predicate<Entity> RIDERS = EntitySelector.NO_SPECTATORS.and(Entity::canBeCollidedWith);
-	private final WLBoat.WLType type;
+	private final WLBoatTypes type;
 	
-	public WLBoatItem(WLBoat.WLType type, Item.Properties properties) {
+	public WLBoatItem(WLBoat.WLBoatTypes type, Item.Properties properties) {
 		super(properties);
 		this.type = type;
 	}

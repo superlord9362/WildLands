@@ -1,10 +1,9 @@
 package superlord.wildlands.common.world.feature;
 
-import java.util.Random;
-
 import com.mojang.serialization.Codec;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,7 +21,7 @@ public class UrchinFeature extends Feature<CountConfiguration> {
 
 	@Override
 	public boolean place(FeaturePlaceContext<CountConfiguration> p_160316_) {
-		Random rand = p_160316_.random();
+		RandomSource rand = p_160316_.random();
 		WorldGenLevel worldgenlevel = p_160316_.level();
 		BlockPos pos = p_160316_.origin();		
 		int i = rand.nextInt(8) - rand.nextInt(8);

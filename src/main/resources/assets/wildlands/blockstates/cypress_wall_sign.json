@@ -1,5 +1,7 @@
 {
-    "variants": {
-        "": { "model": "wildlands:block/cypress_sign" }
-    }
+	"variants": {
+		"": {
+			"model": "wildlands:block/cypress_sign"
+		}
+	}
 }

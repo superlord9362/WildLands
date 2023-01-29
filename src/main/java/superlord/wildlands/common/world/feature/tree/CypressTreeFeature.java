@@ -1,10 +1,9 @@
 package superlord.wildlands.common.world.feature.tree;
 
-import java.util.Random;
-
 import com.mojang.serialization.Codec;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
@@ -26,7 +25,7 @@ public class CypressTreeFeature extends Feature<NoneFeatureConfiguration> {
 		return place(placeContext.level(), placeContext.chunkGenerator(), placeContext.random(), placeContext.origin(), placeContext.config());
 	}
 	
-    public boolean place(WorldGenLevel world, ChunkGenerator generator, Random rand, BlockPos pos, NoneFeatureConfiguration config) {
+    public boolean place(WorldGenLevel world, ChunkGenerator generator, RandomSource rand, BlockPos pos, NoneFeatureConfiguration config) {
     	if ((world.getBlockState(pos.below()).is(Blocks.GRASS_BLOCK) && world.getBlockState(pos.below().east()).is(Blocks.GRASS_BLOCK) && world.getBlockState(pos.below().north()).is(Blocks.GRASS_BLOCK)) || (world.getBlockState(pos).is(Blocks.WATER) && world.getBlockState(pos.below()).is(Blocks.DIRT) && world.getBlockState(pos.east()).is(Blocks.WATER) && world.getBlockState(pos.below().east()).is(Blocks.DIRT) && world.getBlockState(pos.north()).is(Blocks.WATER) && world.getBlockState(pos.below().north()).is(Blocks.DIRT) && world.getBlockState(pos.north().east()).is(Blocks.WATER) && world.getBlockState(pos.north().east().below()).is(Blocks.DIRT)) && world.getBiome(pos).is(WLBiomes.BAYOU)) {
     		placeTree(world, rand, pos);
     		return true;
@@ -36,7 +35,7 @@ public class CypressTreeFeature extends Feature<NoneFeatureConfiguration> {
     }
 
 	
-	private void placeTree(LevelAccessor world, Random random, BlockPos pos) {
+	private void placeTree(LevelAccessor world, RandomSource random, BlockPos pos) {
 		int height1 = random.nextInt(3) + 2;
 		int height2 = random.nextInt(3) + 2;
 		int height3 = random.nextInt(3) + 2;

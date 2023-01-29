@@ -1,17 +1,19 @@
 package superlord.wildlands.common.entity;
 
 import java.util.EnumSet;
-import java.util.Random;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -72,11 +74,11 @@ public class Jellyfish extends WaterAnimal {
 	}
 
 	protected SoundEvent getDeathSound() {
-		return WLSounds.JELLYFISH_DEATH;
+		return WLSounds.JELLYFISH_DEATH.get();
 	}
 
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return WLSounds.JELLYFISH_HURT;
+		return WLSounds.JELLYFISH_HURT.get();
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {
@@ -118,9 +120,9 @@ public class Jellyfish extends WaterAnimal {
 
 	@Nullable
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
-		Biome biome = worldIn.getBiome(this.blockPosition()).value();
-		String name = biome.getRegistryName().getPath();
-		if (name.equals("frozen_ocean") || name.equals("deep_frozen_ocean")) {
+		Holder<Biome> biome = worldIn.getBiome(this.blockPosition());
+		
+		if (biome.get().getPrecipitation() == Biome.Precipitation.SNOW) {
 			setJellyfishVariant(0);
 		} else {
 			setJellyfishVariant(1);
@@ -249,44 +251,36 @@ public class Jellyfish extends WaterAnimal {
 
 		@Override
 		public boolean canUse() {
-			this.entity = this.jellyfish.level.getNearestEntity(LivingEntity.class, PREDICATE, this.jellyfish, 1, 1, 1, this.jellyfish.getBoundingBox());
-			Turtle turtle = new Turtle(EntityType.TURTLE, jellyfish.level);
-			if (entity == turtle || entity == jellyfish) {
+			List<LivingEntity> entity = this.jellyfish.level.getEntitiesOfClass(LivingEntity.class, this.jellyfish.getBoundingBox().inflate(0.25D, 0.25D, 0.25D));
+			if (entity.isEmpty()) {
 				return false;
-			} else if (entity != null) {
-				return true;
 			} else {
-				return false;
+				return true;
 			}
 		}
 
 		public boolean canContinueToUse() {
-			Turtle turtle = new Turtle(EntityType.TURTLE, jellyfish.level);
-			if (entity == null || entity == jellyfish || entity == turtle) {
+			List<LivingEntity> entity = this.jellyfish.level.getEntitiesOfClass(LivingEntity.class, this.jellyfish.getBoundingBox().inflate(0.25D, 0.25D, 0.25D));
+			if (entity.isEmpty()) {
 				return false;
-			} else {
-				return true;
-			}
+			} else return true;
 		}
 
-		public void start() {
-			Turtle turtle = new Turtle(EntityType.TURTLE, jellyfish.level);
-			if (entity == this.jellyfish || entity == turtle) {
-				//This shouldn't do anyhting.
-			} else {
-				if (entity instanceof LivingEntity) {
-					this.entity.addEffect(new MobEffectInstance(WLEffects.STING.get(), 100));
+		public void tick() {
+			super.tick();
+			List<LivingEntity> entity = this.jellyfish.level.getEntitiesOfClass(LivingEntity.class, this.jellyfish.getBoundingBox().inflate(0.25D, 0.25D, 0.25D));
+			if (!entity.isEmpty()) {
+				LivingEntity livingEntity = entity.get(0);
+				if (!(livingEntity instanceof Jellyfish || livingEntity instanceof Turtle)) {
+					livingEntity.addEffect(new MobEffectInstance(WLEffects.STING.get(), 100));
 				}
 			}
 		}
 
-		public void stop() {
-			this.entity = null;
-		}
 
 	}
 
-	public static boolean canSpawn(EntityType<? extends Jellyfish> type, LevelAccessor worldIn, MobSpawnType reason, BlockPos p_223363_3_, Random randomIn) {
+	public static boolean canSpawn(EntityType<? extends Jellyfish> type, LevelAccessor worldIn, MobSpawnType reason, BlockPos p_223363_3_, RandomSource randomIn) {
 		return worldIn.getBlockState(p_223363_3_).is(Blocks.WATER) && worldIn.getBlockState(p_223363_3_.above()).is(Blocks.WATER);
 	}
 

@@ -6,6 +6,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration;
@@ -15,6 +17,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.feature.stateproviders.RuleBasedBlockStateProvider;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import superlord.wildlands.WildLands;
@@ -26,11 +29,11 @@ public class WLConfiguredFeatures {
     public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_STARFISH = CONFIGURED_FEATURES.register("starfish", () -> new ConfiguredFeature<>(WLFeatures.STARFISH.get(), new CountConfiguration(4)));
     public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_URCHIN = CONFIGURED_FEATURES.register("urchin", () -> new ConfiguredFeature<>(WLFeatures.URCHIN.get(), new CountConfiguration(4)));
 
-    public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_DISK_MUD = CONFIGURED_FEATURES.register("disk_mud", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(WLBlocks.MUD.get().defaultBlockState(), UniformInt.of(2, 3), 1, List.of(WLBlocks.MUD.get().defaultBlockState()))));
-    public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_DISK_FINE_SAND = CONFIGURED_FEATURES.register("disk_fine_sand", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(WLBlocks.FINE_SAND.get().defaultBlockState(), UniformInt.of(2, 3), 1, List.of(WLBlocks.FINE_SAND.get().defaultBlockState()))));
-    public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_DISK_CONGLOMERATE = CONFIGURED_FEATURES.register("disk_conglomerate", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(WLBlocks.CONGLOMERATE.get().defaultBlockState(), UniformInt.of(2, 3), 1, List.of(WLBlocks.CONGLOMERATE.get().defaultBlockState()))));
-    public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_DISK_GABBRO = CONFIGURED_FEATURES.register("disk_gabbro", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(WLBlocks.GABBRO.get().defaultBlockState(), UniformInt.of(2, 3), 1, List.of(WLBlocks.GABBRO.get().defaultBlockState()))));
-    public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_DISK_DOLERITE = CONFIGURED_FEATURES.register("disk_dolerite", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(WLBlocks.DOLERITE.get().defaultBlockState(), UniformInt.of(2, 3), 1, List.of(WLBlocks.DOLERITE.get().defaultBlockState()))));
+    public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_DISK_MUD = CONFIGURED_FEATURES.register("disk_mud", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(WLBlocks.MUD.get()), BlockPredicate.matchesBlocks(List.of(Blocks.SAND, Blocks.DIRT, Blocks.GRAVEL)), UniformInt.of(2, 3), 1)));
+    public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_DISK_FINE_SAND = CONFIGURED_FEATURES.register("disk_fine_sand", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(WLBlocks.FINE_SAND.get()), BlockPredicate.matchesBlocks(List.of(Blocks.SAND, Blocks.GRAVEL, Blocks.DIRT)), UniformInt.of(2, 3), 1)));
+    public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_DISK_CONGLOMERATE = CONFIGURED_FEATURES.register("disk_conglomerate", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(WLBlocks.CONGLOMERATE.get()), BlockPredicate.matchesBlocks(List.of(Blocks.SAND, Blocks.GRAVEL, Blocks.DIRT)), UniformInt.of(2, 3), 1)));
+    public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_DISK_GABBRO = CONFIGURED_FEATURES.register("disk_gabbro", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(WLBlocks.GABBRO.get()), BlockPredicate.matchesBlocks(List.of(Blocks.SAND, Blocks.GRAVEL, Blocks.DIRT)), UniformInt.of(2, 3), 1)));
+    public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_DISK_DOLERITE = CONFIGURED_FEATURES.register("disk_dolerite", () -> new ConfiguredFeature<>(Feature.DISK, new DiskConfiguration(RuleBasedBlockStateProvider.simple(WLBlocks.DOLERITE.get()), BlockPredicate.matchesBlocks(List.of(Blocks.SAND, Blocks.GRAVEL, Blocks.DIRT)), UniformInt.of(2, 3), 1)));
 
     public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_CONGLOMERATE_ROCK = CONFIGURED_FEATURES.register("conglomerate_rock", () -> new ConfiguredFeature<>(WLFeatures.LARGE_ROCK.get(), new BlockStateConfiguration(WLBlocks.CONGLOMERATE.get().defaultBlockState())));
     public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_GABBRO_ROCK = CONFIGURED_FEATURES.register("gabbro_rock", () -> new ConfiguredFeature<>(WLFeatures.LARGE_ROCK.get(), new BlockStateConfiguration(WLBlocks.GABBRO.get().defaultBlockState())));

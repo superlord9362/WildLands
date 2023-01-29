@@ -98,7 +98,7 @@ public class CrabModel extends EntityModel<Crab> {
 	public void setupAnim(Crab entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		float speed = 1.0f;
 		float degree = 1.0f;
-		if (entity.isPartying()) {
+		if (entity.isCrabRave()) {
 			this.body.xRot = (-0.2F * 1F * Mth.sin((1.5F * ageInTicks) / 10));
 			this.eye1.zRot = (-0.1F * 1F * Mth.sin((1.5F * ageInTicks) / 10));
 			this.eye2.zRot = (0.1F * 1F * Mth.sin((1.5F * ageInTicks) / 10));

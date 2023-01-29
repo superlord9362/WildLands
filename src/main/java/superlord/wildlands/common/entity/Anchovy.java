@@ -30,15 +30,15 @@ public class Anchovy extends AbstractSchoolingFish {
 	}
 
 	protected SoundEvent getDeathSound() {
-		return WLSounds.ANCHOVY_DEATH;
+		return WLSounds.ANCHOVY_DEATH.get();
 	}
 
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return WLSounds.ANCHOVY_HURT;
+		return WLSounds.ANCHOVY_HURT.get();
 	}
 
 	protected SoundEvent getFlopSound() {
-		return WLSounds.ANCHOVY_FLOP;
+		return WLSounds.ANCHOVY_FLOP.get();
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {

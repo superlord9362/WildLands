@@ -2,7 +2,6 @@ package superlord.wildlands.common.entity;
 
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Predicate;
 
 import net.minecraft.core.BlockPos;
@@ -15,7 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -25,10 +24,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.BreathAirGoal;
 import net.minecraft.world.entity.ai.goal.BreedGoal;
 import net.minecraft.world.entity.ai.goal.FollowParentGoal;
@@ -52,6 +51,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
 import net.minecraft.world.level.pathfinder.AmphibiousNodeEvaluator;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.PathFinder;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
@@ -59,6 +59,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import superlord.wildlands.common.entity.navigator.AmphibiousPathNavigator;
 import superlord.wildlands.init.WLEntities;
 import superlord.wildlands.init.WLItems;
 import superlord.wildlands.init.WLSounds;
@@ -71,7 +72,8 @@ public class SeaLion extends Animal {
 	public SeaLion(EntityType<? extends SeaLion> type, Level worldIn) {
 		super(type, worldIn);
 		this.setCanPickUpLoot(true);
-		this.moveControl = new SeaLion.MoveHelperController(this);
+		this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
+		this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 0.0F);
 		this.maxUpStep = 1.0F;
 	}
 
@@ -229,15 +231,15 @@ public class SeaLion extends Animal {
 	}
 
 	protected SoundEvent getAmbientSound() {
-		return WLSounds.SEA_LION_IDLE;
+		return WLSounds.SEA_LION_IDLE.get();
 	}
 
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return WLSounds.SEA_LION_HURT;
+		return WLSounds.SEA_LION_HURT.get();
 	}
 
 	protected SoundEvent getDeathSound() {
-		return WLSounds.SEA_LION_DEATH;
+		return WLSounds.SEA_LION_DEATH.get();
 	}
 
 	class WalkAndSwimPathNavigator extends WaterBoundPathNavigation {
@@ -271,41 +273,18 @@ public class SeaLion extends Animal {
 		return 0.98F;
 	}
 
-	static class MoveHelperController extends MoveControl {
-		private final SeaLion seaLion;
-
-		MoveHelperController(SeaLion seaLion) {
-			super(seaLion);
-			this.seaLion = seaLion;
-		}
-
-		public void tick() {
-			if (this.seaLion.isInWater()) {
-				this.seaLion.setDeltaMovement(this.seaLion.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
-			}
-
-			if (this.operation == MoveControl.Operation.MOVE_TO && !this.seaLion.getNavigation().isDone()) {
-				float f = (float)(this.speedModifier * this.seaLion.getAttributeValue(Attributes.MOVEMENT_SPEED));
-				this.seaLion.setSpeed(Mth.lerp(0.125F, this.seaLion.getSpeed(), f));
-				double d0 = this.wantedX - this.seaLion.getX();
-				double d1 = this.wantedY - this.seaLion.getY();
-				double d2 = this.wantedZ - this.seaLion.getZ();
-				if (d1 != 0.0D) {
-					double d3 = (double)Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
-					this.seaLion.setDeltaMovement(this.seaLion.getDeltaMovement().add(0.0D, (double)this.seaLion.getSpeed() * (d1 / d3) * 0.1D, 0.0D));
-				}
-
-				if (d0 != 0.0D || d2 != 0.0D) {
-					float f1 = (float)(Mth.atan2(d2, d0) * (double)(180F / (float)Math.PI)) - 90.0F;
-					this.seaLion.yRotO = this.rotlerp(this.seaLion.getYRot(), f1, 90.0F);
-					this.seaLion.yBodyRot = this.seaLion.getYRot();
-				}
-
-			} else {
-				this.seaLion.setSpeed(0.0F);
-			}
-		}
-	}
+	public void travel(Vec3 travelVector) {
+        if (this.isEffectiveAi() && this.isInWater()) {
+            this.moveRelative(this.getSpeed(), travelVector);
+            this.move(MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.5D));
+            if (this.getTarget() == null) {
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.005D, 0.0D));
+            }
+        } else {
+            super.travel(travelVector);
+        }
+    }
 
 	static class SwimGoal extends RandomSwimmingGoal {
 		private final SeaLion seaLion;
@@ -328,7 +307,7 @@ public class SeaLion extends Animal {
 		return stack.getItem() == Items.TROPICAL_FISH;
 	}
 
-	public static boolean canSeaLionSpawn(EntityType<? extends Animal> animal, LevelAccessor levelIn, MobSpawnType reason, BlockPos pos, Random random) {
+	public static boolean canSeaLionSpawn(EntityType<? extends Animal> animal, LevelAccessor levelIn, MobSpawnType reason, BlockPos pos, RandomSource random) {
 		return (levelIn.getBlockState(pos.below()).is(Blocks.GRASS_BLOCK) || levelIn.getBlockState(pos.below()).is(net.minecraftforge.common.Tags.Blocks.SAND)) && isBrightEnoughToSpawn(levelIn, pos);
 	}
 
@@ -336,8 +315,12 @@ public class SeaLion extends Animal {
 		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 30.0D).add(Attributes.FOLLOW_RANGE, 20.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.ATTACK_DAMAGE, 2.0D);
 	}
 
-	protected PathNavigation createNavigation(Level worldIn) {
-		return new SeaLion.WalkAndSwimPathNavigator(this, worldIn);
+	protected PathNavigation createNavigation(Level levelIn) {
+		return new AmphibiousPathNavigator(SeaLion.this, levelIn) {
+			public boolean isStableDestination(BlockPos pos) {
+				return this.level.getBlockState(pos).getFluidState().isEmpty();
+			}
+		};
 	}
 
 	static class GoToWaterGoal extends MoveToBlockGoal {

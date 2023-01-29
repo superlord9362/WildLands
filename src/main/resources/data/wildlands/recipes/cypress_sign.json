@@ -1,21 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "group": "sign",
-  "pattern": [
-    "###",
-    "###",
-	" S "
-  ],
-  "key": {
-    "#": {
-      "item": "wildlands:cypress_planks"
-    },
-	"S": {
-		"item": "minecraft:stick"
+	"type": "minecraft:crafting_shaped",
+	"group": "sign",
+	"pattern": [
+		"###",
+		"###",
+		" S "
+	],
+	"key": {
+		"#": {
+			"item": "wildlands:cypress_planks"
+		},
+		"S": {
+			"item": "minecraft:stick"
+		}
+	},
+	"result": {
+		"item": "wildlands:cypress_sign",
+		"count": 3
 	}
-  },
-  "result": {
-    "item": "wildlands:cypress_sign",
-    "count": 3
-  }
 }

@@ -70,9 +70,9 @@ public class GrizzlySittingModel extends EntityModel<Grizzly> implements ArmedMo
 	public void setupAnim(Grizzly entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.Head.xRot = Mth.abs(0.2F * 1F * Mth.sin((0.75F * ageInTicks) / 10));
 		this.FrontRightLeg.xRot = -Mth.abs(-0.75F * 1F * Mth.sin((1.5F * ageInTicks) / 10));
-		this.FrontRightLeg.zRot = -Mth.abs(-0.75F * 1F * Mth.sin((1.5F * ageInTicks) / 10));
+		this.FrontRightLeg.zRot = Mth.abs(-0.75F * 1F * Mth.sin((1.5F * ageInTicks) / 10));
 		this.FrontLeftLeg.xRot = -Mth.abs(-0.5F * 1F * Mth.sin((1.5F * ageInTicks) / 10));
-		this.FrontLeftLeg.zRot = Mth.abs(-0.5F * 1F * Mth.sin((1.5F * ageInTicks) / 10));
+		this.FrontLeftLeg.zRot = -Mth.abs(-0.5F * 1F * Mth.sin((1.5F * ageInTicks) / 10));
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class GrizzlySittingModel extends EntityModel<Grizzly> implements ArmedMo
 		modelrenderer.x += f;
 		modelrenderer.translateAndRotate(matrixStackIn);
 		modelrenderer.x -= f;
-		matrixStackIn.translate(0.1, -0.1, 0);
+		matrixStackIn.translate(-0.1, -0.1, 0);
 	}
 
 	protected ModelPart getArmForSide(HumanoidArm side) {

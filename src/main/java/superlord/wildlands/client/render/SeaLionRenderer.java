@@ -18,7 +18,7 @@ public class SeaLionRenderer extends MobRenderer<SeaLion, SeaLionModel<SeaLion>>
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public SeaLionRenderer(EntityRendererProvider.Context renderManagerIn) {
 		super(renderManagerIn, new SeaLionModel<>(renderManagerIn.bakeLayer(ClientEvents.SEA_LION)), 0.25F);
-		this.addLayer(new ItemInHandLayer(this));
+		this.addLayer(new ItemInHandLayer(this, renderManagerIn.getItemInHandRenderer()));
 	}
 	
 	public void scale(SeaLion entityIn, PoseStack matrixStackIn, float partialTickTime) {

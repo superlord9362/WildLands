@@ -1,8 +1,8 @@
 {
-  "replace": false,
-  "values": [
-    "wildlands:cypress_wall_sign",
-    "wildlands:coconut_wall_sign",
-	"wildlands:charred_wall_sign"
-  ]
+	"replace": false,
+	"values": [
+		"wildlands:charred_wall_sign",
+		"wildlands:coconut_wall_sign",
+		"wildlands:cypress_wall_sign"
+	]
 }

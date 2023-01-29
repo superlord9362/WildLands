@@ -46,15 +46,15 @@ public class Catfish extends AbstractFish {
 	}
 
 	protected SoundEvent getDeathSound() {
-		return WLSounds.CATFISH_DEATH;
+		return WLSounds.CATFISH_DEATH.get();
 	}
 
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return WLSounds.CATFISH_HURT;
+		return WLSounds.CATFISH_HURT.get();
 	}
 
 	protected SoundEvent getFlopSound() {
-		return WLSounds.CATFISH_FLOP;
+		return WLSounds.CATFISH_FLOP.get();
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {
@@ -83,6 +83,7 @@ public class Catfish extends AbstractFish {
 			this.fish = catfish;
 		}
 
+		@SuppressWarnings("deprecation")
 		public void tick() {
 			if (this.fish.isEyeInFluid(FluidTags.WATER)) {
 				this.fish.setDeltaMovement(this.fish.getDeltaMovement().add(0.0D, 0.005D, 0.0D));
