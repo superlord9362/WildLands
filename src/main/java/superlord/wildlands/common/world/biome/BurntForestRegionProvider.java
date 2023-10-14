@@ -21,11 +21,11 @@ import terrablender.api.ParameterUtils.Weirdness;
 import terrablender.api.Region;
 import terrablender.api.RegionType;
 
-public class BayouRegionProvider extends Region {
+public class BurntForestRegionProvider  extends Region {
 	
 	public static final ResourceLocation LOCATION = new ResourceLocation("minecraft:overworld");
 	
-	public BayouRegionProvider(ResourceLocation name, int weight) {
+	public BurntForestRegionProvider(ResourceLocation name, int weight) {
 		super(name, RegionType.OVERWORLD, weight);
 	}
 	
@@ -38,13 +38,12 @@ public class BayouRegionProvider extends Region {
 	
 	@Override
     public void addBiomes(Registry<Biome> registry, Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> mapper) {
-		Temperature temperature = ParameterUtils.Temperature.WARM;
-		Humidity humidity = ParameterUtils.Humidity.WET;
-		Continentalness continentalness = ParameterUtils.Continentalness.NEAR_INLAND;
-		Erosion erosion = ParameterUtils.Erosion.EROSION_2;
+		Temperature temperature = ParameterUtils.Temperature.HOT;
+		Humidity humidity = ParameterUtils.Humidity.ARID;
+		Continentalness continentalness = ParameterUtils.Continentalness.FAR_INLAND;
+		Erosion erosion = ParameterUtils.Erosion.EROSION_1;
 		Depth depth = ParameterUtils.Depth.SURFACE;
-		Weirdness weirdness = ParameterUtils.Weirdness.MID_SLICE_VARIANT_ASCENDING;
-		if (WildLandsConfig.bayouBiome = true) this.addBiome(mapper, temperature, humidity, continentalness, erosion, weirdness, depth, 0, WLBiomes.BAYOU);
+		Weirdness weirdness = ParameterUtils.Weirdness.HIGH_SLICE_NORMAL_ASCENDING;
+		if (WildLandsConfig.burntForestBiome = true) this.addBiome(mapper, temperature, humidity, continentalness, erosion, weirdness, depth, 0, WLBiomes.BURNT_FOREST);
 	}
-
 }

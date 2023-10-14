@@ -201,10 +201,5 @@
 	"precipitation": "rain",
 	"temperature": 0.7,
 	"downfall": 0.9,
-	"category": "swamp",
-	"erosion": 0,
-	"continentalness": 0.5,
-	"depth": 0,
-	"weirdness": 1,
-	"scale": 0
+	"category": "swamp"
 }

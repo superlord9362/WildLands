@@ -105,6 +105,10 @@ public class Alligator extends Animal {
 		return new ItemStack(WLItems.ALLIGATOR_SPAWN_EGG.get());
 	}
 
+	public boolean canBreatheUnderwater() {
+		return true;
+	}
+
 	protected SoundEvent getDeathSound() {
 		return WLSounds.ALLIGATOR_DEATH.get();
 	}
@@ -234,23 +238,23 @@ public class Alligator extends Animal {
 		}
 		return spawnDataIn;
 	}
-	
+
 	public float getWalkTargetValue(BlockPos pos, LevelReader worldIn) {
-        return worldIn.getFluidState(pos.below()).isEmpty() && worldIn.getFluidState(pos).is(FluidTags.WATER) ? 10.0F : super.getWalkTargetValue(pos, worldIn);
-    }
-	
+		return worldIn.getFluidState(pos.below()).isEmpty() && worldIn.getFluidState(pos).is(FluidTags.WATER) ? 10.0F : super.getWalkTargetValue(pos, worldIn);
+	}
+
 	public void travel(Vec3 travelVector) {
-        if (this.isEffectiveAi() && this.isInWater()) {
-            this.moveRelative(this.getSpeed(), travelVector);
-            this.move(MoverType.SELF, this.getDeltaMovement());
-            this.setDeltaMovement(this.getDeltaMovement().scale(0.5D));
-            if (this.getTarget() == null) {
-                this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.005D, 0.0D));
-            }
-        } else {
-            super.travel(travelVector);
-        }
-    }
+		if (this.isEffectiveAi() && this.isInWater()) {
+			this.moveRelative(this.getSpeed(), travelVector);
+			this.move(MoverType.SELF, this.getDeltaMovement());
+			this.setDeltaMovement(this.getDeltaMovement().scale(0.5D));
+			if (this.getTarget() == null) {
+				this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.005D, 0.0D));
+			}
+		} else {
+			super.travel(travelVector);
+		}
+	}
 
 	public void tick() {
 		super.tick();

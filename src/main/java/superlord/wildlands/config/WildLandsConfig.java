@@ -30,6 +30,8 @@ public class WildLandsConfig {
 	public static boolean mudDisk = true;
 	public static boolean bayouBiome = true;
 	public static boolean burntForestBiome = true;
+	public static int bayouWeight = 1;
+	public static int burntForestWeight = 1;
 	
 	public static void bakeClient(final ModConfig config) {
 		
@@ -62,6 +64,8 @@ public class WildLandsConfig {
 			mudDisk = WLConfigHolder.SERVER.mudDisk.get();
 			bayouBiome = WLConfigHolder.SERVER.bayouBiome.get();
 			burntForestBiome = WLConfigHolder.SERVER.burntForestBiome.get();
+			bayouWeight = WLConfigHolder.SERVER.bayouWeight.get();
+			burntForestWeight = WLConfigHolder.SERVER.burntForestWeight.get();
 		} catch (Exception e) {
 			WildLands.LOGGER.warn("An exception was caused trying to load the config for Wild Lands");
 			e.printStackTrace();

@@ -18,10 +18,12 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -40,7 +42,9 @@ import superlord.wildlands.common.entity.SeaLion;
 import superlord.wildlands.common.world.WLBiomeModifier;
 import superlord.wildlands.common.world.biome.BayouRegionProvider;
 import superlord.wildlands.common.world.biome.BiomeRegistry;
+import superlord.wildlands.common.world.biome.BurntForestRegionProvider;
 import superlord.wildlands.config.WLConfigHolder;
+import superlord.wildlands.config.WildLandsConfig;
 import superlord.wildlands.init.WLBlockEntities;
 import superlord.wildlands.init.WLBlocks;
 import superlord.wildlands.init.WLConfiguredFeatures;
@@ -69,12 +73,11 @@ public class WildLands {
 		final ModLoadingContext modLoadingContext = ModLoadingContext.get();
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-		modLoadingContext.registerConfig(ModConfig.Type.CLIENT, WLConfigHolder.CLIENT_SPEC);
-		modLoadingContext.registerConfig(ModConfig.Type.SERVER, WLConfigHolder.SERVER_SPEC);
 
 		bus.addListener(this::commonSetup);
 		bus.addListener(this::registerEntityAttributes);
 		bus.addListener(this::setup);
+		bus.addListener(this::onModConfigEvent);
 
 		BiomeRegistry.registerBiomes();
 
@@ -92,11 +95,19 @@ public class WildLands {
 		final DeferredRegister<Codec<? extends BiomeModifier>> biomeModifiers = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, WildLands.MOD_ID);
 		biomeModifiers.register(bus);
 		biomeModifiers.register("wildlands_biome_modifiers", WLBiomeModifier::makeCodec);
+		modLoadingContext.registerConfig(ModConfig.Type.CLIENT, WLConfigHolder.CLIENT_SPEC, "wildlands.toml");
+		modLoadingContext.registerConfig(ModConfig.Type.COMMON, WLConfigHolder.SERVER_SPEC, "wildlands.toml");
+		
 		PROXY.init();
 	}
 
 	private void setup(final FMLCommonSetupEvent event) {
-		Regions.register(new BayouRegionProvider(new ResourceLocation(MOD_ID, "overworld"), 3));
+		if (WildLandsConfig.bayouBiome && WildLandsConfig.bayouWeight != 0) {
+			Regions.register(new BayouRegionProvider(new ResourceLocation(MOD_ID, "bayou"), WildLandsConfig.bayouWeight));
+		}
+		if (WildLandsConfig.burntForestBiome && WildLandsConfig.burntForestWeight != 0) {
+			Regions.register(new BurntForestRegionProvider(new ResourceLocation(MOD_ID, "burnt_forest"), WildLandsConfig.burntForestWeight));
+		}
 		event.enqueueWork(() -> {
 			WoodType.register(WLWoodTypes.CHARRED);
 			WoodType.register(WLWoodTypes.COCONUT);
@@ -125,6 +136,7 @@ public class WildLands {
 		}
 	};
 
+	@SuppressWarnings("deprecation")
 	private void commonSetup(FMLCommonSetupEvent event) {
 		event.enqueueWork(this::registerTerraBlender);
 		SpawnPlacements.register(WLEntities.CATFISH.get(), SpawnPlacements.Type.IN_WATER, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, WaterAnimal::checkSurfaceWaterAnimalSpawnRules);
@@ -149,6 +161,17 @@ public class WildLands {
 		event.put(WLEntities.SEA_LION.get(), SeaLion.createAttributes().build());
 		event.put(WLEntities.JELLYFISH.get(), Jellyfish.createAttributes().build());
 		event.put(WLEntities.GRIZZLY.get(), Grizzly.createAttributes().build());
+	}
+	
+	@SubscribeEvent
+	public void onModConfigEvent(final ModConfigEvent event) {
+		final ModConfig config = event.getConfig();
+		if (config.getSpec() == WLConfigHolder.SERVER_SPEC) {
+			WildLandsConfig.bakeServer(config);
+		}
+		if (config.getSpec() == WLConfigHolder.CLIENT_SPEC) {
+			WildLandsConfig.bakeClient(config);
+		}
 	}
 
 	private void registerTerraBlender() {

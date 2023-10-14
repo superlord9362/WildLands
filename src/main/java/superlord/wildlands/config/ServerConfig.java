@@ -30,6 +30,8 @@ public class ServerConfig {
 	public final ForgeConfigSpec.BooleanValue mudDisk;
 	public final ForgeConfigSpec.BooleanValue bayouBiome;
 	public final ForgeConfigSpec.BooleanValue burntForestBiome;
+	public final ForgeConfigSpec.IntValue bayouWeight;
+	public final ForgeConfigSpec.IntValue burntForestWeight;
 	
 	public ServerConfig(final ForgeConfigSpec.Builder builder) {
 		builder.push("general");
@@ -64,7 +66,10 @@ public class ServerConfig {
 		this.mudDisk = buildBoolean(builder, "Mud Disks", "all", true, "Mud Disks will generate in swamps. Default is true");
 		builder.comment("Biomes");
 		this.burntForestBiome = buildBoolean(builder, "Burnt Forest Generation", "all", true, "Burnt Forests will generate. Default is true");
+		this.burntForestWeight = buildInt(builder, "Burnt Forest Biome Weight", "all", 1, 0, 300, "The weight of the Burnt Forest biome generating. Default is 1");
 		this.bayouBiome = buildBoolean(builder, "Bayou Generation", "all", true, "Bayous will generate. Default is true");
+		this.bayouWeight = buildInt(builder, "Bayou Biome Weight", "all", 1, 0, 300, "The weight of the Bayou biome generating. Default is 1");
+		builder.pop();
 	}
 	
 	private static ForgeConfigSpec.BooleanValue buildBoolean(ForgeConfigSpec.Builder builder, String name, String category, boolean defaultValue, String comment) {
