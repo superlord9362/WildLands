@@ -21,7 +21,6 @@ import superlord.wildlands.WildLands;
 public class BiomeRegistry {
 
 	public static final DeferredRegister<Biome> REGISTER = DeferredRegister.create(ForgeRegistries.BIOMES, WildLands.MOD_ID);
-    public static final Map<ResourceKey<Biome>, BiomeFactory> BIOME_FACTORIES = new Reference2ObjectOpenHashMap<>();
 
 	public static void registerBiomes() {
 		register(BiomeInitializer.BAYOU, BayouBiomeDecorator::decorateBayou);
@@ -31,10 +30,4 @@ public class BiomeRegistry {
 	public static RegistryObject<Biome> register(ResourceKey<Biome> key, Supplier<Biome> biomeSupplier) {
 		return REGISTER.register(key.location().getPath(), biomeSupplier);
 	}
-
-	@FunctionalInterface
-	public interface BiomeFactory {
-		Biome generate(HolderGetter<PlacedFeature> placedFeatureHolderGetter, HolderGetter<ConfiguredWorldCarver<?>> worldCarverHolderGetter);
-	}
-
 }
