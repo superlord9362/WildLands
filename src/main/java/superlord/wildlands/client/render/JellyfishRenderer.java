@@ -3,7 +3,7 @@ package superlord.wildlands.client.render;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -40,9 +40,9 @@ public class JellyfishRenderer extends MobRenderer<Jellyfish, JellyfishModel<Jel
 		float f = Mth.lerp(partialTicks, entityLiving.prevjellyfishPitch, entityLiving.jellyfishPitch);
 		float f1 = Mth.lerp(partialTicks, entityLiving.prevjellyfishYaw, entityLiving.jellyfishYaw);
 		matrixStackIn.translate(0.0D, 0.5D, 0.0D);
-		matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180.0F - rotationYaw));
-		matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(f));
-		matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(f1));
+		matrixStackIn.mulPose(Axis.YP.rotationDegrees(180.0F - rotationYaw));
+		matrixStackIn.mulPose(Axis.XP.rotationDegrees(f));
+		matrixStackIn.mulPose(Axis.YP.rotationDegrees(f1));
 		matrixStackIn.translate(0.0D, (double)-1.2F, 0.0D);
 	}
 

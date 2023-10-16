@@ -7,6 +7,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.eventbus.api.Event.Result;
 import superlord.wildlands.init.WLBlocks;
 
 public class CoconutSaplingBlock extends BushBlock implements BonemealableBlock {
@@ -51,12 +53,11 @@ public class CoconutSaplingBlock extends BushBlock implements BonemealableBlock 
 	      else return false;
 	}
 
-	@SuppressWarnings("removal")
 	public void advanceTree(ServerLevel world, BlockPos pos, BlockState state, RandomSource random) {
 		if (state.getValue(STAGE) == 0) {
 			world.setBlock(pos, state.cycle(STAGE), 4);
 		} else {
-			if (!net.minecraftforge.event.ForgeEventFactory.saplingGrowTree(world, random, pos)) return;
+			if (!saplingGrowTree(world, random, pos)) return;
 			int height1 = random.nextInt(3) + 3;
 			int height2 = random.nextInt(3) + 3 + height1;
 			int coconutHeight = random.nextInt(3) + 1 + height1;
@@ -393,7 +394,7 @@ public class CoconutSaplingBlock extends BushBlock implements BonemealableBlock 
 		}
 	}
 
-	public boolean isValidBonemealTarget(BlockGetter p_55991_, BlockPos p_55992_, BlockState p_55993_, boolean p_55994_) {
+	public boolean isValidBonemealTarget(LevelReader p_256559_, BlockPos p_50898_, BlockState p_50899_) {
 		return true;
 	}
 
@@ -408,5 +409,10 @@ public class CoconutSaplingBlock extends BushBlock implements BonemealableBlock 
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_56001_) {
 		p_56001_.add(STAGE);
 	}
+	
+	public static boolean saplingGrowTree(LevelAccessor level, RandomSource randomSource, BlockPos pos)
+    {
+        return !net.minecraftforge.event.ForgeEventFactory.blockGrowFeature(level, randomSource, pos, null).getResult().equals(Result.DENY);
+    }
 
 }

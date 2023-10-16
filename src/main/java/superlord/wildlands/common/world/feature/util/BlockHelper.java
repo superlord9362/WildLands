@@ -7,6 +7,7 @@ import com.google.common.collect.Sets;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.LevelWriter;
@@ -56,7 +57,7 @@ public class BlockHelper {
 
 	public static int downRayRep(LevelReader world, BlockPos pos, int maxDist) {
 		POS.set(pos);
-		for (int j = 1; j < maxDist && (world.getBlockState(POS)).getMaterial().isReplaceable(); j++) {
+        for (int j = 1; j < maxDist && (world.getBlockState(POS)).is(BlockTags.REPLACEABLE); j++) {
 			POS.setY(POS.getY() - 1);
 		}
 		return pos.getY() - POS.getY();

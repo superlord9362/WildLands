@@ -22,10 +22,10 @@ public class ClientProxy extends CommonProxy {
 	}
 	
     public static void setupParticles(RegisterParticleProvidersEvent registry) {
-        registry.register(WLParticles.SNORE_PARTICLE.get(), SnoreParticle.Provider::new);
+        registry.registerSpriteSet(WLParticles.SNORE_PARTICLE.get(), SnoreParticle.Provider::new);
     }
     
-    @SuppressWarnings("removal")
+    @SuppressWarnings({ "deprecation" })
 	public static void setupBlockRenders() {
 		RenderType cutoutRenderType = RenderType.cutout();
 		RenderType cutoutMippedRenderType = RenderType.cutoutMipped();

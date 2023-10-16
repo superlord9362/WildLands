@@ -4,7 +4,6 @@ import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -80,7 +79,7 @@ public class UrchinBlock extends BushBlock implements SimpleWaterloggedBlock {
 	}
 
 	public void entityInside(BlockState state, Level level, BlockPos pos, Entity entityIn) {
-		entityIn.hurt(DamageSource.CACTUS, 1.0F);
+		entityIn.hurt(entityIn.damageSources().cactus(), 1.0F);
 	}
 
 }

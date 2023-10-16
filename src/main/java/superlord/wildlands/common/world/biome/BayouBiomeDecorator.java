@@ -1,5 +1,6 @@
 package superlord.wildlands.common.world.biome;
 
+import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
 import net.minecraft.data.worldgen.placement.AquaticPlacements;
 import net.minecraft.util.Mth;
@@ -11,8 +12,18 @@ import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class BayouBiomeDecorator {
+	
+	static HolderGetter<PlacedFeature> placedFeatureGetter;
+	static HolderGetter<ConfiguredWorldCarver<?>> carverGetter;
+	
+	public BayouBiomeDecorator(HolderGetter<PlacedFeature> placedFeatureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter) {
+		BayouBiomeDecorator.placedFeatureGetter = placedFeatureGetter;
+		BayouBiomeDecorator.carverGetter = carverGetter;
+	}
 
 	private static int getSkyColorWithTemperatureModifier(float temperature) {
 		float f = temperature / 3.0F;
@@ -26,10 +37,10 @@ public class BayouBiomeDecorator {
 		return biome(precipitation, temperature, downfall, spawnBuilder, biomeBuilder);
 	}
 
-	private static Biome biome(Biome.Precipitation precipitation, float temperature, float downfall, int waterColor, int waterFogColor, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder)
+	private static Biome biome(boolean hasPrecipitation, float temperature, float downfall, int waterColor, int waterFogColor, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder)
 	{
 		return (new Biome.BiomeBuilder())
-				.precipitation(precipitation)
+				.hasPrecipitation(hasPrecipitation)
 				.temperature(temperature)
 				.downfall(downfall)
 				.specialEffects((new BiomeSpecialEffects.Builder())
@@ -46,12 +57,12 @@ public class BayouBiomeDecorator {
 
 	public static Biome decorateBayou() {
 		MobSpawnSettings.Builder spawnSettings = new MobSpawnSettings.Builder();
-		BiomeGenerationSettings.Builder biomeFeatures = new BiomeGenerationSettings.Builder();
+		BiomeGenerationSettings.Builder biomeFeatures = new BiomeGenerationSettings.Builder(placedFeatureGetter, carverGetter);
 		MobSpawnSettings.Builder mobspawnsettings$builder = new MobSpawnSettings.Builder();
 		BiomeDefaultFeatures.farmAnimals(mobspawnsettings$builder);
 		BiomeDefaultFeatures.commonSpawns(mobspawnsettings$builder);
 		mobspawnsettings$builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityType.SLIME, 1, 1, 1));
-		BiomeGenerationSettings.Builder biomegenerationsettings$builder = new BiomeGenerationSettings.Builder();
+		BiomeGenerationSettings.Builder biomegenerationsettings$builder =  new BiomeGenerationSettings.Builder(placedFeatureGetter, carverGetter);
 		BiomeDefaultFeatures.addFossilDecoration(biomegenerationsettings$builder);
 		globalOverworldGeneration(biomegenerationsettings$builder);
 		BiomeDefaultFeatures.addDefaultOres(biomegenerationsettings$builder);
@@ -60,7 +71,7 @@ public class BayouBiomeDecorator {
 		BiomeDefaultFeatures.addDefaultMushrooms(biomegenerationsettings$builder);
 		BiomeDefaultFeatures.addSwampExtraVegetation(biomegenerationsettings$builder);
 		biomegenerationsettings$builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, AquaticPlacements.SEAGRASS_SWAMP);
-		return biome(Biome.Precipitation.RAIN, 0.5F, 0.7F, 3031057, 7172665, spawnSettings, biomeFeatures);
+		return biome(true, 0.5F, 0.7F, 3031057, 7172665, spawnSettings, biomeFeatures);
 	}
 
 	private static void globalOverworldGeneration(BiomeGenerationSettings.Builder p_194870_) {

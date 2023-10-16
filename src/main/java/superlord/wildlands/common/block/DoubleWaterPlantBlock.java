@@ -150,6 +150,7 @@ public class DoubleWaterPlantBlock extends DoublePlantBlock {
 	/**
 	 * Return a random long to be passed to {@link IBakedModel#getQuads}, used for random model rotations
 	 */
+	@SuppressWarnings("deprecation")
 	@OnlyIn(Dist.CLIENT)
 	public long getSeed(BlockState state, BlockPos pos) {
 		return Mth.getSeed(pos.getX(), pos.below(state.getValue(HALF) == DoubleBlockHalf.LOWER ? 0 : 1).getY(), pos.getZ());

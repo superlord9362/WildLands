@@ -2,6 +2,7 @@ package superlord.wildlands.common.item;
 
 import java.util.Random;
 
+import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -22,8 +23,8 @@ import superlord.wildlands.common.entity.item.Coconut;
 
 public class CoconutItem extends StandingAndWallBlockItem {
 
-	public CoconutItem(Block floorBlockIn, Block wallBlockIn, Item.Properties builder) {
-		super(floorBlockIn, wallBlockIn, builder);
+	public CoconutItem(Block floorBlockIn, Block wallBlockIn, Item.Properties builder, Direction attachmentDirection) {
+		super(floorBlockIn, wallBlockIn, builder, attachmentDirection);
 	}
 	
 	public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
@@ -56,7 +57,7 @@ public class CoconutItem extends StandingAndWallBlockItem {
 		float f5 = Mth.sin(-f * ((float)Math.PI / 180F));
 		float f6 = f3 * f4;
 		float f7 = f2 * f4;
-		double d0 = player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue();;
+		double d0 = player.getAttribute(net.minecraftforge.common.ForgeMod.BLOCK_REACH.get()).getValue();;
 		Vec3 vector3d1 = vector3d.add((double)f6 * d0, (double)f5 * d0, (double)f7 * d0);
 		return worldIn.clip(new ClipContext(vector3d, vector3d1, blockMode, ClipContext.Fluid.ANY, player));
 	}

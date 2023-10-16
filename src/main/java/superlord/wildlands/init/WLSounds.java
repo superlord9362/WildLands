@@ -51,7 +51,7 @@ public class WLSounds {
 	public static final RegistryObject<SoundEvent> GRIZZLY_EATING = createSoundEvent("grizzly_eating");
 	
 	private static RegistryObject<SoundEvent> createSoundEvent(final String soundName) {
-        return REGISTRY.register(soundName, () -> new SoundEvent(new ResourceLocation(WildLands.MOD_ID, soundName)));
+        return REGISTRY.register(soundName, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(WildLands.MOD_ID, soundName)));
     }
 
 }

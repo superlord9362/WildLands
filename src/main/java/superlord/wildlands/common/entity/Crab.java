@@ -48,12 +48,11 @@ public class Crab extends Animal {
 	private boolean crabRave;
 	private BlockPos jukebox;
 
-	@SuppressWarnings("deprecation")
 	public Crab(EntityType<? extends Crab> type, Level worldIn) {
 		super(type, worldIn);
 		this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
 		this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 0.0F);
-		this.maxUpStep = 1.0F;
+		this.setMaxUpStep(1.0F);
 	}
 
 	protected void registerGoals() {
@@ -106,7 +105,7 @@ public class Crab extends Animal {
 	}
 
 	public boolean doHurtTarget(Entity entityIn) {
-		boolean flag = entityIn.hurt(DamageSource.mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+		boolean flag = entityIn.hurt(this.damageSources().mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
 		if (flag) {
 			this.doEnchantDamageEffects(this, entityIn);
 		}

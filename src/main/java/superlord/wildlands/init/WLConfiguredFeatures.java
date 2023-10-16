@@ -2,7 +2,7 @@ package superlord.wildlands.init;
 
 import java.util.List;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -24,7 +24,7 @@ import superlord.wildlands.WildLands;
 
 public class WLConfiguredFeatures {
 
-    public static final DeferredRegister<ConfiguredFeature<?,?>> CONFIGURED_FEATURES = DeferredRegister.create(Registry.CONFIGURED_FEATURE_REGISTRY, WildLands.MOD_ID);
+    public static final DeferredRegister<ConfiguredFeature<?,?>> CONFIGURED_FEATURES = DeferredRegister.create(Registries.CONFIGURED_FEATURE, WildLands.MOD_ID);
 
     public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_STARFISH = CONFIGURED_FEATURES.register("starfish", () -> new ConfiguredFeature<>(WLFeatures.STARFISH.get(), new CountConfiguration(4)));
     public static final RegistryObject<ConfiguredFeature<?, ?>> CONFIGURED_URCHIN = CONFIGURED_FEATURES.register("urchin", () -> new ConfiguredFeature<>(WLFeatures.URCHIN.get(), new CountConfiguration(4)));

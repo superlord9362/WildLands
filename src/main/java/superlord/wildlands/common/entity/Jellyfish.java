@@ -118,11 +118,12 @@ public class Jellyfish extends WaterAnimal {
 		this.setJellyfishVariant(compound.getInt("JellyfishVariant"));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Nullable
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
 		Holder<Biome> biome = worldIn.getBiome(this.blockPosition());
 		
-		if (biome.get().getPrecipitation() == Biome.Precipitation.SNOW) {
+		if (biome.get().getPrecipitationAt(this.blockPosition()) == Biome.Precipitation.SNOW) {
 			setJellyfishVariant(0);
 		} else {
 			setJellyfishVariant(1);
@@ -232,7 +233,7 @@ public class Jellyfish extends WaterAnimal {
 	}
 
 	public boolean hurt(DamageSource source, float amount) {
-		if (source == WLDamageSources.STING) {
+		if (source.is(WLDamageSources.STING)) {
 			return false;
 		} else {
 			return super.hurt(source, amount);

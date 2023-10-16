@@ -13,7 +13,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,7 +36,7 @@ public class SmolderingLogBlock extends RotatedPillarBlock {
 
 	public void stepOn(Level worldIn, BlockPos pos, BlockState state, Entity entityIn) {
 		if (!entityIn.fireImmune() && entityIn instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity)entityIn)) {
-			entityIn.hurt(DamageSource.HOT_FLOOR, 1.0F);
+			entityIn.hurt(entityIn.damageSources().hotFloor(), 1.0F);
 		}
 
 		super.stepOn(worldIn, pos, state, entityIn);

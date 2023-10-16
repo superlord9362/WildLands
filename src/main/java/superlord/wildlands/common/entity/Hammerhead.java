@@ -61,7 +61,7 @@ public class Hammerhead extends WaterAnimal {
 	}
 
 	public boolean doHurtTarget(Entity p_28319_) {
-		boolean flag = p_28319_.hurt(DamageSource.mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+		boolean flag = p_28319_.hurt(this.damageSources().mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
 		if (flag) {
 			this.doEnchantDamageEffects(this, p_28319_);
 		}
@@ -158,7 +158,7 @@ public class Hammerhead extends WaterAnimal {
 			float angle = (0.01745329251F * (clockwise ? -circlingTime : circlingTime));
 			double extraX = circleDistance * Mth.sin((angle));
 			double extraZ = circleDistance * Mth.cos(angle);
-			BlockPos ground = new BlockPos(target.getX() + 0.5F + extraX, shark.getY(), target.getZ() + 0.5F + extraZ);
+			BlockPos ground = new BlockPos((int) (target.getX() + 0.5F + extraX), (int) shark.getY(), (int) (target.getZ() + 0.5F + extraZ));
 			if(shark.level.getFluidState(ground).is(FluidTags.WATER)){
 				return ground;
 

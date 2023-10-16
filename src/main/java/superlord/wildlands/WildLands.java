@@ -11,8 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.WaterAnimal;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.world.BiomeModifier;
@@ -56,6 +54,7 @@ import superlord.wildlands.init.WLParticles;
 import superlord.wildlands.init.WLPlacedFeatures;
 import superlord.wildlands.init.WLSounds;
 import superlord.wildlands.init.WLSurfaceRules;
+import superlord.wildlands.init.WLTabs;
 import superlord.wildlands.init.WLWoodTypes;
 import terrablender.api.Regions;
 import terrablender.api.SurfaceRuleManager;
@@ -84,6 +83,9 @@ public class WildLands {
 		WLBlocks.REGISTER.register(bus);
 		WLEntities.REGISTER.register(bus);
 		WLItems.REGISTER.register(bus);
+		WLItems.BLOCKS.register(bus);
+		WLItems.SPAWN_EGGS.register(bus);
+		WLTabs.REGISTER.register(bus);
 		WLFeatures.FEATURES.register(bus);
 		WLConfiguredFeatures.CONFIGURED_FEATURES.register(bus);
 		WLPlacedFeatures.PLACED_FEATURES.register(bus);
@@ -114,27 +116,6 @@ public class WildLands {
 			WoodType.register(WLWoodTypes.CYPRESS);
 		});
 	}
-
-	public final static CreativeModeTab BLOCK_GROUP = new CreativeModeTab("wildlands_block_item_group") {
-		@Override
-		public ItemStack makeIcon() {
-			return new ItemStack(WLBlocks.MUD.get().asItem());
-		}
-	};
-
-	public final static CreativeModeTab ITEM_GROUP = new CreativeModeTab("wildlands_item_item_group") {
-		@Override
-		public ItemStack makeIcon() {
-			return new ItemStack(WLItems.OLIVINE.get());
-		}
-	};
-
-	public final static CreativeModeTab SPAWN_EGG_GROUP = new CreativeModeTab("wildlands_spawn_item_group") {
-		@Override
-		public ItemStack makeIcon() {
-			return new ItemStack(WLItems.CATFISH_SPAWN_EGG.get());
-		}
-	};
 
 	@SuppressWarnings("deprecation")
 	private void commonSetup(FMLCommonSetupEvent event) {

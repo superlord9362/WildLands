@@ -20,6 +20,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -235,7 +236,7 @@ public class Grizzly extends Animal
 	}
 
 	public boolean hurt(DamageSource source, float amount) {
-		if (source == DamageSource.SWEET_BERRY_BUSH) {
+		if (source.is(DamageTypes.SWEET_BERRY_BUSH)) {
 			return false;
 		} else {
 			return super.hurt(source, amount);
@@ -328,7 +329,7 @@ public class Grizzly extends Animal
 	}
 
 	public boolean doHurtTarget(Entity entityIn) {
-		boolean flag = entityIn.hurt(DamageSource.mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+		boolean flag = entityIn.hurt(this.damageSources().mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
 		if (flag) {
 			this.doEnchantDamageEffects(this, entityIn);
 		}
@@ -342,7 +343,7 @@ public class Grizzly extends Animal
 	@Override
 	public AgeableMob getBreedOffspring(ServerLevel p_241840_1_, AgeableMob p_241840_2_) {
 		Grizzly entity = new Grizzly(WLEntities.GRIZZLY.get(), this.level);
-		entity.finalizeSpawn(p_241840_1_, this.level.getCurrentDifficultyAt(new BlockPos(entity.getEyePosition())), MobSpawnType.BREEDING, (SpawnGroupData)null, (CompoundTag)null);
+		entity.finalizeSpawn(p_241840_1_, this.level.getCurrentDifficultyAt(new BlockPos((int) entity.getEyePosition().x, (int) entity.getEyePosition().y, (int) entity.getEyePosition().z)), MobSpawnType.BREEDING, (SpawnGroupData)null, (CompoundTag)null);
 		return entity;
 	}
 
@@ -459,7 +460,7 @@ public class Grizzly extends Animal
 		}
 
 		private void pickGlowBerry(BlockState p_148927_) {
-			CaveVines.use(p_148927_, Grizzly.this.level, this.blockPos);
+			CaveVines.use(Grizzly.this, p_148927_, Grizzly.this.level, this.blockPos);
 		}
 
 		private void eatBerry(BlockState p_148929_) {

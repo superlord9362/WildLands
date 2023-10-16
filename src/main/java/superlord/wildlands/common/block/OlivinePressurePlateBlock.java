@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.BasePressurePlateBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.AABB;
@@ -24,8 +25,8 @@ public class OlivinePressurePlateBlock extends BasePressurePlateBlock {
 
 	int i;
 
-	public OlivinePressurePlateBlock(Sensitivity sensitivityIn, Properties propertiesIn) {
-		super(propertiesIn);
+	public OlivinePressurePlateBlock(Sensitivity sensitivityIn, Properties propertiesIn, BlockSetType type) {
+		super(propertiesIn, type);
 		this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, Boolean.valueOf(false)));
 		this.sensitivity = sensitivityIn;
 	}

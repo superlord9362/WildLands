@@ -67,12 +67,11 @@ public class Alligator extends Animal {
 	};
 	private int warningSoundTicks;
 
-	@SuppressWarnings("deprecation")
 	public Alligator(EntityType<? extends Alligator> type, Level levelIn) {
 		super(type, levelIn);
 		this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
 		this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 0.0F);
-		this.maxUpStep = 1.0F;
+		this.setMaxUpStep(1.0F);
 	}
 
 	protected void registerGoals() {
@@ -132,7 +131,7 @@ public class Alligator extends Animal {
 	@Override
 	public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob mob) {
 		Alligator entity = new Alligator(WLEntities.ALLIGATOR.get(), this.level);
-		entity.finalizeSpawn(level, this.level.getCurrentDifficultyAt(new BlockPos(entity.getEyePosition())), MobSpawnType.BREEDING, (SpawnGroupData)null, (CompoundTag)null);
+		entity.finalizeSpawn(level, this.level.getCurrentDifficultyAt(new BlockPos((int) entity.getEyePosition().x, (int) entity.getEyePosition().y, (int) entity.getEyePosition().z)), MobSpawnType.BREEDING, (SpawnGroupData)null, (CompoundTag)null);
 		return entity;
 	}
 
@@ -196,7 +195,7 @@ public class Alligator extends Animal {
 	}
 
 	public boolean doHurtTarget(Entity entityIn) {
-		boolean flag = entityIn.hurt(DamageSource.mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+		boolean flag = entityIn.hurt(this.damageSources().mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
 		if (flag) {
 			this.doEnchantDamageEffects(this, entityIn);
 		}

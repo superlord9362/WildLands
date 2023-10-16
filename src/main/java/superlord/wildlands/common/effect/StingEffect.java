@@ -5,7 +5,6 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Turtle;
 import superlord.wildlands.common.entity.Jellyfish;
-import superlord.wildlands.init.WLDamageSources;
 
 public class StingEffect extends MobEffect {
 
@@ -17,7 +16,7 @@ public class StingEffect extends MobEffect {
 	public void applyEffectTick(LivingEntity entity, int p_19468_) {
 		if (entity.isInWater()) {
 			if (!(entity instanceof Turtle || entity instanceof Jellyfish)) {
-				entity.hurt(WLDamageSources.STING, 1.0F);
+				entity.hurt(entity.damageSources().sting(entity), 1.0F);
 			}
 		}
 	}

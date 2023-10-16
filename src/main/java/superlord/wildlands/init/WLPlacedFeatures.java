@@ -2,7 +2,7 @@ package superlord.wildlands.init;
 
 import java.util.List;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.world.level.levelgen.placement.BiomeFilter;
@@ -17,7 +17,7 @@ import superlord.wildlands.WildLands;
 
 public class WLPlacedFeatures {
 
-	public static final DeferredRegister<PlacedFeature> PLACED_FEATURES = DeferredRegister.create(Registry.PLACED_FEATURE_REGISTRY, WildLands.MOD_ID);
+	public static final DeferredRegister<PlacedFeature> PLACED_FEATURES = DeferredRegister.create(Registries.PLACED_FEATURE, WildLands.MOD_ID);
 
 	public static final RegistryObject<PlacedFeature> PLACED_STARFISH = PLACED_FEATURES.register("placed_starfish", () -> new PlacedFeature(WLConfiguredFeatures.CONFIGURED_STARFISH.getHolder().orElseThrow(), VegetationPlacements.worldSurfaceSquaredWithCount(4)));
 	public static final RegistryObject<PlacedFeature> PLACED_URCHIN = PLACED_FEATURES.register("placed_urchin", () -> new PlacedFeature(WLConfiguredFeatures.CONFIGURED_URCHIN.getHolder().orElseThrow(), VegetationPlacements.worldSurfaceSquaredWithCount(4)));

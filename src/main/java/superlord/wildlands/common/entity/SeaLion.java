@@ -53,8 +53,8 @@ import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
 import net.minecraft.world.level.pathfinder.AmphibiousNodeEvaluator;
 import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.level.pathfinder.PathFinder;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -68,13 +68,12 @@ public class SeaLion extends Animal {
 
 	public int ticksSinceEaten;
 
-	@SuppressWarnings("deprecation")
 	public SeaLion(EntityType<? extends SeaLion> type, Level worldIn) {
 		super(type, worldIn);
 		this.setCanPickUpLoot(true);
 		this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
 		this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 0.0F);
-		this.maxUpStep = 1.0F;
+		this.setMaxUpStep(1.0F);
 	}
 
 
@@ -356,7 +355,7 @@ public class SeaLion extends Animal {
 	@Override
 	public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob mob) {
 		SeaLion entity = new SeaLion(WLEntities.SEA_LION.get(), this.level);
-		entity.finalizeSpawn(level, this.level.getCurrentDifficultyAt(new BlockPos(entity.getEyePosition())), MobSpawnType.BREEDING, (SpawnGroupData)null, (CompoundTag)null);
+		entity.finalizeSpawn(level, this.level.getCurrentDifficultyAt(new BlockPos((int) entity.getEyePosition().x, (int) entity.getEyePosition().y, (int) entity.getEyePosition().z)), MobSpawnType.BREEDING, (SpawnGroupData)null, (CompoundTag)null);
 		return entity;
 	}
 
@@ -423,7 +422,7 @@ public class SeaLion extends Animal {
 				if (entity.level.getBlockState(blockpos1).is(Blocks.WATER)) {
 					MinecraftServer server = entity.level.getServer();
 					if (server != null) {
-						List<ItemStack> items = server.getLootTables().get(FISHING_LOOT).getRandomItems(new LootContext.Builder((ServerLevel) entity.level).withRandom(entity.getRandom()).create(LootContextParamSet.builder().build()));
+                        List<ItemStack> items = server.getLootData().getLootTable(FISHING_LOOT).getRandomItems(new LootParams.Builder((ServerLevel) entity.level).create(LootContextParamSets.EMPTY));
 						Containers.dropContents(entity.level, blockpos, NonNullList.of(ItemStack.EMPTY, items.toArray(new ItemStack[0])));
 					}
 				}
