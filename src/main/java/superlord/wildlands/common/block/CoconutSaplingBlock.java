@@ -394,7 +394,7 @@ public class CoconutSaplingBlock extends BushBlock implements BonemealableBlock 
 		}
 	}
 
-	public boolean isValidBonemealTarget(LevelReader p_256559_, BlockPos p_50898_, BlockState p_50899_) {
+	public boolean isValidBonemealTarget(LevelReader p_256559_, BlockPos p_50898_, BlockState p_50899_, boolean p_50900_) {
 		return true;
 	}
 

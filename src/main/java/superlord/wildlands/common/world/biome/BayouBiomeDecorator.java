@@ -16,14 +16,6 @@ import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class BayouBiomeDecorator {
-	
-	static HolderGetter<PlacedFeature> placedFeatureGetter;
-	static HolderGetter<ConfiguredWorldCarver<?>> carverGetter;
-	
-	public BayouBiomeDecorator(HolderGetter<PlacedFeature> placedFeatureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter) {
-		BayouBiomeDecorator.placedFeatureGetter = placedFeatureGetter;
-		BayouBiomeDecorator.carverGetter = carverGetter;
-	}
 
 	private static int getSkyColorWithTemperatureModifier(float temperature) {
 		float f = temperature / 3.0F;
@@ -55,7 +47,7 @@ public class BayouBiomeDecorator {
 				.build();
 	}
 
-	public static Biome decorateBayou() {
+	public static Biome decorateBayou(HolderGetter<PlacedFeature> placedFeatureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter) {
 		MobSpawnSettings.Builder spawnSettings = new MobSpawnSettings.Builder();
 		BiomeGenerationSettings.Builder biomeFeatures = new BiomeGenerationSettings.Builder(placedFeatureGetter, carverGetter);
 		MobSpawnSettings.Builder mobspawnsettings$builder = new MobSpawnSettings.Builder();

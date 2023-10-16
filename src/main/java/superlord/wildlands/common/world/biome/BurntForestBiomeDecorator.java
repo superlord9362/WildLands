@@ -11,14 +11,6 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class BurntForestBiomeDecorator {
 	
-	static HolderGetter<PlacedFeature> placedFeatureGetter;
-	static HolderGetter<ConfiguredWorldCarver<?>> carverGetter;
-	
-	public BurntForestBiomeDecorator(HolderGetter<PlacedFeature> placedFeatureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter) {
-		BayouBiomeDecorator.placedFeatureGetter = placedFeatureGetter;
-		BayouBiomeDecorator.carverGetter = carverGetter;
-	}
-	
 	@SuppressWarnings("unused")
 	private static Biome biome(Biome.Precipitation precipitation, float temperature, float downfall, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder)
 	{
@@ -42,7 +34,7 @@ public class BurntForestBiomeDecorator {
 				.build();
 	}
 
-	public static Biome decorateBurntForest() {
+	public static Biome decorateBurntForest(HolderGetter<PlacedFeature> placedFeatureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter) {
 		MobSpawnSettings.Builder spawnSettings = new MobSpawnSettings.Builder();
 		BiomeGenerationSettings.Builder biomeFeatures = new BiomeGenerationSettings.Builder(placedFeatureGetter, carverGetter);
 		return biome(false, 0.9F, 0.0F, 0x4E4439, 0x2D2821, spawnSettings, biomeFeatures);

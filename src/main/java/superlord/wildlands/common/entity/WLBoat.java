@@ -13,8 +13,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.network.packets.SpawnEntity;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages.SpawnEntity;
 import superlord.wildlands.init.WLBlocks;
 import superlord.wildlands.init.WLEntities;
 import superlord.wildlands.init.WLItems;
@@ -59,7 +59,7 @@ public class WLBoat extends Boat {
 
 	@Override
 	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return ForgeHooks.getEntitySpawnPacket(this);
+		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	public void setWLBoatType(WLBoatTypes type) {

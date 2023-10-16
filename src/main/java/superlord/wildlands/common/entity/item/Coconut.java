@@ -16,8 +16,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.Tags.Blocks;
+import net.minecraftforge.network.NetworkHooks;
 import superlord.wildlands.init.WLEntities;
 import superlord.wildlands.init.WLItems;
 
@@ -47,7 +47,7 @@ public class Coconut extends ThrowableItemProjectile {
 	@Nonnull
 	@Override
 	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return ForgeHooks.getEntitySpawnPacket(this);
+		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	protected void onHitEntity(EntityHitResult result) {

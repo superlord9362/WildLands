@@ -29,7 +29,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.network.NetworkHooks;
 import superlord.wildlands.init.WLEntities;
 import superlord.wildlands.init.WLItems;
 
@@ -83,7 +83,7 @@ public class WLChestBoat extends WLBoat implements HasCustomInventoryScreen, Con
 
 	@Override
 	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return ForgeHooks.getEntitySpawnPacket(this);
+		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 	public void setWLChestBoatType(WLBoatTypes type) {

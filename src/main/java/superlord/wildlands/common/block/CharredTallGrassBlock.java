@@ -25,7 +25,7 @@ public class CharredTallGrassBlock extends BushBlock implements BonemealableBloc
       return SHAPE;
    }
 	
-	public boolean isValidBonemealTarget(LevelReader world, BlockPos pos, BlockState state) {
+	public boolean isValidBonemealTarget(LevelReader p_256559_, BlockPos p_50898_, BlockState p_50899_, boolean p_50900_) {
 		return false;
 	}
 	

@@ -14,7 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.network.NetworkHooks;
 import superlord.wildlands.common.entity.Jellyfish;
 import superlord.wildlands.init.WLEffects;
 import superlord.wildlands.init.WLEntities;
@@ -41,7 +41,7 @@ public class JellyBall extends ThrowableItemProjectile {
 	@Nonnull
 	@Override
 	public Packet<ClientGamePacketListener> getAddEntityPacket() {
-		return ForgeHooks.getEntitySpawnPacket(this);
+		return NetworkHooks.getEntitySpawningPacket(this);
 	}
 
 
