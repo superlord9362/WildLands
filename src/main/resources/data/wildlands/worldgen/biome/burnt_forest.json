@@ -67,9 +67,6 @@
 		],
 		[],
 		[
-			"wildlands:placed_charred_trees",
-			"wildlands:placed_burnt_grass",
-			"wildlands:placed_burnt_bush"
 		],
 		[
 			"minecraft:freeze_top_layer"
@@ -146,7 +143,7 @@
 	},
 	"spawn_costs": {},
 	"player_spawn_friendly": false,
-	"precipitation": "none",
+	"has_precipitation": false,
 	"temperature": 0.9,
 	"downfall": 0.0,
 	"category": "forest"

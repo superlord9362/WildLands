@@ -69,12 +69,7 @@
 			"minecraft:spring_lava",
 			"minecraft:seagrass_swamp",
 			"minecraft:patch_waterlily",
-			"minecraft:patch_grass_normal",
-			"wildlands:placed_duckweed",
-			"wildlands:placed_cattail",
-			"wildlands:placed_palmetto",
-			"wildlands:placed_bayou_trees",
-			"wildlands:placed_beard_moss"
+			"minecraft:patch_grass_normal"
 		],
 		[
 			"minecraft:freeze_top_layer"
@@ -198,7 +193,7 @@
 	},
 	"spawn_costs": {},
 	"player_spawn_friendly": false,
-	"precipitation": "rain",
+	"has_precipitation": true,
 	"temperature": 0.7,
 	"downfall": 0.9,
 	"category": "swamp"
