@@ -49,6 +49,9 @@ public class ClientProxy extends CommonProxy {
 		ItemBlockRenderTypes.setRenderLayer(WLBlocks.CHARRED_BUSH.get(), cutoutRenderType);
 		ItemBlockRenderTypes.setRenderLayer(WLBlocks.URCHIN.get(), cutoutRenderType);
 		ItemBlockRenderTypes.setRenderLayer(WLBlocks.JELLY_BLOCK.get(), translucentRenderType);
+		ItemBlockRenderTypes.setRenderLayer(WLBlocks.POTTED_CATTAIL.get(), cutoutRenderType);
+		ItemBlockRenderTypes.setRenderLayer(WLBlocks.POTTED_PALMETTO.get(), cutoutRenderType);
+		ItemBlockRenderTypes.setRenderLayer(WLBlocks.POTTED_CHARRED_BUSH.get(), cutoutRenderType);
     }
 
 }

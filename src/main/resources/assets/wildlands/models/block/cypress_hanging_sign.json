@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "wildlands:block/stripped_cypress_log_side"
+  }
+}

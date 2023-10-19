@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "minecraft:beach",
+  "features": "wildlands:placed_coconut_tree",
+  "step": "vegetal_decoration"
+}

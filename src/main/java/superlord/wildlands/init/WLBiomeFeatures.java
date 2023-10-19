@@ -31,8 +31,8 @@ public class WLBiomeFeatures {
 	public static final ResourceKey<BiomeModifier> ADD_BEACH_VEGETAL_FEATURES = register("add_beach_vegetal_features");
 	public static final ResourceKey<BiomeModifier> ADD_STONY_SHORE_FEATURES = register("add_stony_shore_features");
 	//public static final ResourceKey<BiomeModifier> ADD_FOREST_FEATURES = register("add_forest_features");
-	public static final ResourceKey<BiomeModifier> ADD_BAYOU_FEATURES = register("add_bayou_features");
-	public static final ResourceKey<BiomeModifier> ADD_BURNT_FOREST_FEATURES = register("add_burnt_forest_features");
+//	public static final ResourceKey<BiomeModifier> ADD_BAYOU_VEGETATION_FEATURES = register("add_bayou_vegetation_features");
+	//public static final ResourceKey<BiomeModifier> ADD_BURNT_FOREST_FEATURES = register("add_burnt_forest_features");
 	
 	public static void bootstrap(BootstapContext<BiomeModifier> bootstapContext) {
 		bootstapContext.register(ADD_SWAMP_FEATURES, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(getBiome(bootstapContext, Biomes.SWAMP), getPlacedFeature(bootstapContext, WLPlacedFeatures.PLACED_DISK_MUD), GenerationStep.Decoration.UNDERGROUND_ORES));
@@ -45,8 +45,8 @@ public class WLBiomeFeatures {
 		bootstapContext.register(ADD_BEACH_ROCK_FEATURES, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(getBiome(bootstapContext, Biomes.BEACH), getPlacedFeature(bootstapContext, WLPlacedFeatures.PLACED_DISK_FINE_SAND), GenerationStep.Decoration.UNDERGROUND_DECORATION));
 		bootstapContext.register(ADD_BEACH_VEGETAL_FEATURES, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(getBiome(bootstapContext, Biomes.BEACH), getPlacedFeature(bootstapContext, WLPlacedFeatures.PLACED_COCONUT_TREE), GenerationStep.Decoration.VEGETAL_DECORATION));
 		bootstapContext.register(ADD_STONY_SHORE_FEATURES, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(getBiome(bootstapContext, Biomes.STONY_SHORE), getPlacedFeature(bootstapContext, WLPlacedFeatures.PLACED_CONGLOMERATE_ROCK, WLPlacedFeatures.PLACED_DISK_CONGLOMERATE), GenerationStep.Decoration.UNDERGROUND_ORES));
-		bootstapContext.register(ADD_BAYOU_FEATURES, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(getBiome(bootstapContext, WLBiomes.BAYOU), getPlacedFeature(bootstapContext, WLPlacedFeatures.PLACED_DUCKWEED, WLPlacedFeatures.PLACED_CATTAIL, WLPlacedFeatures.PLACED_PALMETTO, WLPlacedFeatures.PLACED_CYPRESS_TREE, WLPlacedFeatures.PLACED_BEARD_MOSS), GenerationStep.Decoration.VEGETAL_DECORATION));
-		bootstapContext.register(ADD_BURNT_FOREST_FEATURES, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(getBiome(bootstapContext, WLBiomes.BURNT_FOREST), getPlacedFeature(bootstapContext, WLPlacedFeatures.PLACED_CHARRED_TREE, WLPlacedFeatures.PLACED_BURNT_GRASS, WLPlacedFeatures.PLACED_BURNT_BUSH), GenerationStep.Decoration.VEGETAL_DECORATION));
+		//bootstapContext.register(ADD_BAYOU_VEGETATION_FEATURES, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(getBiome(bootstapContext, WLBiomes.BAYOU), getPlacedFeature(bootstapContext, VegetationPlacements.FLOWER_SWAMP, VegetationPlacements.BROWN_MUSHROOM_NORMAL, VegetationPlacements.RED_MUSHROOM_NORMAL, VegetationPlacements.PATCH_SUGAR_CANE_SWAMP, VegetationPlacements.PATCH_PUMPKIN, AquaticPlacements.SEAGRASS_SWAMP, VegetationPlacements.PATCH_WATERLILY, VegetationPlacements.PATCH_GRASS_NORMAL, WLPlacedFeatures.PLACED_DUCKWEED, WLPlacedFeatures.PLACED_CATTAIL, WLPlacedFeatures.PLACED_PALMETTO, WLPlacedFeatures.PLACED_CYPRESS_TREE, WLPlacedFeatures.PLACED_BEARD_MOSS), GenerationStep.Decoration.VEGETAL_DECORATION));
+		//bootstapContext.register(ADD_BURNT_FOREST_FEATURES, new ForgeBiomeModifiers.AddFeaturesBiomeModifier(getBiome(bootstapContext, WLBiomes.BURNT_FOREST), getPlacedFeature(bootstapContext, WLPlacedFeatures.PLACED_CHARRED_TREE, WLPlacedFeatures.PLACED_BURNT_GRASS, WLPlacedFeatures.PLACED_BURNT_BUSH), GenerationStep.Decoration.VEGETAL_DECORATION));
 	}
 	
 	@NotNull

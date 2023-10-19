@@ -3,97 +3,52 @@ package superlord.wildlands.client.render;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import org.joml.Quaternionf;
-
 import com.google.common.collect.ImmutableMap;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.math.Axis;
 
 import net.minecraft.client.model.BoatModel;
-import net.minecraft.client.model.ChestBoatModel;
+import net.minecraft.client.model.ListModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.BoatRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import superlord.wildlands.WildLands;
 import superlord.wildlands.common.entity.WLBoat;
+import superlord.wildlands.common.entity.WLBoat.WLBoatTypes;
 
 @OnlyIn(Dist.CLIENT)
-public class WLBoatRenderer extends EntityRenderer<WLBoat> {
-	
-	private final Map<WLBoat.WLBoatTypes, Pair<ResourceLocation, BoatModel>> boatResources;
-	
-	public WLBoatRenderer(EntityRendererProvider.Context context, boolean hasChest) {
-		super(context);
-		this.shadowRadius = 0.8F;
-		this.boatResources = Stream.of(WLBoat.WLBoatTypes.values()).collect(ImmutableMap.toImmutableMap((wlType) -> {
-			return wlType;
-		}, (wlType) -> {
-			return Pair.of(WildLands.createLocation(getTextureLocation(wlType, hasChest)), this.createBoatModel(context, wlType, hasChest));
-		}));
-	}
-	
-	private BoatModel createBoatModel(EntityRendererProvider.Context context, WLBoat.WLBoatTypes wlType, boolean hasChest) {
-		ModelLayerLocation modellayerlocation = hasChest ? createChestBoatModelName(wlType) : createBoatModelName(wlType);
-		return hasChest ? new ChestBoatModel(context.bakeLayer(modellayerlocation)) : new BoatModel(context.bakeLayer(modellayerlocation));
-	}
-	
-	public static ModelLayerLocation createChestBoatModelName(WLBoat.WLBoatTypes type) {
-		return new ModelLayerLocation(WildLands.createLocation("chest_boat/" + type.getName()), "main");
-	}
-	
-	public static ModelLayerLocation createBoatModelName(WLBoat.WLBoatTypes type) {
-		return new ModelLayerLocation(WildLands.createLocation("boat/" + type.getName()), "main");
-	}
-	
-	public static String getTextureLocation(WLBoat.WLBoatTypes wlType, boolean hasChest) {
-		return hasChest ? "textures/entity/chest_boat/" + wlType.getName() + ".png" : "textures/entity/boat/" + wlType.getName() + ".png";
-	}
-	
-	@Override
-	public void render(WLBoat boat, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource multiBufferSource, int packedLightIn) {
-		matrixStackIn.pushPose();
-		matrixStackIn.translate(0.0D, 0.375D, 0.0D);
-		matrixStackIn.mulPose(Axis.YP.rotationDegrees(180.0F - entityYaw));
-		float h = (float) boat.getHurtTime() - partialTicks;
-		float j = boat.getDamage() - partialTicks;
-		if (j < 0.0F) {
-			j = 0.0F;
-		}
-		if (h > 0.0F) {
-			matrixStackIn.mulPose(Axis.XP.rotationDegrees(Mth.sin(h) * h * j / 10.0F * (float) boat.getHurtDir()));
-		}
-		
-		float k = boat.getBubbleAngle(partialTicks);
-		if (!Mth.equal(k, 0.0F)) {
-			matrixStackIn.mulPose(new Quaternionf().setAngleAxis(boat.getBubbleAngle(partialTicks) * ((float)Math.PI / 180F), 1.0F, 0.0F, 1.0F));
-		}
-		Pair<ResourceLocation, BoatModel> pair = this.boatResources.get(boat.getWLBoatType());
-		ResourceLocation resourceLocation = (ResourceLocation) pair.getFirst();
-		BoatModel boatModel = (BoatModel) pair.getSecond();
-		matrixStackIn.scale(-1.0F, -1.0F, 1.0F);
-		matrixStackIn.mulPose(Axis.YP.rotationDegrees(90.0F));
-		boatModel.setupAnim(boat, partialTicks, 0.0F, -0.1F, 0.0F, 0.0F);
-		VertexConsumer vertexConsumer = multiBufferSource.getBuffer(boatModel.renderType(resourceLocation));
-		boatModel.renderToBuffer(matrixStackIn, vertexConsumer, packedLightIn, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-		if (!boat.isUnderWater()) {
-			VertexConsumer vertexConsumer2 = multiBufferSource.getBuffer(RenderType.waterMask());
-			boatModel.waterPatch().render(matrixStackIn, vertexConsumer2, packedLightIn, OverlayTexture.NO_OVERLAY);
-		}
-		matrixStackIn.popPose();
-		super.render(boat, entityYaw, partialTicks, matrixStackIn, multiBufferSource, packedLightIn);
-	}
-	
-	public ResourceLocation getTextureLocation(WLBoat boat) {
-		return this.boatResources.get(boat.getWLBoatType()).getFirst();
-	}
+public class WLBoatRenderer extends BoatRenderer {
+	private final Map<WLBoatTypes, Pair<ResourceLocation, ListModel<Boat>>> modBoatResources;
 
+    public WLBoatRenderer(EntityRendererProvider.Context renderContext, boolean isChestBoot) {
+        super(renderContext, isChestBoot);
+        modBoatResources = Stream.of(WLBoatTypes.values()).collect(ImmutableMap.toImmutableMap((boatType) -> {
+            return boatType;
+        }, (boatType) -> {
+            return Pair.of(
+                new ResourceLocation(WildLands.MOD_ID, "textures/entity/boat/" + boatType.getName() + ".png"),
+                new BoatModel(renderContext.bakeLayer(
+                    new ModelLayerLocation(
+                        new ResourceLocation("boat/oak"),
+                        "main"
+                    )
+                ))
+            );
+        }));
+    }
+
+    public WLBoatRenderer(EntityRendererProvider.Context renderContext) {
+        this(renderContext, false);
+    }
+    
+    @Override
+    public Pair<ResourceLocation, ListModel<Boat>> getModelWithLocation(Boat boat) {
+        WLBoat moddedBoat = (WLBoat) boat;
+        return modBoatResources.get(moddedBoat.getWLBoatType());
+    }
+
+	
 }

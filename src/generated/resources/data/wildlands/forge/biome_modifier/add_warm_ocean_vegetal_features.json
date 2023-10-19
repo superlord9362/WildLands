@@ -1,0 +1,9 @@
+{
+  "type": "forge:add_features",
+  "biomes": "minecraft:warm_ocean",
+  "features": [
+    "wildlands:placed_starfish",
+    "wildlands:placed_urchin"
+  ],
+  "step": "vegetal_decoration"
+}

@@ -75,8 +75,7 @@ public class WLBoat extends Boat {
 		return Boat.Type.OAK;
 	}
 
-	@Override
-	public void setVariant(Boat.Type p_38333_) {
+	public void setVariant(WLBoatTypes type) {
 	}
 
 	@Override

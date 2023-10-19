@@ -49,7 +49,9 @@ import superlord.wildlands.common.block.PalmettoBlock;
 import superlord.wildlands.common.block.SmolderingLogBlock;
 import superlord.wildlands.common.block.StarfishBlock;
 import superlord.wildlands.common.block.UrchinBlock;
+import superlord.wildlands.common.block.WLCeilingHangingSignBlock;
 import superlord.wildlands.common.block.WLStandingSignBlock;
+import superlord.wildlands.common.block.WLWallHangingSignBlock;
 import superlord.wildlands.common.block.WLWallSignBlock;
 import superlord.wildlands.common.block.WallCoconutBlock;
 
@@ -188,10 +190,25 @@ public class WLBlocks {
 	@SuppressWarnings("deprecation")
 	public static final RegistryObject<WLWallSignBlock> CHARRED_WALL_SIGN = REGISTER.register("charred_wall_sign", () -> new WLWallSignBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD).dropsLike(CHARRED_SIGN.get()), WLWoodTypes.CHARRED));
 
+	public static final RegistryObject<WLCeilingHangingSignBlock> CYPRESS_HANGING_SIGN = REGISTER.register("cypress_hanging_sign", () -> new WLCeilingHangingSignBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD), WLWoodTypes.CYPRESS));
+	public static final RegistryObject<WLWallHangingSignBlock> CYPRESS_HANGING_WALL_SIGN = REGISTER.register("cypress_hanging_wall_sign", () -> new WLWallHangingSignBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD), WLWoodTypes.CYPRESS));
+	public static final RegistryObject<WLCeilingHangingSignBlock> COCONUT_HANGING_SIGN = REGISTER.register("coconut_hanging_sign", () -> new WLCeilingHangingSignBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD), WLWoodTypes.COCONUT));
+	public static final RegistryObject<WLWallHangingSignBlock> COCONUT_HANGING_WALL_SIGN = REGISTER.register("coconut_hanging_wall_sign", () -> new WLWallHangingSignBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD), WLWoodTypes.COCONUT));
+	public static final RegistryObject<WLCeilingHangingSignBlock> CHARRED_HANGING_SIGN = REGISTER.register("charred_hanging_sign", () -> new WLCeilingHangingSignBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD), WLWoodTypes.CHARRED));
+	public static final RegistryObject<WLWallHangingSignBlock> CHARRED_HANGING_WALL_SIGN = REGISTER.register("charred_hanging_wall_sign", () -> new WLWallHangingSignBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).noCollission().strength(1.0F).sound(SoundType.WOOD), WLWoodTypes.CHARRED));
+	
 	public static final RegistryObject<Block> CHARRED_GRASS = REGISTER.register("charred_grass", () -> new CharredGrassBlock(Block.Properties.of().mapColor(MapColor.GRASS).strength(0.5F).sound(SoundType.GRASS)));
 	public static final RegistryObject<Block> CHARRED_TALL_GRASS = REGISTER.register("charred_tall_grass", () -> new CharredTallGrassBlock(Block.Properties.of().mapColor(MapColor.GRASS).instabreak().noCollission().sound(SoundType.GRASS)));
 	public static final RegistryObject<Block> CHARRED_BUSH = REGISTER.register("charred_bush", () -> new CharredTallGrassBlock(Block.Properties.of().mapColor(MapColor.GRASS).instabreak().noCollission().sound(SoundType.GRASS)));
 
+	@SuppressWarnings("deprecation")
+	public static final RegistryObject<Block> POTTED_CHARRED_BUSH = REGISTER.register("potted_charred_bush", () -> new FlowerPotBlock(CHARRED_BUSH.get(), Block.Properties.of().instabreak()));
+	@SuppressWarnings("deprecation")
+	public static final RegistryObject<Block> POTTED_CATTAIL = REGISTER.register("potted_cattail", () -> new FlowerPotBlock(CATTAIL.get(), Block.Properties.of().instabreak()));
+	@SuppressWarnings("deprecation")
+	public static final RegistryObject<Block> POTTED_PALMETTO = REGISTER.register("potted_palmetto", () -> new FlowerPotBlock(PALMETTO.get(), Block.Properties.of().instabreak()));
+
+	
 	public static final RegistryObject<Block> OLIVINE_LAMP = REGISTER.register("olivine_lamp", () -> new OlivineLampBlock(Block.Properties.of().strength(1.0F).sound(SoundType.LANTERN).lightLevel((state) -> {
 		return 1 * state.getValue(OlivineLampBlock.XP_0_10);
 	})));

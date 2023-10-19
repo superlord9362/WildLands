@@ -1,0 +1,6 @@
+{
+  "type": "forge:add_features",
+  "biomes": "minecraft:beach",
+  "features": "wildlands:placed_disk_fine_sand",
+  "step": "underground_decoration"
+}

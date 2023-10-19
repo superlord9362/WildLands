@@ -1,0 +1,8 @@
+{
+  "type": "wildlands:large_rock",
+  "config": {
+    "state": {
+      "Name": "wildlands:gabbro"
+    }
+  }
+}

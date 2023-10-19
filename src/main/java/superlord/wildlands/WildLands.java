@@ -16,9 +16,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.world.BiomeModifier;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -34,7 +35,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import superlord.wildlands.client.ClientProxy;
-import superlord.wildlands.common.CommonEvents;
 import superlord.wildlands.common.CommonProxy;
 import superlord.wildlands.common.entity.Alligator;
 import superlord.wildlands.common.entity.Anchovy;
@@ -119,11 +119,24 @@ public class WildLands {
 		}
 		event.enqueueWork(() -> {
 			WLPlacedFeatures.init();
+			((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(WLBlocks.COCONUT_SAPLING.getId(), WLBlocks.POTTED_COCONUT_SAPLING);
+			((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(WLBlocks.CYPRESS_SAPLING.getId(), WLBlocks.POTTED_CYPRESS_SAPLING);
+			((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(WLBlocks.CATTAIL.getId(), WLBlocks.POTTED_CATTAIL);
+			((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(WLBlocks.PALMETTO.getId(), WLBlocks.POTTED_PALMETTO);
+			((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(WLBlocks.CHARRED_BUSH.getId(), WLBlocks.POTTED_CHARRED_BUSH);
 			WoodType.register(WLWoodTypes.CHARRED);
 			WoodType.register(WLWoodTypes.COCONUT);
 			WoodType.register(WLWoodTypes.CYPRESS);
 		});
 	}
+	
+	public void gatherData(GatherDataEvent event) {
+        DataGenerator dataGenerator = event.getGenerator();
+        PackOutput packOutput = dataGenerator.getPackOutput();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        boolean server = event.includeServer();
+        dataGenerator.addProvider(server, new WLFeatureAndBiomeGenerator(packOutput, lookupProvider));
+    }
 
 	@SuppressWarnings("deprecation")
 	private void commonSetup(FMLCommonSetupEvent event) {
@@ -151,14 +164,6 @@ public class WildLands {
 		event.put(WLEntities.JELLYFISH.get(), Jellyfish.createAttributes().build());
 		event.put(WLEntities.GRIZZLY.get(), Grizzly.createAttributes().build());
 	}
-	
-	public void gatherData(GatherDataEvent event) {
-        DataGenerator dataGenerator = event.getGenerator();
-        PackOutput packOutput = dataGenerator.getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-        boolean server = event.includeServer();
-        dataGenerator.addProvider(server, new WLFeatureAndBiomeGenerator(packOutput, lookupProvider));
-    }
 	
 	@SubscribeEvent
 	public void onModConfigEvent(final ModConfigEvent event) {

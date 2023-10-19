@@ -3,6 +3,7 @@ package superlord.wildlands.init;
 import net.minecraft.core.Direction;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.HangingSignItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SignItem;
 import net.minecraft.world.level.material.Fluids;
@@ -157,4 +158,8 @@ public class WLItems {
 	public static final RegistryObject<Item> CYPRESS_SIGN = BLOCKS.register("cypress_sign", () -> new SignItem(new Item.Properties().stacksTo(16), WLBlocks.CYPRESS_SIGN.get(), WLBlocks.CYPRESS_WALL_SIGN.get()));
 	public static final RegistryObject<Item> COCONUT_SIGN = BLOCKS.register("coconut_sign", () -> new SignItem(new Item.Properties().stacksTo(16), WLBlocks.COCONUT_SIGN.get(), WLBlocks.COCONUT_WALL_SIGN.get()));
 	public static final RegistryObject<Item> CHARRED_SIGN = BLOCKS.register("charred_sign", () -> new SignItem(new Item.Properties().stacksTo(16), WLBlocks.CHARRED_SIGN.get(), WLBlocks.CHARRED_WALL_SIGN.get()));
+	public static final RegistryObject<Item> CYPRESS_HANGING_SIGN = BLOCKS.register("cypress_hanging_sign", () -> new HangingSignItem(WLBlocks.CYPRESS_HANGING_SIGN.get(), WLBlocks.CYPRESS_HANGING_WALL_SIGN.get(), new Item.Properties().stacksTo(16)));
+	public static final RegistryObject<Item> COCONUT_HANGING_SIGN = BLOCKS.register("coconut_hanging_sign", () -> new HangingSignItem(WLBlocks.COCONUT_HANGING_SIGN.get(), WLBlocks.COCONUT_HANGING_WALL_SIGN.get(), new Item.Properties().stacksTo(16)));
+	public static final RegistryObject<Item> CHARRED_HANGING_SIGN = BLOCKS.register("charred_hanging_sign", () -> new HangingSignItem(WLBlocks.CHARRED_HANGING_SIGN.get(), WLBlocks.CHARRED_HANGING_WALL_SIGN.get(), new Item.Properties().stacksTo(16)));
+
 }

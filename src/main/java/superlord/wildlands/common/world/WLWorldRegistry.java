@@ -52,7 +52,7 @@ public class WLWorldRegistry {
     	if (getBiomeName(biome) == WLBiomes.BAYOU.location()) {
     		if (WildLandsConfig.alligatorSpawnWeight != 0) builder.getMobSpawnSettings().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(WLEntities.ALLIGATOR.get(), WildLandsConfig.alligatorSpawnWeight, 1, 2));
     		if (WildLandsConfig.catfishSpawnWeight != 0) builder.getMobSpawnSettings().addSpawn(MobCategory.WATER_AMBIENT, new MobSpawnSettings.SpawnerData(WLEntities.CATFISH.get(), WildLandsConfig.catfishSpawnWeight, 1, 1));
-    	}
+       	}
     }
 
 }

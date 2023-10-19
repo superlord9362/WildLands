@@ -1,0 +1,9 @@
+{
+  "type": "forge:add_features",
+  "biomes": "minecraft:stony_shore",
+  "features": [
+    "wildlands:placed_conglomerate_rock",
+    "wildlands:placed_disk_conglomerate"
+  ],
+  "step": "underground_ores"
+}

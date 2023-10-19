@@ -36,7 +36,7 @@ public class OlivinePressurePlateBlock extends BasePressurePlateBlock {
 	}
 
 	protected int getSignalForState(BlockState state) {
-		return state.getValue(POWERED) ? 15 : 0;
+		return state.getValue(POWERED) ? i : 0;
 	}
 
 	protected void playOnSound(LevelAccessor worldIn, BlockPos pos) {
@@ -47,6 +47,7 @@ public class OlivinePressurePlateBlock extends BasePressurePlateBlock {
 		worldIn.playSound((Player)null, pos, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundSource.BLOCKS, 0.3F, 0.5F);
 	}
 
+	@Override
 	protected int getSignalStrength(Level worldIn, BlockPos pos) {
 		AABB axisalignedbb = TOUCH_AABB.move(pos);
 		List<? extends Entity> list;
@@ -67,15 +68,13 @@ public class OlivinePressurePlateBlock extends BasePressurePlateBlock {
 					if (entity instanceof Player) {
 						Player player = (Player) entity;
 						int i = player.experienceLevel;
+						if (i > 15) i = 15;
 						this.i = i;
-						System.out.println(i);
-						if (i >= 15) i = 15;
 						return i;
 					}
 				}
 			}
 		}
-
 		return 0;
 	}
 

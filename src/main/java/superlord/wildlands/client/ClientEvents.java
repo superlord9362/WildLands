@@ -1,12 +1,10 @@
 package superlord.wildlands.client;
 
-import net.minecraft.client.model.BoatModel;
-import net.minecraft.client.model.ChestBoatModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
 import net.minecraft.client.renderer.blockentity.SignRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -37,10 +35,9 @@ import superlord.wildlands.client.render.JellyfishRenderer;
 import superlord.wildlands.client.render.OctopusRenderer;
 import superlord.wildlands.client.render.SeaLionRenderer;
 import superlord.wildlands.client.render.WLBoatRenderer;
+import superlord.wildlands.client.render.WLChestBoatRenderer;
 import superlord.wildlands.client.render.item.CoconutRenderer;
 import superlord.wildlands.client.render.item.JellyBallRenderer;
-import superlord.wildlands.common.entity.WLBoat;
-import superlord.wildlands.common.entity.WLBoat.WLBoatTypes;
 import superlord.wildlands.init.WLBlockEntities;
 import superlord.wildlands.init.WLEntities;
 import superlord.wildlands.init.WLWoodTypes;
@@ -69,8 +66,8 @@ public class ClientEvents {
 		event.registerEntityRenderer(WLEntities.ALLIGATOR.get(), AlligatorRenderer::new);
 		event.registerEntityRenderer(WLEntities.ANCHOVY.get(), AnchovyRenderer::new);
 		event.registerEntityRenderer(WLEntities.CATFISH.get(), CatfishRenderer::new);
-		event.registerEntityRenderer(WLEntities.BOAT.get(), (EntityRendererProvider.Context context) -> new WLBoatRenderer(context, false));
-		event.registerEntityRenderer(WLEntities.CHEST_BOAT.get(), (EntityRendererProvider.Context context) -> new WLBoatRenderer(context, true));
+		event.registerEntityRenderer(WLEntities.BOAT.get(), WLBoatRenderer::new);
+		event.registerEntityRenderer(WLEntities.CHEST_BOAT.get(), WLChestBoatRenderer::new);
 		event.registerEntityRenderer(WLEntities.COCONUT.get(), CoconutRenderer::new);
 		event.registerEntityRenderer(WLEntities.JELLY_BALL.get(), JellyBallRenderer::new);
 		event.registerEntityRenderer(WLEntities.CRAB.get(), CrabRenderer::new);
@@ -85,6 +82,7 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void init(final FMLClientSetupEvent event) {
 		BlockEntityRenderers.register(WLBlockEntities.SIGN.get(), SignRenderer::new);
+		BlockEntityRenderers.register(WLBlockEntities.HANGING_SIGN.get(), HangingSignRenderer::new);
 		event.enqueueWork(() -> {
 			Sheets.addWoodType(WLWoodTypes.CYPRESS);
 			Sheets.addWoodType(WLWoodTypes.COCONUT);
@@ -108,10 +106,6 @@ public class ClientEvents {
 		event.registerLayerDefinition(JELLYFISH, JellyfishModel::createBodyLayer);
 		event.registerLayerDefinition(OCTOPUS, OctopusModel::createBodyLayer);
 		event.registerLayerDefinition(SEA_LION, SeaLionModel::createBodyLayer);
-		for (WLBoatTypes value : WLBoat.WLBoatTypes.values()) {
-			event.registerLayerDefinition(WLBoatRenderer.createBoatModelName(value), BoatModel::createBodyModel);
-			event.registerLayerDefinition(WLBoatRenderer.createChestBoatModelName(value), ChestBoatModel::createBodyModel);
-		}	
 	}
 
 }

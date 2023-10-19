@@ -1,0 +1,17 @@
+{
+  "type": "forge:add_features",
+  "biomes": [
+    "minecraft:cold_ocean",
+    "minecraft:deep_cold_ocean"
+  ],
+  "features": [
+    "wildlands:placed_disk_dolerite",
+    "wildlands:placed_dolerite_rock",
+    "wildlands:placed_disk_gabbro",
+    "wildlands:placed_gabbro_rock",
+    "wildlands:placed_olivine_gabbro_rock",
+    "wildlands:placed_conglomerate_rock",
+    "wildlands:placed_disk_conglomerate"
+  ],
+  "step": "underground_ores"
+}

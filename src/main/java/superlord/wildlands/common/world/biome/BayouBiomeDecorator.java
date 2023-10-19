@@ -3,7 +3,7 @@ package superlord.wildlands.common.world.biome;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.BiomeDefaultFeatures;
 import net.minecraft.data.worldgen.placement.AquaticPlacements;
-import net.minecraft.util.Mth;
+import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.AmbientMoodSettings;
@@ -14,14 +14,9 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import superlord.wildlands.init.WLPlacedFeatures;
 
 public class BayouBiomeDecorator {
-
-	private static int getSkyColorWithTemperatureModifier(float temperature) {
-		float f = temperature / 3.0F;
-		f = Mth.clamp(f, -1.0F, 1.0F);
-		return Mth.hsvToRgb(0.6325F - f * 0.1F, 0.44F + f * 0.11F, 1F);
-	}
 
 	@SuppressWarnings("unused")
 	private static Biome biome(Biome.Precipitation precipitation, float temperature, float downfall, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder)
@@ -29,17 +24,19 @@ public class BayouBiomeDecorator {
 		return biome(precipitation, temperature, downfall, spawnBuilder, biomeBuilder);
 	}
 
-	private static Biome biome(boolean hasPrecipitation, float temperature, float downfall, int waterColor, int waterFogColor, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder)
+	private static Biome biome(boolean hasPrecipitation, float temperature, float downfall, MobSpawnSettings.Builder spawnBuilder, BiomeGenerationSettings.Builder biomeBuilder)
 	{
 		return (new Biome.BiomeBuilder())
 				.hasPrecipitation(hasPrecipitation)
 				.temperature(temperature)
 				.downfall(downfall)
 				.specialEffects((new BiomeSpecialEffects.Builder())
-						.waterColor(waterColor)
-						.waterFogColor(waterFogColor)
+						.waterColor(3031057)
+						.waterFogColor(7172665)
 						.fogColor(12638463)
-						.skyColor(getSkyColorWithTemperatureModifier(temperature))
+						.skyColor(10865067)
+						.foliageColorOverride(8242525)
+						.grassColorOverride(8242525)
 						.ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)
 						.build())
 				.mobSpawnSettings(spawnBuilder.build())
@@ -50,21 +47,34 @@ public class BayouBiomeDecorator {
 	public static Biome decorateBayou(HolderGetter<PlacedFeature> placedFeatureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter) {
 		MobSpawnSettings.Builder spawnSettings = new MobSpawnSettings.Builder();
 		BiomeGenerationSettings.Builder biomeFeatures = new BiomeGenerationSettings.Builder(placedFeatureGetter, carverGetter);
-		MobSpawnSettings.Builder mobspawnsettings$builder = new MobSpawnSettings.Builder();
-		BiomeDefaultFeatures.farmAnimals(mobspawnsettings$builder);
-		BiomeDefaultFeatures.commonSpawns(mobspawnsettings$builder);
-		mobspawnsettings$builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityType.SLIME, 1, 1, 1));
-		BiomeGenerationSettings.Builder biomegenerationsettings$builder =  new BiomeGenerationSettings.Builder(placedFeatureGetter, carverGetter);
-		BiomeDefaultFeatures.addFossilDecoration(biomegenerationsettings$builder);
-		globalOverworldGeneration(biomegenerationsettings$builder);
-		BiomeDefaultFeatures.addDefaultOres(biomegenerationsettings$builder);
-		BiomeDefaultFeatures.addSwampClayDisk(biomegenerationsettings$builder);
-		BiomeDefaultFeatures.addSwampVegetation(biomegenerationsettings$builder);
-		BiomeDefaultFeatures.addDefaultMushrooms(biomegenerationsettings$builder);
-		BiomeDefaultFeatures.addSwampExtraVegetation(biomegenerationsettings$builder);
-		biomegenerationsettings$builder.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, AquaticPlacements.SEAGRASS_SWAMP);
-		return biome(true, 0.5F, 0.7F, 3031057, 7172665, spawnSettings, biomeFeatures);
+		BiomeDefaultFeatures.farmAnimals(spawnSettings);
+		BiomeDefaultFeatures.commonSpawns(spawnSettings);
+		spawnSettings.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityType.SLIME, 1, 1, 1));
+		spawnSettings.addSpawn(MobCategory.WATER_AMBIENT, new MobSpawnSettings.SpawnerData(EntityType.COD, 5, 2, 4));
+		BiomeDefaultFeatures.addFossilDecoration(biomeFeatures);
+		globalOverworldGeneration(biomeFeatures);
+		BiomeDefaultFeatures.addDefaultOres(biomeFeatures);
+		BiomeDefaultFeatures.addSwampClayDisk(biomeFeatures);
+		addBayouVegetation(biomeFeatures);
+		BiomeDefaultFeatures.addDefaultMushrooms(biomeFeatures);
+		BiomeDefaultFeatures.addSwampExtraVegetation(biomeFeatures);
+		biomeFeatures.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, AquaticPlacements.SEAGRASS_SWAMP);
+		return biome(true, 0.7F, 0.9F, spawnSettings, biomeFeatures);
 	}
+	
+	public static void addBayouVegetation(BiomeGenerationSettings.Builder p_126711_) {
+	      p_126711_.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VegetationPlacements.FLOWER_SWAMP);
+	      p_126711_.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VegetationPlacements.PATCH_GRASS_NORMAL);
+	      p_126711_.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VegetationPlacements.PATCH_DEAD_BUSH);
+	      p_126711_.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VegetationPlacements.PATCH_WATERLILY);
+	      p_126711_.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VegetationPlacements.BROWN_MUSHROOM_SWAMP);
+	      p_126711_.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, VegetationPlacements.RED_MUSHROOM_SWAMP);
+	      p_126711_.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WLPlacedFeatures.PLACED_BEARD_MOSS);
+	      p_126711_.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WLPlacedFeatures.PLACED_CYPRESS_TREE);
+	      p_126711_.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WLPlacedFeatures.PLACED_CATTAIL);
+	      p_126711_.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WLPlacedFeatures.PLACED_DUCKWEED);
+	      p_126711_.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WLPlacedFeatures.PLACED_PALMETTO);
+	   }
 
 	private static void globalOverworldGeneration(BiomeGenerationSettings.Builder p_194870_) {
 		BiomeDefaultFeatures.addDefaultCarversAndLakes(p_194870_);
