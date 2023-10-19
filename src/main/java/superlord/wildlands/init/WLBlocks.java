@@ -196,6 +196,12 @@ public class WLBlocks {
 	})));
 
 	public static final RegistryObject<JellyBlock> JELLY_BLOCK = REGISTER.register("jelly_block", () -> new JellyBlock(Block.Properties.of(Material.CLAY, MaterialColor.COLOR_PINK).sound(SoundType.SLIME_BLOCK).friction(0.8F).noOcclusion()));
+	@SuppressWarnings("deprecation")
+	public static final RegistryObject<Block> POTTED_CHARRED_BUSH = REGISTER.register("potted_charred_bush", () -> new FlowerPotBlock(CHARRED_BUSH.get(), Block.Properties.of(Material.DECORATION).instabreak()));
+	@SuppressWarnings("deprecation")
+	public static final RegistryObject<Block> POTTED_CATTAIL = REGISTER.register("potted_cattail", () -> new FlowerPotBlock(CATTAIL.get(), Block.Properties.of(Material.DECORATION).instabreak()));
+	@SuppressWarnings("deprecation")
+	public static final RegistryObject<Block> POTTED_PALMETTO = REGISTER.register("potted_palmetto", () -> new FlowerPotBlock(PALMETTO.get(), Block.Properties.of(Material.DECORATION).instabreak()));
 
 	private static RotatedPillarBlock createLog() {
 		return new RotatedPillarBlock(BlockBehaviour.Properties.of(Material.WOOD).strength(2.0F).sound(SoundType.WOOD));

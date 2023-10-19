@@ -23,79 +23,76 @@ public class OlivineLampBlock extends Block {
 		this.registerDefaultState(this.stateDefinition.any().setValue(XP_0_10, 0));
 	}
 
+	@SuppressWarnings("deprecation")
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand hamd, BlockHitResult result) {
 		int playerExperience = player.totalExperience;
 		this.experience = state.getValue(XP_0_10);
 		if (player.isShiftKeyDown()) {
-			if (this.experience == 1) {
+			if (experience == 1) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 0), 0);
 				player.giveExperiencePoints(7);
-			} else if (this.experience == 2) {
+			} else if (experience == 2) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 1), 0);
 				player.giveExperiencePoints(9);
-			} else if (this.experience == 3) {
+			} else if (experience == 3) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 2), 0);
 				player.giveExperiencePoints(11);
-			} else if (this.experience == 4) {
+			} else if (experience == 4) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 3), 0);
 				player.giveExperiencePoints(13);
-			} else if (this.experience == 5) {
+			} else if (experience == 5) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 4), 0);
 				player.giveExperiencePoints(15);
-			} else if (this.experience == 6) {
+			} else if (experience == 6) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 5), 0);
 				player.giveExperiencePoints(17);
-			} else if (this.experience == 7) {
+			} else if (experience == 7) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 6), 0);
 				player.giveExperiencePoints(19);
-			} else if (this.experience == 8) {
+			} else if (experience == 8) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 7), 0);
 				player.giveExperiencePoints(21);
-			} else if (this.experience == 9) {
+			} else if (experience == 9) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 8), 0);
 				player.giveExperiencePoints(23);
-			} else if (this.experience == 10) {
+			} else if (experience == 10) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 9), 0);
 				player.giveExperiencePoints(25);
-			} else {
-				return InteractionResult.sidedSuccess(worldIn.isClientSide());
 			}
 		} else {
 			if (playerExperience >= 7 && experience == 0) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 1), 0);
 				player.giveExperiencePoints(-7);
-			} else if (playerExperience >= 9 && experience == 1) {
+			} else if (this.experience == 1 && playerExperience >= 9) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 2), 0);
 				player.giveExperiencePoints(-9);
-			} else if (playerExperience >= 11 && experience ==  2) {
+			} else if (this.experience == 2 && playerExperience >= 11) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 3), 0);
 				player.giveExperiencePoints(-11);
-			} else if (playerExperience >= 13 && experience == 3) {
+			} else if (this.experience == 3 && playerExperience >= 13) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 4), 0);
 				player.giveExperiencePoints(-13);
-			} else if (playerExperience >= 15 && experience == 4) {
+			} else if (this.experience == 4 && playerExperience >= 15) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 5), 0);
 				player.giveExperiencePoints(-15);
-			} else if (playerExperience >= 17 && experience == 5) {
+			} else if (this.experience == 5 && playerExperience >= 17) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 6), 0);
 				player.giveExperiencePoints(-17);
-			} else if (playerExperience >= 19 && experience == 6) {
+			} else if (this.experience == 6 && playerExperience >= 19) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 7), 0);
 				player.giveExperiencePoints(-19);
-			} else if (playerExperience >= 21 && experience == 7) {
+			} else if (this.experience == 7 && playerExperience >= 21) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 8), 0);
 				player.giveExperiencePoints(-21);
-			} else if (playerExperience >= 23 && experience == 8) {
+			} else if (this.experience == 8 && playerExperience >= 23) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 9), 0);
 				player.giveExperiencePoints(-23);
-			} else if (playerExperience >= 25 && experience == 9) {
+			} else if (this.experience == 9 && playerExperience >= 25) {
 				worldIn.setBlock(pos, this.defaultBlockState().setValue(XP_0_10, 10), 0);
 				player.giveExperiencePoints(-25);
-			} else {
-				return InteractionResult.sidedSuccess(worldIn.isClientSide());
 			}
 		}
-		return InteractionResult.sidedSuccess(worldIn.isClientSide());
+		return super.use(state, worldIn, pos, player, hamd, result);
 	}
 
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

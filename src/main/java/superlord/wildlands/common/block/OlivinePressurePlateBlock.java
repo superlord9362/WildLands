@@ -35,7 +35,7 @@ public class OlivinePressurePlateBlock extends BasePressurePlateBlock {
 	}
 
 	protected int getSignalForState(BlockState state) {
-		return state.getValue(POWERED) ? 15 : 0;
+		return state.getValue(POWERED) ? i : 0;
 	}
 
 	protected void playOnSound(LevelAccessor worldIn, BlockPos pos) {
@@ -67,7 +67,6 @@ public class OlivinePressurePlateBlock extends BasePressurePlateBlock {
 						Player player = (Player) entity;
 						int i = player.experienceLevel;
 						this.i = i;
-						System.out.println(i);
 						if (i >= 15) i = 15;
 						return i;
 					}
